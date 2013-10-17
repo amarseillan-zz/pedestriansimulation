@@ -1,5 +1,8 @@
 package ar.edu.itba.pedestriansim.gui;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -7,14 +10,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 
-import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSim;
-import ar.edu.itba.pedestriansim.back.Scene;
+import ar.edu.itba.pedestriansim.back.parser.PedestrianFileParser;
 
 public class PedestrianApp extends BasicGame {
 
-	private final static int INTERVAL_UPDATE_MILLIS = 200;
-	
 	public static void main(String[] args) {
         try {
             AppGameContainer app = new AppGameContainer(new PedestrianApp("Pedestrian simulation"));
@@ -24,7 +25,6 @@ public class PedestrianApp extends BasicGame {
         }
 	}
 
-	private int timeFromLastUpdateMillis = 0; 
 	private PedestrianSim simulation;
 	private PedestrianRenderer pedestrianRenderer = new PedestrianRenderer();
 	private ObstacleRenderer obstacleRenderer = new ObstacleRenderer();
@@ -36,25 +36,27 @@ public class PedestrianApp extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		simulation = new PedestrianSim();
+		try {
+			new PedestrianFileParser()
+				.laod(simulation, new File("./src/main/resources/pedestrian.properties"));
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		Scene scene = simulation.getScene();
+		PedestrianArea scene = simulation.getScene();
 		for (Shape shape : scene.getObstacles()) {
 			obstacleRenderer.render(g, shape);
 		}
-		for (Pedestrian pedestrian : scene.getPedestrians()) {
-			pedestrianRenderer.render(g, pedestrian);
-		}
+		pedestrianRenderer.render(gc, g, scene.getPedestrians());
 	}
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
-		timeFromLastUpdateMillis += delta;
-		if (timeFromLastUpdateMillis >= INTERVAL_UPDATE_MILLIS) {
-			float seconds = timeFromLastUpdateMillis / 1000f;
-			simulation.update(gc, seconds);
-			timeFromLastUpdateMillis = 0;
+		if (delta > 5) {
+			delta = Math.min(100, delta);
+			simulation.update(gc, delta);
 		}
 	}
 }

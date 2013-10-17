@@ -5,28 +5,29 @@ import java.util.List;
 
 import org.newdawn.slick.GameContainer;
 
-import ar.edu.itba.pedestriansim.back.component.ExternalForcesComponent;
-import ar.edu.itba.pedestriansim.back.component.PositionUpdater;
+import ar.edu.itba.pedestriansim.back.component.PedestrianForceComponent;
 
 public class PedestrianSim implements Updateable {
 
-	private Scene scene;
+	private PedestrianArea scene;
 	private List<Updateable> updatables = new LinkedList<Updateable>();
 
 	public PedestrianSim() {
-		scene = new Scene();
-		scene.addPedestrian(new Pedestrian(100, 100));
-		updatables.add(new ExternalForcesComponent(scene));
-		updatables.add(new PositionUpdater(scene));
+		scene = new PedestrianArea();
+		updatables.add(new PedestrianForceComponent(scene));
 	}
 
-	public void update(GameContainer gc, float elapsedTimeSeconds) {
+	public void addPedestrian(Pedestrian pedestrian) {
+		scene.addPedestrian(pedestrian);
+	}
+	
+	public void update(GameContainer gc, long elapsedTime) {
 		for (Updateable updatable : updatables) {
-			updatable.update(gc, elapsedTimeSeconds);
+			updatable.update(gc, elapsedTime);
 		}
 	}
 
-	public Scene getScene() {
+	public PedestrianArea getScene() {
 		return scene;
 	}
 

@@ -1,53 +1,60 @@
 package ar.edu.itba.pedestriansim.back;
 
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Pedestrian {
 
-	private static final float MASS = 50;
+	private static final float MASS = 1;
 
-	private Shape shape;
-	private float mass;
-	private Carrot carrot;
-	private Vector2f velocity;
+	private Vector2f _location;
+	private float _mass;
+	private Vector2f _velocity;
+	private Vector2f _target;
+	private CircularShape collitionShape;
 
-	public Pedestrian(float x, float y) {
-		this.shape = new Circle(x, y, 10);
-		this.mass = MASS;
-		carrot = new Carrot(new Vector2f(1, 0));
-		velocity = new Vector2f();
+	public Pedestrian(Vector2f location, Vector2f target) {
+		this(MASS, location, target);
 	}
 
-	public Shape getShape() {
-		return shape;
+	public Pedestrian(float mass, Vector2f location, Vector2f target) {
+		_location = location;
+		_mass = mass;
+		_velocity = new Vector2f();
+		_target = target;
+		collitionShape = new CircularShape(this);
+	}
+
+	public Vector2f getLocation() {
+		return _location;
 	}
 
 	public Vector2f getVelocity() {
-		return velocity.copy();
-	}
-
-	public void addVelocity(Vector2f velocity) {
-		this.velocity.add(velocity);
-	}
-
-	public Vector2f getDesireVelocity() {
-		return new Vector2f(20, 0);
+		return _velocity;
 	}
 
 	public float getMass() {
-		return mass;
+		return _mass;
 	}
 
-	public Carrot getCarrot() {
-		return carrot;
+	public Vector2f getTarget() {
+		return _target;
+	}
+	
+	public void stop() {
+		_velocity.set(0,  0);
+	}
+	
+	public boolean onTarget() {
+		return _location.distanceSquared(_target) < 10;
 	}
 
-	public void apply(Transform transform) {
-		shape = shape.transform(transform);
-		carrot.apply(transform);
+	public void translate(Vector2f distance, long elapsedTime) {
+		_location.add(distance);
+		_velocity.set(distance);
+		_velocity.scale(1.0f / elapsedTime);
 	}
-
+	
+	public CircularShape getCollitionShape() {
+		return collitionShape;
+	}
 }
