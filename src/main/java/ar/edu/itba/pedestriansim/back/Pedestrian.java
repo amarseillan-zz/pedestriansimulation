@@ -4,57 +4,59 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class Pedestrian {
 
-	private static final float MASS = 1;
+	private static final float DEFAULT_MASS = 60;
 
-	private Vector2f _location;
-	private float _mass;
-	private Vector2f _velocity;
 	private Vector2f _target;
+	private Vector2f _appliedForce;
+	private RigidBody _body;
 	private CircularShape collitionShape;
+	private float _maxVelocity;
 
 	public Pedestrian(Vector2f location, Vector2f target) {
-		this(MASS, location, target);
+		this(DEFAULT_MASS, location, target);
 	}
 
 	public Pedestrian(float mass, Vector2f location, Vector2f target) {
-		_location = location;
-		_mass = mass;
-		_velocity = new Vector2f();
+		_body = new RigidBody(mass, location);
 		_target = target;
 		collitionShape = new CircularShape(this);
-	}
-
-	public Vector2f getLocation() {
-		return _location;
-	}
-
-	public Vector2f getVelocity() {
-		return _velocity;
-	}
-
-	public float getMass() {
-		return _mass;
+		_maxVelocity = 50;
+		_appliedForce = new Vector2f();
 	}
 
 	public Vector2f getTarget() {
 		return _target;
 	}
 	
-	public void stop() {
-		_velocity.set(0,  0);
-	}
-	
-	public boolean onTarget() {
-		return _location.distanceSquared(_target) < 10;
+	public void applyForce(Vector2f force) {
+		_appliedForce.set(force);
 	}
 
-	public void translate(Vector2f distance, long elapsedTime) {
-		_location.add(distance);
-		_velocity.set(distance);
-		_velocity.scale(1.0f / elapsedTime);
+	public Vector2f getAppliedForce() {
+		return _appliedForce;
 	}
-	
+
+	public void stop() {
+		_body.getVelocity().set(0, 0);
+	}
+
+	public boolean onTarget() {
+		return _body.getLocation().distanceSquared(_target) < 1;
+	}
+
 	public CircularShape getCollitionShape() {
 		return collitionShape;
+	}
+	
+	public RigidBody getBody() {
+		return _body;
+	}
+	
+	public float getMaxVelocity() {
+		return _maxVelocity;
+	}
+	
+	public void setMaxVelocity(float maxVelocity) {
+		_maxVelocity = maxVelocity;
 	}
 }

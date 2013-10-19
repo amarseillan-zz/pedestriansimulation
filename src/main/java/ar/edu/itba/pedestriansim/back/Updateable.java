@@ -4,6 +4,6 @@ import org.newdawn.slick.GameContainer;
 
 public interface Updateable {
 
-	void update(GameContainer gc, long elapsedTime);
+	void update(GameContainer gc, float elapsedTimeInSeconds);
 
 }

@@ -20,6 +20,6 @@ public class CircularShape {
 	}
 	
 	private void recenterShape() {
-		_shape.setLocation(_owner.getLocation());		
+		_shape.setLocation(_owner.getBody().getLocation());		
 	}
 }

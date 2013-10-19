@@ -18,9 +18,11 @@ public class PedestrianFileParser {
 		for (Object value : propertyFile.values()) {
 			String[] parts = value.toString().split(",");
 			float mass = Float.parseFloat(parts[0].trim());
-			Vector2f location = new Vector2f(ParserUtil.parseArray(parts[1].trim()));
-			Vector2f target = new Vector2f(ParserUtil.parseArray(parts[2].trim()));
-			pedestrianSim.addPedestrian(new Pedestrian(mass, location, target));
+			Vector2f location = new Vector2f(ParserUtil.parseArray(parts[2].trim()));
+			Vector2f target = new Vector2f(ParserUtil.parseArray(parts[3].trim()));
+			Pedestrian pedestrian = new Pedestrian(mass, location, target);
+			pedestrian.setMaxVelocity(Float.parseFloat(parts[1].trim()));
+			pedestrianSim.addPedestrian(pedestrian);
 		}
 	}
 }
