@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back.parser;
+package ar.edu.itba.pedestriansim.parser;
 
 public class ParserUtil {
 

@@ -19,10 +19,6 @@ public class PedestrianSim implements Updateable {
 		updatables.add(new PositionUpdaterComponent(scene));
 	}
 
-	public void addPedestrian(Pedestrian pedestrian) {
-		scene.addPedestrian(pedestrian);
-	}
-	
 	public void update(GameContainer gc, float elapsedTimeInSeconds) {
 		for (Updateable updatable : updatables) {
 			updatable.update(gc, elapsedTimeInSeconds);
