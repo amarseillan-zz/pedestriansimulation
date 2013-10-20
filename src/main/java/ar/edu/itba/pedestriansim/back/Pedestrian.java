@@ -1,27 +1,30 @@
 package ar.edu.itba.pedestriansim.back;
 
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Pedestrian {
 
-	private static final float DEFAULT_MASS = 60;
-
+	private Serializable _id;
 	private Vector2f _target;
 	private Vector2f _appliedForce;
 	private RigidBody _body;
 	private CircularShape collitionShape;
 	private float _maxVelocity;
 
-	public Pedestrian(Vector2f location, Vector2f target) {
-		this(DEFAULT_MASS, location, target);
-	}
-
-	public Pedestrian(float mass, Vector2f location, Vector2f target) {
+	public Pedestrian(Serializable id, float mass, Vector2f location, Vector2f target) {
 		_body = new RigidBody(mass, location);
 		_target = target;
 		collitionShape = new CircularShape(this);
-		_maxVelocity = 50;
 		_appliedForce = new Vector2f();
+		_id = id;
+	}
+
+	public Serializable getId() {
+		return _id;
 	}
 
 	public Vector2f getTarget() {
@@ -40,8 +43,17 @@ public class Pedestrian {
 		_body.getVelocity().set(0, 0);
 	}
 
+	public float getETA() {
+		if (onTarget()) {
+			return 0;
+		} else {
+			float velocity = getBody().getVelocity().length();
+			return Math.abs(velocity) < 0.01 ? Float.NaN  : getBody().getLocation().distance(getTarget()) / velocity;
+		}
+	}
+
 	public boolean onTarget() {
-		return _body.getLocation().distanceSquared(_target) < 1;
+		return getBody().getLocation().distanceSquared(getTarget()) < 1;
 	}
 
 	public CircularShape getCollitionShape() {
@@ -58,5 +70,14 @@ public class Pedestrian {
 	
 	public void setMaxVelocity(float maxVelocity) {
 		_maxVelocity = maxVelocity;
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+			.append("id", getId())
+			.append("location", getBody().getLocation())
+			.append("target", getBody().getVelocity())
+			.build();
 	}
 }

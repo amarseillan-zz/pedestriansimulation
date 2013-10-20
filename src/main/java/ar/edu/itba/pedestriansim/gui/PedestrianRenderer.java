@@ -12,10 +12,15 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 
-public class PedestrianRenderer {
+public class PedestrianRenderer extends ShapeRenderer {
 
+	private final Line externalForce = new Line(0, 0);
 	private final Line pedestrianPath = new Line(0, 0);
 	private final Shape pedestrianShape = new Circle(0, 0, 10);
+	
+	public PedestrianRenderer(Camera camera) {
+		super(camera);
+	}
 
 	public void render(GameContainer gc, Graphics g, Collection<Pedestrian> pedestrians) {
 		for (Pedestrian pedestrian : pedestrians) {
@@ -26,17 +31,18 @@ public class PedestrianRenderer {
 	}
 
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
-		g.setColor(Color.white);
-		pedestrianPath.set(pedestrian.getBody().getLocation(), pedestrian.getTarget());		
-		g.draw(pedestrianPath);
+		Vector2f location = pedestrian.getBody().getLocation();
+		pedestrianPath.set(location, pedestrian.getTarget());
+		draw(g, pedestrianPath, Color.white);
+		externalForce.set(location, location.copy().add(pedestrian.getAppliedForce()));
+		draw(g, externalForce, Color.orange);
 	}
 	
 	private void drawShape(Graphics g, Pedestrian pedestrian) {
-		g.setColor(Color.green);
 		Vector2f location = pedestrian.getBody().getLocation();
 		pedestrianShape.setCenterX(location.x);
 		pedestrianShape.setCenterY(location.y);
-		g.fill(pedestrianShape);
+		fill(g, pedestrianShape, Color.green);
 	}
 	
 	private void drawStats(Graphics g, Pedestrian pedestrian) {
@@ -44,15 +50,9 @@ public class PedestrianRenderer {
 		Vector2f location = pedestrian.getBody().getLocation();
 		float distance = location.distance(pedestrian.getTarget());
 		String positionString = String.format("x = (%.2f, %.2f) | D = %.3f [m]", location.x, location.y, distance);
-		g.drawString(positionString, location.x, location.y - 30);
-		float ETA;
-		if (pedestrian.onTarget()) {
-			ETA = 0;
-		} else {
-			float velocity = pedestrian.getBody().getVelocity().length();
-			ETA = Math.abs(velocity) < 0.01 ? 999f  : distance / velocity;
-		}
-		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), ETA);
-		g.drawString(velocityString, location.x, location.y - 15);
+		drawString(g, positionString, location.x, location.y - 30);
+		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), pedestrian.getETA());
+		drawString(g, velocityString, location.x, location.y - 15);
 	}
+	
 }

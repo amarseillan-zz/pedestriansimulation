@@ -7,11 +7,13 @@ import ar.edu.itba.pedestriansim.back.HelbingForceModel;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.RigidBody;
+import ar.edu.itba.pedestriansim.back.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
 
 public class ForceUpdaterComponent implements Updateable {
 
 	private final HelbingForceModel forceModel = new HelbingForceModel();
+	private final SpringForceModel collisitionModel = new SpringForceModel();
 	private PedestrianArea scene;
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
@@ -35,16 +37,14 @@ public class ForceUpdaterComponent implements Updateable {
 		RigidBody body = subject.getBody();
 		return forceModel.getForce(body, subject.getTarget(), subject.getMaxVelocity());
 	}
-	
+
 	private Vector2f getExternalForces(Pedestrian subject) {
 		Vector2f externalForces = new Vector2f();
 		for (Pedestrian other : scene.getPedestrians()) {
 			if (other == subject) {
 				continue;
 			}
-			if (other.getCollitionShape().isCollidingWith(other.getCollitionShape())) {
-				// TODO: calcular la fuerza de repulsion
-			}
+			externalForces.add(collisitionModel.getForce(subject.getCollitionShape(), other.getCollitionShape()));
 		}
 		return externalForces;
 	}

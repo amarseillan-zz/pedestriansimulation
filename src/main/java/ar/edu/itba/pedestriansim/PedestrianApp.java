@@ -8,12 +8,11 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Shape;
 
-import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSim;
 import ar.edu.itba.pedestriansim.back.parser.PedestrianFileParser;
-import ar.edu.itba.pedestriansim.gui.ObstacleRenderer;
+import ar.edu.itba.pedestriansim.gui.Camera;
+import ar.edu.itba.pedestriansim.gui.CameraHandler;
 import ar.edu.itba.pedestriansim.gui.PedestrianRenderer;
 
 public class PedestrianApp extends BasicGame {
@@ -26,13 +25,13 @@ public class PedestrianApp extends BasicGame {
             e.printStackTrace();
         }
 	}
-
+	private static final int MAX_DELTA = 15;
 //	private static final float UPDATE_INTERVAL = 0.01f;
 //	private long elapsedTimeMillis = 0;
 
 	private PedestrianSim simulation;
-	private PedestrianRenderer pedestrianRenderer = new PedestrianRenderer();
-	private ObstacleRenderer obstacleRenderer = new ObstacleRenderer();
+	private Camera _camera;
+	private PedestrianRenderer _pedestrianRenderer;
 
 	public PedestrianApp(String title) {
 		super(title);
@@ -40,7 +39,10 @@ public class PedestrianApp extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		_camera = new Camera();
+		_pedestrianRenderer = new PedestrianRenderer(_camera);
 		simulation = new PedestrianSim();
+		gc.getInput().addKeyListener(new CameraHandler(_camera));
 		try {
 			new PedestrianFileParser()
 				.laod(simulation, new File("./src/main/resources/pedestrian.properties"));
@@ -50,15 +52,12 @@ public class PedestrianApp extends BasicGame {
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		PedestrianArea scene = simulation.getScene();
-		for (Shape shape : scene.getObstacles()) {
-			obstacleRenderer.render(g, shape);
-		}
-		pedestrianRenderer.render(gc, g, scene.getPedestrians());
+		_pedestrianRenderer.render(gc, g, simulation.getScene().getPedestrians());
 	}
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
+		delta = Math.min(delta, MAX_DELTA); // Cap max update interval!
 //		elapsedTimeMillis += delta;
 //		if ((UPDATE_INTERVAL_SECONDS * 1000) < elapsedTimeMillis) {
 			simulation.update(gc, delta / 1000.0f);

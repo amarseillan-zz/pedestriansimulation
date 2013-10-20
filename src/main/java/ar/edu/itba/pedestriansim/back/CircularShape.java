@@ -2,6 +2,7 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 
 public class CircularShape {
 
@@ -21,5 +22,13 @@ public class CircularShape {
 	
 	private void recenterShape() {
 		_shape.setLocation(_owner.getBody().getLocation());		
+	}
+	
+	public float getRadius() {
+		return _shape.getBoundingCircleRadius();
+	}
+
+	public Vector2f getCenter() {
+		return new Vector2f(_shape.getCenter());
 	}
 }
