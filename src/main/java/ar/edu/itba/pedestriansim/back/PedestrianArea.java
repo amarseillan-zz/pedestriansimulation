@@ -8,15 +8,20 @@ import org.newdawn.slick.geom.Shape;
 
 public class PedestrianArea {
 
-	private List<Pedestrian> _pedestrians = new ArrayList<Pedestrian>();
-	private List<Shape> _obstacles = new ArrayList<Shape>();
-	
+	private final List<Pedestrian> _pedestrians = new ArrayList<>();
+	private final List<Shape> _obstacles = new ArrayList<>();
+	private final List<PedestrianSource> _sources = new ArrayList<>();
+
 	public void addPedestrian(Pedestrian pedestrian) {
 		_pedestrians.add(pedestrian);
 	}
 
 	public void addObstacle(Shape obstacte) {
 		_obstacles.add(obstacte);
+	}
+
+	public void addSource(PedestrianSource source) {
+		_sources.add(source);
 	}
 
 	public Collection<Shape> getObstacles() {
@@ -27,4 +32,11 @@ public class PedestrianArea {
 		return _pedestrians;
 	}
 
+	public Collection<PedestrianSource> getSources() {
+		return _sources;
+	}
+	
+	public void removePedestrians(Collection<Pedestrian> pedestrians) {
+		_pedestrians.removeAll(pedestrians);
+	}
 }

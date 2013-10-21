@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.back.PedestrianMovementStrategy;
 import ar.edu.itba.pedestriansim.back.PedestrianSim;
 
 public class PedestrianFileParser {
@@ -19,10 +20,10 @@ public class PedestrianFileParser {
 			for (Entry<Object, Object> entry : propertyFile.entrySet()) {
 				String id = entry.getKey().toString();
 				String[] parts = entry.getValue().toString().split(",");
-				float mass = Float.parseFloat(parts[0].trim());
+//				float mass = Float.parseFloat(parts[0].trim());
 				Vector2f location = new Vector2f(ParserUtil.parseArray(parts[2].trim()));
 				Vector2f target = new Vector2f(ParserUtil.parseArray(parts[3].trim()));
-				Pedestrian pedestrian = new Pedestrian(id, mass, location, target);
+				Pedestrian pedestrian = new Pedestrian(id, location, new PedestrianMovementStrategy(target));
 				pedestrian.setMaxVelocity(Float.parseFloat(parts[1].trim()));
 				pedestrianSim.getScene().addPedestrian(pedestrian);
 			}

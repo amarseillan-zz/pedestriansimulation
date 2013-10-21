@@ -2,7 +2,7 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class EulerForce {
+public class EulerMethod {
 
 	public Vector2f acceleration(RigidBody body, Vector2f force) {
 		return force.copy().scale(1 / body.getMass());

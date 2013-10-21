@@ -6,21 +6,29 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.pedestriansim.back.rand.GaussianRandomGenerator;
+import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
+import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
+
 public class Pedestrian {
 
+	private static final float TARGET_MIN_DISTANCE = (float) Math.sqrt(0.5);
+	private static final RandomGenerator _massGenerator = new GaussianRandomGenerator(70, 5);
+	private static final RandomGenerator _velocityGenerator = new GaussianRandomGenerator(3, 0.5f);
+	private static final RandomGenerator _radiusGenerator = new UniformRandomGenerator(0.25f, 0.75f);
+
 	private Serializable _id;
-	private Vector2f _target;
+	private PedestrianMovementStrategy _strategy;
 	private Vector2f _appliedForce;
 	private RigidBody _body;
-	private CircularShape collitionShape;
 	private float _maxVelocity;
 
-	public Pedestrian(Serializable id, float mass, Vector2f location, Vector2f target) {
-		_body = new RigidBody(mass, location);
-		_target = target;
-		collitionShape = new CircularShape(this);
-		_appliedForce = new Vector2f();
+	public Pedestrian(Serializable id, Vector2f location, PedestrianMovementStrategy strategy) {
 		_id = id;
+		_strategy = strategy;
+		_appliedForce = new Vector2f();
+		_body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
+		setMaxVelocity(_velocityGenerator.generate());
 	}
 
 	public Serializable getId() {
@@ -28,9 +36,9 @@ public class Pedestrian {
 	}
 
 	public Vector2f getTarget() {
-		return _target;
+		return _strategy.currentTarget();
 	}
-	
+
 	public void applyForce(Vector2f force) {
 		_appliedForce.set(force);
 	}
@@ -48,18 +56,24 @@ public class Pedestrian {
 			return 0;
 		} else {
 			float velocity = getBody().getVelocity().length();
-			return Math.abs(velocity) < 0.01 ? Float.NaN  : getBody().getLocation().distance(getTarget()) / velocity;
+			return Math.abs(velocity) < 0.01 ? Float.NaN  : getBody().getCenter().distance(getTarget()) / velocity;
 		}
 	}
 
 	public boolean onTarget() {
-		return getBody().getLocation().distanceSquared(getTarget()) < 1;
+		Vector2f target = getTarget();
+		if (target == null) {
+			return true;
+		}
+		if (getBody().getCenter().distanceSquared(target) < TARGET_MIN_DISTANCE) {
+			if (!_strategy.hasNextTarget()) {
+				return true;
+			}
+			_strategy.nextTarget();
+		}
+		return false;
 	}
 
-	public CircularShape getCollitionShape() {
-		return collitionShape;
-	}
-	
 	public RigidBody getBody() {
 		return _body;
 	}
@@ -76,7 +90,7 @@ public class Pedestrian {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.append("id", getId())
-			.append("location", getBody().getLocation())
+			.append("location", getBody().getCenter())
 			.append("target", getBody().getVelocity())
 			.build();
 	}

@@ -4,14 +4,16 @@ import org.newdawn.slick.geom.Vector2f;
 
 public class RigidBody {
 
-	private Vector2f _location;
+	private Vector2f _center;
 	private float _mass;
 	private Vector2f _velocity;
+	private CircularShape _collitionShape;
 
-	public RigidBody(float mass, Vector2f location) {
+	public RigidBody(float mass, Vector2f location, float radius) {
 		_mass = mass;
-		_location = location;
+		_center = location;
 		_velocity = new Vector2f();
+		_collitionShape = new CircularShape(this, radius);
 	}
 
 	public float getMass() {
@@ -30,16 +32,24 @@ public class RigidBody {
 		this._velocity = velocity;
 	}
 
-	public Vector2f getLocation() {
-		return _location;
+	public Vector2f getCenter() {
+		return _center;
 	}
 
-	public void setLocation(Vector2f location) {
-		this._location = location;
+	public float getRadius() {
+		return _collitionShape.getRadius();
 	}
 	
+	public void setLocation(Vector2f location) {
+		this._center = location;
+	}
+
+	public CircularShape getCollitionShape() {
+		return _collitionShape;
+	}
+
 	public void apply(Vector2f deltaVelocity, Vector2f deltaPosition) {
 		getVelocity().add(deltaVelocity);
-		getLocation().add(deltaPosition);
+		getCenter().add(deltaPosition);
 	}
 }

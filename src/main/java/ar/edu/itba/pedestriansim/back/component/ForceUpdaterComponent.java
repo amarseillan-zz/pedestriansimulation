@@ -1,6 +1,5 @@
 package ar.edu.itba.pedestriansim.back.component;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.HelbingForceModel;
@@ -12,15 +11,15 @@ import ar.edu.itba.pedestriansim.back.Updateable;
 
 public class ForceUpdaterComponent implements Updateable {
 
+	private final PedestrianArea scene;
 	private final HelbingForceModel forceModel = new HelbingForceModel();
 	private final SpringForceModel collisitionModel = new SpringForceModel();
-	private PedestrianArea scene;
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
 		this.scene = scene;
 	}
 
-	public void update(GameContainer gc, float elapsedTimeInSeconds) {
+	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian subject : scene.getPedestrians()) {
 			if (subject.onTarget()) {
 				subject.stop();
@@ -44,8 +43,11 @@ public class ForceUpdaterComponent implements Updateable {
 			if (other == subject) {
 				continue;
 			}
-			externalForces.add(collisitionModel.getForce(subject.getCollitionShape(), other.getCollitionShape()));
+			externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 		}
+//		for (Shape shape) {
+//			
+//		}
 		return externalForces;
 	}
 }
