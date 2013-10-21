@@ -23,8 +23,8 @@ public class PedestrianSim implements Updateable {
 
 	public void update(float elapsedTimeInSeconds) {
 		dispatcher.update(elapsedTimeInSeconds);
-		for (Updateable updatable : _components) {
-			updatable.update(elapsedTimeInSeconds);
+		for (Updateable component : _components) {
+			component.update(elapsedTimeInSeconds);
 		}
 	}
 

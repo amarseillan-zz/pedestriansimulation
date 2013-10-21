@@ -23,12 +23,12 @@ public class ForceUpdaterComponent implements Updateable {
 		for (Pedestrian subject : scene.getPedestrians()) {
 			if (subject.onTarget()) {
 				subject.stop();
-				continue;
+			} else {
+				Vector2f forces = new Vector2f();
+				forces.add(getDesireForce(subject));
+				forces.add(getExternalForces(subject));
+				subject.applyForce(forces);
 			}
-			Vector2f forces = new Vector2f();
-			forces.add(getDesireForce(subject));
-			forces.add(getExternalForces(subject));
-			subject.applyForce(forces);
 		}
 	}
 
@@ -40,10 +40,9 @@ public class ForceUpdaterComponent implements Updateable {
 	private Vector2f getExternalForces(Pedestrian subject) {
 		Vector2f externalForces = new Vector2f();
 		for (Pedestrian other : scene.getPedestrians()) {
-			if (other == subject) {
-				continue;
+			if (other != subject) {
+				externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 			}
-			externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 		}
 //		for (Shape shape) {
 //			

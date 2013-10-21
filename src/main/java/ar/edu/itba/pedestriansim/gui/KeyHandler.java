@@ -35,7 +35,7 @@ public class KeyHandler implements KeyListener {
 		handlers.add(new KeyMapping(Input.KEY_A, new ScrollLeft()));
 		handlers.add(new KeyMapping(Input.KEY_D, new ScrollRight()));
 		
-		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderStats()));		
+		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderStats()));
 	}
 
 	@Override

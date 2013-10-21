@@ -12,7 +12,7 @@ import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class Pedestrian {
 
-	private static final float TARGET_MIN_DISTANCE = (float) Math.sqrt(0.5);
+	private static final float TARGET_MIN_DISTANCE_SQ = 1.0f * 1.0f;
 	private static final RandomGenerator _massGenerator = new GaussianRandomGenerator(70, 5);
 	private static final RandomGenerator _velocityGenerator = new GaussianRandomGenerator(3, 0.5f);
 	private static final RandomGenerator _radiusGenerator = new UniformRandomGenerator(0.25f, 0.75f);
@@ -65,7 +65,7 @@ public class Pedestrian {
 		if (target == null) {
 			return true;
 		}
-		if (getBody().getCenter().distanceSquared(target) < TARGET_MIN_DISTANCE) {
+		if (getBody().getCenter().distanceSquared(target) < TARGET_MIN_DISTANCE_SQ) {
 			if (!_strategy.hasNextTarget()) {
 				return true;
 			}
@@ -85,7 +85,7 @@ public class Pedestrian {
 	public void setMaxVelocity(float maxVelocity) {
 		_maxVelocity = maxVelocity;
 	}
-	
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

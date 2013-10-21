@@ -19,6 +19,7 @@ public class PedestrianApp extends BasicGame {
 	public static void main(String[] args) {
         try {
             AppGameContainer app = new AppGameContainer(new PedestrianApp("Pedestrian simulation"));
+            app.setDisplayMode(1200, 700, false);
             app.start();
         } catch (SlickException e) {
             e.printStackTrace();
@@ -38,6 +39,7 @@ public class PedestrianApp extends BasicGame {
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		gc.setAlwaysRender(true);
 		_camera = new Camera();
 		_simulation = new PedestrianSim();
 		_renderer = new PedestrianAreaRenderer(_camera);
