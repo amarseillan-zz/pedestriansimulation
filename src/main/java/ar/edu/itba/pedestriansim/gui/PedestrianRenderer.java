@@ -26,17 +26,18 @@ public class PedestrianRenderer extends ShapeRenderer {
 
 	public void render(GameContainer gc, Graphics g, Collection<Pedestrian> pedestrians) {
 		for (Pedestrian pedestrian : pedestrians) {
-			drawPath(g, pedestrian);
-			drawShape(g, pedestrian);
 			if (_pedestrianArearenderer.isRenderStats()) {
+				drawPath(g, pedestrian);
 				drawStats(g, pedestrian);
 			}
+			drawShape(g, pedestrian);
 		}
 		if (_pedestrianArearenderer.isRenderStats()) {
 			String mousePositionStr = String.format("(%d, %d)", gc.getInput().getMouseX(), gc.getInput().getMouseY());
-			
 			g.drawString(mousePositionStr, gc.getInput().getMouseX(), gc.getInput().getMouseY());
 		}
+		g.setColor(Color.cyan);
+		g.drawString("Pedestrians: " + pedestrians.size(), 0, gc.getHeight() - 20);
 	}
 
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
