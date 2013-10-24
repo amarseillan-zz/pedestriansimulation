@@ -13,7 +13,7 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 
 	private boolean renderStats;
 	private PedestrianRenderer _pedestrianRenderer;
-	private final Shape _sourceShape = new Circle(0, 0, 5);
+	private final Circle _sourceShape = new Circle(0, 0, 5);
 
 	public PedestrianAreaRenderer(Camera camera) {
 		super(camera);
@@ -23,6 +23,7 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 	public void render(GameContainer gc, Graphics g, PedestrianArea pedestrianArea) {
 		g.setColor(Color.pink);
 		for (PedestrianSource source : pedestrianArea.getSources()) {
+			_sourceShape.setRadius(source.getRadius());
 			_sourceShape.setCenterX(source.getLocation().x);
 			_sourceShape.setCenterY(source.getLocation().y);
 			fill(g, _sourceShape);

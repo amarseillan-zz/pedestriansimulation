@@ -19,6 +19,7 @@ public class PedestrianApp extends BasicGame {
 	public static void main(String[] args) {
         try {
             AppGameContainer app = new AppGameContainer(new PedestrianApp("Pedestrian simulation"));
+            app.setUpdateOnlyWhenVisible(false);
             app.setDisplayMode(1200, 700, false);
             app.start();
         } catch (SlickException e) {
@@ -26,12 +27,11 @@ public class PedestrianApp extends BasicGame {
         }
 	}
 
-	private static final int MAX_DELTA = 15;
+	private static final float TIME_STEP = 1 / 100f;
 
 	private Camera _camera;
 	private PedestrianAreaRenderer _renderer;
 	private PedestrianSim _simulation;
-	private KeyHandler _cameraHandler;
 	
 	public PedestrianApp(String title) {
 		super(title);
@@ -40,13 +40,12 @@ public class PedestrianApp extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		gc.setAlwaysRender(true);
+		gc.setTargetFrameRate(60);
 		_camera = new Camera();
 		_simulation = new PedestrianSim();
 		_renderer = new PedestrianAreaRenderer(_camera);
-		_cameraHandler = new KeyHandler(_camera, _renderer);
-		_cameraHandler.initialize(gc);
-		gc.getInput().addKeyListener(_cameraHandler);
-		new AreaFileParser().load(_simulation, new File("./src/main/resources/room1.desc"));
+		gc.getInput().addKeyListener(new KeyHandler(gc, _camera, _renderer));
+		new AreaFileParser().load(_simulation, new File("./src/main/resources/room1.desc"), _camera);
 //		new PedestrianFileParser().load(_simulation, new File("./src/main/resources/pedestrian.properties"));
 	}
 
@@ -56,9 +55,7 @@ public class PedestrianApp extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
-		delta = Math.min(delta, MAX_DELTA); // Cap max update interval!
-		float elapsedTimeInSeconds = delta / 1000.0f;
 		_camera.update(gc);
-		_simulation.update(elapsedTimeInSeconds);
+		_simulation.update(TIME_STEP);
 	}
 }

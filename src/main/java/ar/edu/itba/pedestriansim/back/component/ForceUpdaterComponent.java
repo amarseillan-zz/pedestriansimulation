@@ -13,7 +13,7 @@ public class ForceUpdaterComponent implements Updateable {
 
 	private final PedestrianArea scene;
 	private final HelbingForceModel forceModel = new HelbingForceModel();
-	private final SpringForceModel collisitionModel = new SpringForceModel();
+	private final SpringForceModel collisitionModel = new SpringForceModel(5000);
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
 		this.scene = scene;
@@ -44,8 +44,12 @@ public class ForceUpdaterComponent implements Updateable {
 				externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 			}
 		}
-//		for (Shape shape) {
-//			
+//		for (Shape shape : scene.getObstacles()) {
+//			if (shape instanceof Rectangle) {
+//				collisitionModel.getForce(subject.getBody().getCollitionShape(), (Rectangle) shape);
+//			} else {
+//				throw new IllegalStateException("Colition not supported yet!");
+//			}
 //		}
 		return externalForces;
 	}

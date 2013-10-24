@@ -16,27 +16,39 @@ public class Camera {
 	}
 	
 	public void zoomOut() {
-		transform.concatenate(Transform.createScaleTransform(0.95f, 0.95f));
+		setZoom(0.95f);
 	}
 
 	public void zoomIn() {
-		transform.concatenate(Transform.createScaleTransform(1.05f, 1.05f));
+		setZoom(1.05f);
 	}
-
+	
+	public void setZoom(float zoom) {
+		transform.concatenate(Transform.createScaleTransform(zoom, zoom));
+	}
+	
 	public void scrollLeft() {
-		transform.concatenate(Transform.createTranslateTransform(getHorizontalScroll(), 0));
+		scrollX(getHorizontalScroll());
 	}
 
 	public void scrollRight() {
-		transform.concatenate(Transform.createTranslateTransform(-getHorizontalScroll(), 0));
+		scrollX(-getHorizontalScroll());
 	}
 
+	public void scrollX(float amount) {
+		transform.concatenate(Transform.createTranslateTransform(amount, 0));
+	}
+	
 	public void scrollUp() {
-		transform.concatenate(Transform.createTranslateTransform(0, getVerticalScroll()));
+		scrollY(getVerticalScroll());
 	}
 
 	public void scrollDown() {
-		transform.concatenate(Transform.createTranslateTransform(0, -getVerticalScroll()));
+		scrollY(-getVerticalScroll());
+	}
+
+	public void scrollY(float amount) {
+		transform.concatenate(Transform.createTranslateTransform(0, amount));
 	}
 
 	private float getVerticalScroll() {

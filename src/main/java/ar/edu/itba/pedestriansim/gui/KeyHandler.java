@@ -14,12 +14,13 @@ public class KeyHandler implements KeyListener {
 
 	private final List<KeyMapping> handlers = new LinkedList<>();
 	
-	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer) {
+	public KeyHandler(GameContainer gc, Camera camera, PedestrianAreaRenderer renderer) {
 		_camera = camera;
 		_renderer = renderer;
+		initialize(gc);
 	}
 	
-	public void initialize(GameContainer gc) {
+	private void initialize(GameContainer gc) {
 		handlers.add(new KeyMapping(13, new ZoomIn()));
 		handlers.add(new KeyMapping(Input.KEY_ADD, new ZoomIn()));
 		handlers.add(new KeyMapping(Input.KEY_MINUS, new ZoomOut()));

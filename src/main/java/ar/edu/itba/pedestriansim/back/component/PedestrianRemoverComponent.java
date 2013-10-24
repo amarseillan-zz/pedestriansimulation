@@ -33,7 +33,7 @@ public class PedestrianRemoverComponent implements Updateable, EventListener {
 			}
 		}
 		if (!toRemove.isEmpty()) {
-			dispatcher.dispatch(new RemovePedestrianEvent(this, toRemove), 10);
+			dispatcher.dispatch(new RemovePedestrianEvent(this, toRemove), 1);
 		}
 	}
 	

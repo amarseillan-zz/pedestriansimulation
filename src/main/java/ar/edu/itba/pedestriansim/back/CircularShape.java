@@ -13,13 +13,6 @@ public class CircularShape {
 		_shape = new Circle(0, 0, radius);
 	}
 
-	public boolean isCollidingWith(CircularShape other) {
-		recenterShape();
-		other.recenterShape();
-		return _shape.intersects(other._shape) || _shape.contains(other._shape)
-			|| other._shape.contains(_shape);
-	}
-
 	private void recenterShape() {
 		_shape.setCenterX(_body.getCenter().x);
 		_shape.setCenterY(_body.getCenter().y);
@@ -35,6 +28,7 @@ public class CircularShape {
 	}
 
 	public Circle getShape() {
+		recenterShape();
 		return _shape;
 	}
 }

@@ -56,6 +56,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 		pedestrianShape.setCenterX(location.x);
 		pedestrianShape.setCenterY(location.y);
 		fill(g, pedestrianShape, Color.green);
+		draw(g, pedestrianShape, Color.white);
 	}
 
 	private void drawStats(Graphics g, Pedestrian pedestrian) {

@@ -13,19 +13,22 @@ public class PedestrianSource implements EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
 
-	private static final RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(5, 2);
-	private static final RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(3, 6);
-	private static final RandomGenerator _initialLocationGenerator =  new UniformRandomGenerator(-3, 3);
+	private final RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(3, 2);
+	private final RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
+	private final RandomGenerator _initialLocationGenerator;
 
+	private int _radius;
 	private PedestrianArea _pedestrianArea;
 	private int lastPedestrianId = 0;
 	private Vector2f _location;
 	private PedestrianMovementStrategy _strategy;
 
 	public PedestrianSource(Vector2f location, PedestrianMovementStrategy strategy, PedestrianArea pedestrianArea) {
+		_radius = 3;
 		_location = location;
 		_pedestrianArea = pedestrianArea;
 		_strategy = strategy;
+		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		schedule();
 	}
 
@@ -54,6 +57,10 @@ public class PedestrianSource implements EventListener {
 			Pedestrian pedestrian = new Pedestrian(lastPedestrianId++, new Vector2f(x, y), _strategy.copy());
 			_pedestrianArea.addPedestrian(pedestrian);
 		}
+	}
+	
+	public int getRadius() {
+		return _radius;
 	}
 
 	private static final class ProducePedestrianEvent extends Event {
