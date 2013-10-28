@@ -39,4 +39,15 @@ public class PedestrianArea {
 	public void removePedestrians(Collection<Pedestrian> pedestrians) {
 		_pedestrians.removeAll(pedestrians);
 	}
+	
+	public boolean collides(Shape shape) {
+		for (Pedestrian pedestrian : _pedestrians) {
+			Shape pedestrianShape = pedestrian.getBody().getCollitionShape().getShape();
+			if (Collitions.colliding(pedestrianShape, shape)) {
+				return false;
+			}
+		}
+		// XXX: marse, acordate que me dijsite que no iban a chocar contra las paredes...
+		return true;
+	}
 }

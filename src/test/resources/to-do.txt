@@ -1,6 +1,4 @@
 Cosas para hacer para la próxima:
-	En el cuarto, hacer la puerta de 1.20m y en target de 1m dejando 10cm de cada lado.
-	Arreglar el generador (que no se choquen cuando spawnean los tipos, podríamos dividirlo en una grilla para facilitar esto)
 	Hacer el target que sea una linea en vez de un punto, si tocan esa linea desaparecen/cambian target.
 Si llegamos a hacer esto, empezar a implementar la zanahoria.
 	Definir un nombre
