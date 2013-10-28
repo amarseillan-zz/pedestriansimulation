@@ -6,25 +6,26 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.rand.GaussianRandomGenerator;
 import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
 import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class Pedestrian {
 
 	private static final float TARGET_MIN_DISTANCE_SQ = 1.0f * 1.0f;
-	private static final RandomGenerator _massGenerator = new GaussianRandomGenerator(70, 5);
-	private static final RandomGenerator _velocityGenerator = new GaussianRandomGenerator(3, 0.5f);
-	private static final RandomGenerator _radiusGenerator = new UniformRandomGenerator(0.25f, 0.75f);
+	private static final RandomGenerator _massGenerator = new UniformRandomGenerator(50, 80);
+	private static final RandomGenerator _velocityGenerator = new UniformRandomGenerator(1f, 1.6f);
+	private static final RandomGenerator _radiusGenerator = new UniformRandomGenerator(0.25f, 0.29f);
 
 	private Serializable _id;
+	private int _team;
 	private PedestrianMovementStrategy _strategy;
 	private Vector2f _appliedForce;
 	private RigidBody _body;
 	private float _maxVelocity;
 
-	public Pedestrian(Serializable id, Vector2f location, PedestrianMovementStrategy strategy) {
+	public Pedestrian(Serializable id, Vector2f location, PedestrianMovementStrategy strategy, int team) {
 		_id = id;
+		_team = team;
 		_strategy = strategy;
 		_appliedForce = new Vector2f();
 		_body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
@@ -33,6 +34,10 @@ public class Pedestrian {
 
 	public Serializable getId() {
 		return _id;
+	}
+
+	public int getTeam() {
+		return _team;
 	}
 
 	public Vector2f getTarget() {

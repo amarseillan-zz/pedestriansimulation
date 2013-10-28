@@ -1,9 +1,10 @@
-rectangle 100 100 1 20
-rectangle 100 100 20 1
-rectangle 120 100 1 20
-rectangle 100 120 8 1
-rectangle 113 120 8 1
+line 97 120 109.8 120
+line 111 120 123 120
+line 97 105 123 105
+line 97 105 97 120
+line 123 105 123 120
+
 source 105 110 110 120 110 150
 source 116 110 110 120 110 150
 zoom 18
-location -80 -97
+location -80 -90

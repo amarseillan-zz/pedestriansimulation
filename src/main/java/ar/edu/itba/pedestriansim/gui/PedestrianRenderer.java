@@ -13,6 +13,8 @@ import ar.edu.itba.pedestriansim.back.Pedestrian;
 
 public class PedestrianRenderer extends ShapeRenderer {
 
+	private final Color[] TEAM_COLORS = {Color.green, Color.red, Color.blue};
+	
 	private PedestrianAreaRenderer _pedestrianArearenderer;
 	private final Line velocity = new Line(0, 0);
 	private final Line externalForce = new Line(0, 0);
@@ -55,7 +57,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 		pedestrianShape.setRadius(pedestrian.getBody().getRadius());
 		pedestrianShape.setCenterX(location.x);
 		pedestrianShape.setCenterY(location.y);
-		fill(g, pedestrianShape, Color.green);
+		fill(g, pedestrianShape, TEAM_COLORS[pedestrian.getTeam()]);
 		draw(g, pedestrianShape, Color.white);
 	}
 

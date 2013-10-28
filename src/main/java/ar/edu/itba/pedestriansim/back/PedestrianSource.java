@@ -22,12 +22,14 @@ public class PedestrianSource implements EventListener {
 	private int lastPedestrianId = 0;
 	private Vector2f _location;
 	private PedestrianMovementStrategy _strategy;
+	private int _team;
 
-	public PedestrianSource(Vector2f location, PedestrianMovementStrategy strategy, PedestrianArea pedestrianArea) {
+	public PedestrianSource(Vector2f location, PedestrianMovementStrategy strategy, PedestrianArea pedestrianArea, int team) {
 		_radius = 3;
 		_location = location;
 		_pedestrianArea = pedestrianArea;
 		_strategy = strategy;
+		_team = team;
 		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		schedule();
 	}
@@ -54,7 +56,7 @@ public class PedestrianSource implements EventListener {
 		for (int i = 0; i < amount; i++) {
 			float x = _location.x + _initialLocationGenerator.generate();
 			float y = _location.y + _initialLocationGenerator.generate();
-			Pedestrian pedestrian = new Pedestrian(lastPedestrianId++, new Vector2f(x, y), _strategy.copy());
+			Pedestrian pedestrian = new Pedestrian(lastPedestrianId++, new Vector2f(x, y), _strategy.copy(), _team);
 			_pedestrianArea.addPedestrian(pedestrian);
 		}
 	}

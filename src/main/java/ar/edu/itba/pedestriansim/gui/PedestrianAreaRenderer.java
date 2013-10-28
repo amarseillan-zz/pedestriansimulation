@@ -31,7 +31,7 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 		_pedestrianRenderer.render(gc, g, pedestrianArea.getPedestrians());
 		g.setColor(Color.white);
 		for (Shape obstacle : pedestrianArea.getObstacles()) {
-			fill(g, obstacle);
+			draw(g, obstacle);
 		}
 	}
 	

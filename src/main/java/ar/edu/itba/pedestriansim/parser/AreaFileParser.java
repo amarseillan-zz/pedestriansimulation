@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -16,6 +17,7 @@ public class AreaFileParser {
 
 	public void load(PedestrianSim simulation, File sourceFile, Camera _camera) {
 		try {
+			int lastTeam = 0;
 			Scanner scanner = new Scanner(sourceFile);
 			while (scanner.hasNextLine()) {
 				String[] values = scanner.nextLine().split(" ");
@@ -36,7 +38,7 @@ public class AreaFileParser {
 						if (values.length > 5) {
 							strategy.append(new Vector2f(Float.parseFloat(values[5]), Float.parseFloat(values[6])));
 						}
-						PedestrianSource source = new PedestrianSource(new Vector2f(x, y), strategy, simulation.getScene());
+						PedestrianSource source = new PedestrianSource(new Vector2f(x, y), strategy, simulation.getScene(), lastTeam++);
 						simulation.getScene().addSource(source);
 						break;
 					case "zoom":
@@ -45,6 +47,13 @@ public class AreaFileParser {
 					case "location":
 						_camera.scrollX(Float.parseFloat(values[1]));
 						_camera.scrollY(Float.parseFloat(values[2]));
+						break;
+					case "line":
+						float x1 = Float.parseFloat(values[1]);
+						float y1 = Float.parseFloat(values[2]);
+						float x2 = Float.parseFloat(values[3]);
+						float y2 = Float.parseFloat(values[4]);
+						simulation.getScene().addObstacle(new Line(x1, y1, x2, y2));
 					default:
 						break;
 				}

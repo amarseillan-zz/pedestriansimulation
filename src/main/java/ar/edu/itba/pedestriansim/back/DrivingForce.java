@@ -2,7 +2,7 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class HelbingForceModel {
+public class DrivingForce {
 
 	private static final float TAU = 0.5f;
 

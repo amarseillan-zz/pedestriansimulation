@@ -1,8 +1,9 @@
 package ar.edu.itba.pedestriansim.back.component;
 
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.HelbingForceModel;
+import ar.edu.itba.pedestriansim.back.DrivingForce;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.RigidBody;
@@ -12,8 +13,8 @@ import ar.edu.itba.pedestriansim.back.Updateable;
 public class ForceUpdaterComponent implements Updateable {
 
 	private final PedestrianArea scene;
-	private final HelbingForceModel forceModel = new HelbingForceModel();
-	private final SpringForceModel collisitionModel = new SpringForceModel(5000);
+	private final DrivingForce forceModel = new DrivingForce();
+	private final SpringForceModel collisitionModel = new SpringForceModel(10000);
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
 		this.scene = scene;
@@ -44,13 +45,10 @@ public class ForceUpdaterComponent implements Updateable {
 				externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 			}
 		}
-//		for (Shape shape : scene.getObstacles()) {
-//			if (shape instanceof Rectangle) {
-//				collisitionModel.getForce(subject.getBody().getCollitionShape(), (Rectangle) shape);
-//			} else {
-//				throw new IllegalStateException("Colition not supported yet!");
-//			}
-//		}
+		for (Shape shape : scene.getObstacles()) {
+			Vector2f force = collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
+			externalForces.add(force);
+		}
 		return externalForces;
 	}
 }

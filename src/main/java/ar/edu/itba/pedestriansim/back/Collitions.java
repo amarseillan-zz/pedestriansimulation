@@ -14,20 +14,24 @@ public class Collitions {
 	private static final Line rectangleEdge = new Line(0, 0);
 	private static final Line radialLine = new Line(0, 0);
 
-	public static float overlapping(Circle circle, Rectangle rectangle, Vector2f directorCache) {
+	public static float overlapping(Circle circle, Rectangle rectangle) {
 		for (int i = 0; i < 4; i++) {
 			rectangleEdge.set(rectangle.getPoint(i), rectangle.getPoint((i + 1) % 4));
 			if (rectangleEdge.intersects(circle)) {
-				Vector2f end = new Vector2f(circle.getCenter()).add(
-					new Vector2f(rectangleEdge.getNormal(0)).scale(circle.getRadius()));
-				radialLine.set(circle.getCenter(), new float[] {end.x, end.y});
-				directorCache.set(radialLine.getEnd());
-				directorCache.sub(radialLine.getStart());
-				Vector2f intersection = radialLine.intersect(rectangleEdge);
-				return circle.getRadius() - new Vector2f(circle.getCenter()).distance(intersection);
+				return overlapping(circle, rectangleEdge);
 			}
 		}
 		throw new IllegalStateException("Not overlapping");
+	}
+	
+	public static float overlapping(Circle circle, Line line) {
+		if (circle.intersects(line)) {
+			Vector2f end = new Vector2f(circle.getCenter()).add(new Vector2f(line.getNormal(0)));
+			radialLine.set(circle.getCenter(), new float[] {end.x, end.y});
+			Vector2f intersection = radialLine.intersect(line);
+			return circle.getRadius() - intersection.distance(new Vector2f(circle.getCenter()));
+		}
+		return 0;
 	}
 	
 	public static float overlapping(Circle circle1, Circle circle2) {
