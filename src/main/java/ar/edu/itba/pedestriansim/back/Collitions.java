@@ -45,7 +45,7 @@ public class Collitions {
 		return overlapping;
 	}
 	
-	public static boolean colliding(Shape shape1, Shape shape2) {
+	public static boolean touching(Shape shape1, Shape shape2) {
 		return shape1.intersects(shape2) || shape1.contains(shape2) || shape2.contains(shape1);
 	}
 }

@@ -17,7 +17,7 @@ public class SpringForceModel {
 	}
 
 	public Vector2f getForce(CircularShape shape1, CircularShape shape2) {
-		if (Collitions.colliding(shape1.getShape(), shape2.getShape())) {
+		if (Collitions.touching(shape1.getShape(), shape2.getShape())) {
 			float overlapping = Collitions.overlapping(shape1.getShape(), shape2.getShape());
 			Vector2f director = shape1.getCenter().sub(shape2.getCenter()).normalise();
 			return director.scale(_K * overlapping);

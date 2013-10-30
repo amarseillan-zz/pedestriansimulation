@@ -12,6 +12,7 @@ import ar.edu.itba.pedestriansim.back.Updateable;
 
 public class ForceUpdaterComponent implements Updateable {
 
+	private final static Vector2f nullForce = new Vector2f();
 	private final PedestrianArea scene;
 	private final DrivingForce forceModel = new DrivingForce();
 	private final SpringForceModel collisitionModel = new SpringForceModel(10000);
@@ -22,20 +23,19 @@ public class ForceUpdaterComponent implements Updateable {
 
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian subject : scene.getPedestrians()) {
-			if (subject.onTarget()) {
-				subject.stop();
-			} else {
-				Vector2f forces = new Vector2f();
-				forces.add(getDesireForce(subject));
-				forces.add(getExternalForces(subject));
-				subject.applyForce(forces);
-			}
+			Vector2f forces = new Vector2f();
+			forces.add(getDesireForce(subject));
+			forces.add(getExternalForces(subject));
+			subject.applyForce(forces);
 		}
 	}
 
 	private Vector2f getDesireForce(Pedestrian subject) {
-		RigidBody body = subject.getBody();
-		return forceModel.getForce(body, subject.getTarget(), subject.getMaxVelocity());
+		if (subject.getTarget() != null) {
+			RigidBody body = subject.getBody();
+			return forceModel.getForce(body, subject.getTarget().getCenter(), subject.getMaxVelocity());
+		}
+		return nullForce;
 	}
 
 	private Vector2f getExternalForces(Pedestrian subject) {

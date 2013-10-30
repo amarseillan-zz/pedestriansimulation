@@ -43,7 +43,7 @@ public class PedestrianArea {
 	public boolean collides(Shape shape) {
 		for (Pedestrian pedestrian : _pedestrians) {
 			Shape pedestrianShape = pedestrian.getBody().getCollitionShape().getShape();
-			if (Collitions.colliding(pedestrianShape, shape)) {
+			if (Collitions.touching(pedestrianShape, shape)) {
 				return false;
 			}
 		}

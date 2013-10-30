@@ -17,18 +17,19 @@ public class PedestrianSource implements EventListener {
 	private final RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
 	private final RandomGenerator _initialLocationGenerator;
 
-	private int _radius;
+	private static final PedestrianFactory pedestrianFactory = PedestrianFactory.instance();
+
+	private float _radius;
 	private PedestrianArea _pedestrianArea;
-	private int lastPedestrianId = 0;
 	private Vector2f _location;
-	private PedestrianMovementStrategy _strategy;
+	private PedestrianTargetList _targetList;
 	private int _team;
 
-	public PedestrianSource(Vector2f location, PedestrianMovementStrategy strategy, PedestrianArea pedestrianArea, int team) {
-		_radius = 3;
+	public PedestrianSource(Vector2f location, float radius, PedestrianTargetList targetList, PedestrianArea pedestrianArea, int team) {
+		_radius = radius;
 		_location = location;
 		_pedestrianArea = pedestrianArea;
-		_strategy = strategy;
+		_targetList = targetList;
 		_team = team;
 		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		schedule();
@@ -54,7 +55,7 @@ public class PedestrianSource implements EventListener {
 	public void produce() {
 		int amount = (int) _pedestrianAmountGenerator.generate();
 		for (int i = 0; i < amount; i++) {
-			Pedestrian pedestrian = new Pedestrian(lastPedestrianId++, new Vector2f(), _strategy.copy(), _team);
+			Pedestrian pedestrian = pedestrianFactory.build(new Vector2f(), _team, _targetList);
 			boolean isEmpty;
 			do {
 				float x = _location.x + _initialLocationGenerator.generate();
@@ -66,7 +67,7 @@ public class PedestrianSource implements EventListener {
 		}
 	}
 	
-	public int getRadius() {
+	public float getRadius() {
 		return _radius;
 	}
 

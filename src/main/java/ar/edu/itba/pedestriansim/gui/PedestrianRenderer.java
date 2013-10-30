@@ -44,7 +44,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
 		Vector2f location = pedestrian.getBody().getCenter();
-		pedestrianPath.set(location, pedestrian.getTarget());
+		pedestrianPath.set(location, pedestrian.getTarget().getCenter());
 		draw(g, pedestrianPath, Color.white);
 		externalForce.set(location, location.copy().add(pedestrian.getAppliedForce()));
 		draw(g, externalForce, Color.red);
@@ -64,7 +64,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 	private void drawStats(Graphics g, Pedestrian pedestrian) {
 		g.setColor(Color.cyan);
 		Vector2f location = pedestrian.getBody().getCenter();
-		float distance = location.distance(pedestrian.getTarget());
+		float distance = location.distance(pedestrian.getTarget().getCenter());
 		String positionString = String.format("x = (%.2f, %.2f) | D = %.3f [m]", location.x, location.y, distance);
 		drawString(g, positionString, location.x, location.y);
 		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), pedestrian.getETA());

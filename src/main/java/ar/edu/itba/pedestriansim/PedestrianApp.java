@@ -1,6 +1,7 @@
 package ar.edu.itba.pedestriansim;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -17,24 +18,26 @@ import ar.edu.itba.pedestriansim.parser.AreaFileParser;
 public class PedestrianApp extends BasicGame {
 
 	public static void main(String[] args) {
-        try {
-            AppGameContainer app = new AppGameContainer(new PedestrianApp("Pedestrian simulation"));
-            app.setUpdateOnlyWhenVisible(false);
-            app.setDisplayMode(1200, 700, false);
-            app.start();
-        } catch (SlickException e) {
-            e.printStackTrace();
-        }
+		try {
+			AppGameContainer app = new AppGameContainer(new PedestrianApp("./src/main/resources/room1/room1.desc"));
+			app.setUpdateOnlyWhenVisible(false);
+			app.setDisplayMode(1200, 700, false);
+			app.start();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static final float TIME_STEP = 1 / 100f;
 
+	private String _roomDirectory;
 	private Camera _camera;
 	private PedestrianAreaRenderer _renderer;
 	private PedestrianSim _simulation;
-	
-	public PedestrianApp(String title) {
-		super(title);
+
+	public PedestrianApp(String roomDirectory) {
+		super("Pedestrian simulation");
+		_roomDirectory = roomDirectory;
 	}
 
 	@Override
@@ -45,8 +48,11 @@ public class PedestrianApp extends BasicGame {
 		_simulation = new PedestrianSim();
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.getInput().addKeyListener(new KeyHandler(gc, _camera, _renderer));
-		new AreaFileParser().load(_simulation, new File("./src/main/resources/room1.desc"), _camera);
-//		new PedestrianFileParser().load(_simulation, new File("./src/main/resources/pedestrian.properties"));
+		try {
+			new AreaFileParser().load(_simulation, new File(_roomDirectory),_camera);
+		} catch (IOException e) {
+			throw new IllegalStateException("Error aprsing configuration file!", e);
+		}
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {

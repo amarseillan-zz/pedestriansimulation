@@ -30,6 +30,7 @@ public class PositionUpdaterComponent implements Updateable {
 			Vector2f deltaVelocity = _eulerMethod.deltaVelocity(body, force, elapsedTimeInSeconds);
 			Vector2f deltaPosition = _eulerMethod.deltaPosition(body, force, elapsedTimeInSeconds);
 			body.apply(deltaVelocity, deltaPosition);
+			pedestrian.updateTarget();
 		}
 	}
 

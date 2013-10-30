@@ -4,32 +4,26 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
-
-import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class Pedestrian {
 
-	private static final float TARGET_MIN_DISTANCE_SQ = 1.0f * 1.0f;
-	private static final RandomGenerator _massGenerator = new UniformRandomGenerator(50, 80);
-	private static final RandomGenerator _velocityGenerator = new UniformRandomGenerator(1f, 1.6f);
-	private static final RandomGenerator _radiusGenerator = new UniformRandomGenerator(0.25f, 0.29f);
-
 	private Serializable _id;
 	private int _team;
-	private PedestrianMovementStrategy _strategy;
+	private PedestrianTargetList _targetList;
+	private PedestrianTargetArea _currentTarget;
 	private Vector2f _appliedForce;
 	private RigidBody _body;
 	private float _maxVelocity;
 
-	public Pedestrian(Serializable id, Vector2f location, PedestrianMovementStrategy strategy, int team) {
+	public Pedestrian(Serializable id, PedestrianTargetList targets, int team, RigidBody body) {
 		_id = id;
 		_team = team;
-		_strategy = strategy;
+		_targetList = targets;
 		_appliedForce = new Vector2f();
-		_body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
-		setMaxVelocity(_velocityGenerator.generate());
+		_body = body;
+		_currentTarget = _targetList.getFirst();
 	}
 
 	public Serializable getId() {
@@ -40,8 +34,8 @@ public class Pedestrian {
 		return _team;
 	}
 
-	public Vector2f getTarget() {
-		return _strategy.currentTarget();
+	public PedestrianTargetArea getTarget() {
+		return _currentTarget;
 	}
 
 	public void applyForce(Vector2f force) {
@@ -57,30 +51,33 @@ public class Pedestrian {
 	}
 
 	public float getETA() {
-		if (onTarget()) {
+		if (_currentTarget == null || _currentTarget.onTarget(getShape())) {
 			return 0;
 		} else {
 			float velocity = getBody().getVelocity().length();
-			return Math.abs(velocity) < 0.01 ? Float.NaN  : getBody().getCenter().distance(getTarget()) / velocity;
+			return Math.abs(velocity) < 0.01 ? Float.NaN  : getTarget().distanceTo(getBody().getCenter()) / velocity;
 		}
 	}
 
-	public boolean onTarget() {
-		Vector2f target = getTarget();
-		if (target == null) {
+	public boolean isOnFinalTarget() {
+		if (_currentTarget == null) {
 			return true;
 		}
-		if (getBody().getCenter().distanceSquared(target) < TARGET_MIN_DISTANCE_SQ) {
-			if (!_strategy.hasNextTarget()) {
-				return true;
-			}
-			_strategy.nextTarget();
+		return _currentTarget.onTarget(getShape()) && !_targetList.hasNextTarget(_currentTarget);
+	}
+
+	public void updateTarget() {
+		if (_currentTarget != null && _currentTarget.onTarget(getShape())) {
+			_currentTarget = _targetList.nextTarget(_currentTarget);
 		}
-		return false;
 	}
 
 	public RigidBody getBody() {
 		return _body;
+	}
+	
+	public Shape getShape() {
+		return _body.getCollitionShape().getShape();
 	}
 	
 	public float getMaxVelocity() {
