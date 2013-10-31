@@ -12,16 +12,14 @@ import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 public class PedestrianSource implements EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
-
-	private final RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(3, 2);
-	private final RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
-	private final RandomGenerator _initialLocationGenerator;
-
 	private static final PedestrianFactory pedestrianFactory = PedestrianFactory.instance();
 
+	private RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(3, 2);
+	private RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
+	private final RandomGenerator _initialLocationGenerator;
 	private float _radius;
-	private PedestrianArea _pedestrianArea;
 	private Vector2f _location;
+	private PedestrianArea _pedestrianArea;
 	private PedestrianTargetList _targetList;
 	private int _team;
 
@@ -33,6 +31,14 @@ public class PedestrianSource implements EventListener {
 		_team = team;
 		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		schedule();
+	}
+
+	public void setProduceDelayGenerator(RandomGenerator produceDelayGenerator) {
+		_produceDelayGenerator = produceDelayGenerator;
+	}
+
+	public void setPedestrianAmountGenerator(RandomGenerator pedestrianAmountGenerator) {
+		_pedestrianAmountGenerator = pedestrianAmountGenerator;
 	}
 
 	public Vector2f getLocation() {

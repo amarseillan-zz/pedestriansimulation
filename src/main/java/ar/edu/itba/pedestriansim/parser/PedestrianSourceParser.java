@@ -12,6 +12,9 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetArea;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
+import ar.edu.itba.pedestriansim.back.rand.GaussianRandomGenerator;
+import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
+import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class PedestrianSourceParser {
 
@@ -24,8 +27,11 @@ public class PedestrianSourceParser {
 		float x = Float.valueOf(properties.getProperty("x"));
 		float y = Float.valueOf(properties.getProperty("y"));
 		float radius = Float.valueOf(properties.getProperty("radius"));
-		Vector2f location = new Vector2f(x, y); 
-		return new PedestrianSource(location, radius, parsePedestrianTarget(properties), pedestrianArea, team);
+		Vector2f location = new Vector2f(x, y);
+		PedestrianSource source = new PedestrianSource(location, radius, parsePedestrianTarget(properties), pedestrianArea, team);
+		source.setProduceDelayGenerator(parseRandomDistribution(properties.getProperty("produce.delay").split(" ")));
+		source.setPedestrianAmountGenerator(parseRandomDistribution(properties.getProperty("produce.amount").split(" ")));
+		return source;
 	}
 	
 	private PedestrianTargetList parsePedestrianTarget(Properties properties) {
@@ -47,5 +53,17 @@ public class PedestrianSourceParser {
 		float x2 = Float.parseFloat(values[2]);
 		float y2 = Float.parseFloat(values[3]);
 		return new Line(x1, y1, x2, y2);
+	}
+	
+	private RandomGenerator parseRandomDistribution(String[] values) {
+		switch (values[0]) {
+		case "gauss":
+			return new GaussianRandomGenerator(Float.valueOf(values[1]), Float.valueOf(values[2]));
+		case "uniform":
+			return new UniformRandomGenerator(Float.valueOf(values[1]), Float.valueOf(values[2]));
+		default:
+			break;
+		}
+		throw new IllegalStateException("Unknown type " + values[0]);
 	}
 }

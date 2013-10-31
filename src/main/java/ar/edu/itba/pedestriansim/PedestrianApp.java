@@ -19,7 +19,9 @@ public class PedestrianApp extends BasicGame {
 
 	public static void main(String[] args) {
 		try {
-			AppGameContainer app = new AppGameContainer(new PedestrianApp("./src/main/resources/room1/room1.desc"));
+//			String room = "./src/main/resources/room1/room1.desc";
+			String room = "./src/main/resources/9JulioYLavalle/room2.desc";
+			AppGameContainer app = new AppGameContainer(new PedestrianApp(room));
 			app.setUpdateOnlyWhenVisible(false);
 			app.setDisplayMode(1200, 700, false);
 			app.start();
