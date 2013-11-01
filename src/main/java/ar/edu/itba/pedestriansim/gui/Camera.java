@@ -9,18 +9,24 @@ public class Camera {
 
 	private Transform transform = new Transform();
 	private float width, height;
-
+	private static final float SMOOTHER = 20f;
+	private static final float SCROLL = 0.63f;
+	
 	public void update(GameContainer gc) {
 		width = gc.getWidth();
 		height = gc.getHeight();
 	}
 	
 	public void zoomOut() {
-		setZoom(0.95f);
+		setZoom(0.99f);
+		this.scrollX(SCROLL);
+		this.scrollY(SCROLL);
 	}
 
 	public void zoomIn() {
-		setZoom(1.05f);
+		setZoom(1.01f);
+		this.scrollX(-SCROLL);
+		this.scrollY(-SCROLL);
 	}
 	
 	public void setZoom(float zoom) {
@@ -28,11 +34,11 @@ public class Camera {
 	}
 	
 	public void scrollLeft() {
-		scrollX(getHorizontalScroll());
+		scrollX(getHorizontalScroll()/SMOOTHER);
 	}
 
 	public void scrollRight() {
-		scrollX(-getHorizontalScroll());
+		scrollX(-getHorizontalScroll()/SMOOTHER);
 	}
 
 	public void scrollX(float amount) {
@@ -40,11 +46,11 @@ public class Camera {
 	}
 	
 	public void scrollUp() {
-		scrollY(getVerticalScroll());
+		scrollY(getVerticalScroll()/SMOOTHER);
 	}
 
 	public void scrollDown() {
-		scrollY(-getVerticalScroll());
+		scrollY(-getVerticalScroll()/SMOOTHER);
 	}
 
 	public void scrollY(float amount) {
