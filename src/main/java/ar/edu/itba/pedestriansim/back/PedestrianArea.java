@@ -21,6 +21,7 @@ public class PedestrianArea {
 	}
 
 	public void addSource(PedestrianSource source) {
+		source.start();
 		_sources.add(source);
 	}
 

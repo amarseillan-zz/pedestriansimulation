@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Vector2f;
 
 public class Pedestrian {
 
@@ -13,7 +12,6 @@ public class Pedestrian {
 	private int _team;
 	private PedestrianTargetList _targetList;
 	private PedestrianTargetArea _currentTarget;
-	private Vector2f _appliedForce;
 	private RigidBody _body;
 	private float _maxVelocity;
 
@@ -21,7 +19,6 @@ public class Pedestrian {
 		_id = id;
 		_team = team;
 		_targetList = targets;
-		_appliedForce = new Vector2f();
 		_body = body;
 		_currentTarget = _targetList.getFirst();
 	}
@@ -38,12 +35,6 @@ public class Pedestrian {
 		return _currentTarget;
 	}
 
-	public void applyForce(Vector2f force) {
-		_appliedForce.set(force);
-	}
-
-	public Vector2f getAppliedForce() {
-		return _appliedForce;
 	}
 
 	public void stop() {

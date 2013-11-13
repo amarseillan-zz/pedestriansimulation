@@ -26,7 +26,6 @@ public class ForceUpdaterComponent implements Updateable {
 			Vector2f forces = new Vector2f();
 			forces.add(getDesireForce(subject));
 			forces.add(getExternalForces(subject));
-			subject.applyForce(forces);
 		}
 	}
 

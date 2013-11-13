@@ -1,5 +1,7 @@
 package ar.edu.itba.pedestriansim.back;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Vector2f;
 
 public class RigidBody {
@@ -7,12 +9,14 @@ public class RigidBody {
 	private Vector2f _center;
 	private float _mass;
 	private Vector2f _velocity;
+	private Vector2f _appliedForce;
 	private CircularShape _collitionShape;
 
 	public RigidBody(float mass, Vector2f location, float radius) {
 		_mass = mass;
 		_center = location;
 		_velocity = new Vector2f();
+		_appliedForce = new Vector2f();
 		_collitionShape = new CircularShape(this, radius);
 	}
 
@@ -39,17 +43,33 @@ public class RigidBody {
 	public float getRadius() {
 		return _collitionShape.getRadius();
 	}
-	
+
 	public void setLocation(Vector2f location) {
-		this._center = location;
+		this._center.set(location);
 	}
 
 	public CircularShape getCollitionShape() {
 		return _collitionShape;
 	}
 
+	public void applyForce(Vector2f force) {
+		_appliedForce.set(force);
+	}
+
+	public Vector2f getAppliedForce() {
+		return _appliedForce;
+	}
+
 	public void apply(Vector2f deltaVelocity, Vector2f deltaPosition) {
 		getVelocity().add(deltaVelocity);
 		getCenter().add(deltaPosition);
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+			.append("cener", getCenter())
+			.append("velocity", getVelocity())
+			.build();
 	}
 }
