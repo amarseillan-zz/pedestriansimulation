@@ -16,8 +16,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 	private final Color[] TEAM_COLORS = {Color.green, Color.red, Color.blue};
 	
 	private PedestrianAreaRenderer _pedestrianArearenderer;
-	private final Line velocity = new Line(0, 0);
-	private final Line externalForce = new Line(0, 0);
+	private final Line future = new Line(0, 0);
 	private final Line pedestrianPath = new Line(0, 0);
 	private final Circle pedestrianShape = new Circle(0, 0, 1);
 	
@@ -30,7 +29,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 		for (Pedestrian pedestrian : pedestrians) {
 			if (_pedestrianArearenderer.isRenderStats()) {
 				drawPath(g, pedestrian);
-				drawStats(g, pedestrian);
+//				drawStats(g, pedestrian);
 			}
 			drawShape(g, pedestrian);
 		}
@@ -46,12 +45,10 @@ public class PedestrianRenderer extends ShapeRenderer {
 		Vector2f location = pedestrian.getBody().getCenter();
 		pedestrianPath.set(location, pedestrian.getTarget().getCenter());
 		draw(g, pedestrianPath, Color.white);
-		externalForce.set(location, location.copy().add(pedestrian.getAppliedForce()));
-		draw(g, externalForce, Color.red);
-		velocity.set(location, location.copy().add(pedestrian.getBody().getVelocity()));
-		draw(g, velocity, Color.pink);
+		future.set(location, pedestrian.getFuture().getBody().getCenter());
+		draw(g, future, Color.red);
 	}
-	
+
 	private void drawShape(Graphics g, Pedestrian pedestrian) {
 		Vector2f location = pedestrian.getBody().getCenter();
 		pedestrianShape.setRadius(pedestrian.getBody().getRadius());
