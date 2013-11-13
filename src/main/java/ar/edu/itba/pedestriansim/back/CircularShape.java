@@ -7,6 +7,7 @@ public class CircularShape {
 
 	private RigidBody _body;
 	private Circle _shape;
+	private final Vector2f center = new Vector2f();
 
 	public CircularShape(RigidBody body, float radius) {
 		_body = body;
@@ -17,10 +18,11 @@ public class CircularShape {
 		_shape.setCenterX(_body.getCenter().x);
 		_shape.setCenterY(_body.getCenter().y);
 		_shape.setRadius(getRadius());
+		center.set(_shape.getCenter());
 	}
 
 	public Vector2f getCenter() {
-		return new Vector2f(_shape.getCenter());
+		return center;
 	}
 
 	public float getRadius() {

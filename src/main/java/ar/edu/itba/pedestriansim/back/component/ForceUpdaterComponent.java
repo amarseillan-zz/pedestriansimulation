@@ -6,16 +6,16 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.pedestriansim.back.DrivingForce;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.RigidBody;
 import ar.edu.itba.pedestriansim.back.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
 
 public class ForceUpdaterComponent implements Updateable {
 
-	private final static Vector2f nullForce = new Vector2f();
+	private final Vector2f nullForce = new Vector2f();
 	private final PedestrianArea scene;
 	private final DrivingForce forceModel = new DrivingForce();
 	private final SpringForceModel collisitionModel = new SpringForceModel(10000);
+	private final Vector2f forces = new Vector2f();
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
 		this.scene = scene;
@@ -23,18 +23,25 @@ public class ForceUpdaterComponent implements Updateable {
 
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian subject : scene.getPedestrians()) {
-			Vector2f forces = new Vector2f();
-			forces.add(getDesireForce(subject));
-			forces.add(getExternalForces(subject));
+			updatePedestrianFuture(subject);
+			// Pedestrian forces
+			forces.set(nullForce);
+			forces.add(getDesireForce(subject, subject.getFuture().getBody().getCenter()));
+			subject.getBody().applyForce(forces);
 		}
 	}
 
-	private Vector2f getDesireForce(Pedestrian subject) {
+	private void updatePedestrianFuture(Pedestrian subject) {
+		forces.set(nullForce);
 		if (subject.getTarget() != null) {
-			RigidBody body = subject.getBody();
-			return forceModel.getForce(body, subject.getTarget().getCenter(), subject.getMaxVelocity());
+			forces.add(getDesireForce(subject, subject.getTarget().getCenter()));
 		}
-		return nullForce;
+		forces.add(getExternalForces(subject));
+		subject.getFuture().getBody().applyForce(forces);
+	}
+	
+	private Vector2f getDesireForce(Pedestrian subject, Vector2f target) {
+		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity());
 	}
 
 	private Vector2f getExternalForces(Pedestrian subject) {

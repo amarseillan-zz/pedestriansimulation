@@ -12,6 +12,7 @@ public class Pedestrian {
 	private int _team;
 	private PedestrianTargetList _targetList;
 	private PedestrianTargetArea _currentTarget;
+	private PedestrianFuture _future;
 	private RigidBody _body;
 	private float _maxVelocity;
 
@@ -21,6 +22,7 @@ public class Pedestrian {
 		_targetList = targets;
 		_body = body;
 		_currentTarget = _targetList.getFirst();
+		_future = new PedestrianFuture(this);
 	}
 
 	public Serializable getId() {
@@ -35,10 +37,8 @@ public class Pedestrian {
 		return _currentTarget;
 	}
 
-	}
-
-	public void stop() {
-		_body.getVelocity().set(0, 0);
+	public PedestrianFuture getFuture() {
+		return _future;
 	}
 
 	public float getETA() {
@@ -61,6 +61,14 @@ public class Pedestrian {
 		if (_currentTarget != null && _currentTarget.onTarget(getShape())) {
 			_currentTarget = _targetList.nextTarget(_currentTarget);
 		}
+		if (_currentTarget == null) {
+			stop();
+		}
+	}
+
+	private void stop() {
+		_body.getVelocity().set(0, 0);
+		getFuture().getBody().getCenter().set(getBody().getCenter());
 	}
 
 	public RigidBody getBody() {
@@ -78,7 +86,7 @@ public class Pedestrian {
 	public void setMaxVelocity(float maxVelocity) {
 		_maxVelocity = maxVelocity;
 	}
-
+	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

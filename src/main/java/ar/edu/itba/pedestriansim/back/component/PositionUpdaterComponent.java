@@ -27,13 +27,17 @@ public class PositionUpdaterComponent implements Updateable {
 
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian pedestrian : _scene.getPedestrians()) {
-			RigidBody body = pedestrian.getFuture().getBody();
-			Vector2f force = body.getAppliedForce();
-			Vector2f deltaVelocity = _eulerMethod.deltaVelocity(body, force, elapsedTimeInSeconds, velocityCache);
-			Vector2f deltaPosition = _eulerMethod.deltaPosition(body, force, elapsedTimeInSeconds, positionCache);
-			body.apply(deltaVelocity, deltaPosition);
+			updateRigidBody(pedestrian.getFuture().getBody(), elapsedTimeInSeconds);
+			updateRigidBody(pedestrian.getBody(), elapsedTimeInSeconds);
 			pedestrian.updateTarget();
 		}
+	}
+
+	private void updateRigidBody(RigidBody body, float elapsedTimeInSeconds) {
+		Vector2f force = body.getAppliedForce();
+		Vector2f deltaVelocity = _eulerMethod.deltaVelocity(body, force, elapsedTimeInSeconds, velocityCache);
+		Vector2f deltaPosition = _eulerMethod.deltaPosition(body, force, elapsedTimeInSeconds, positionCache);
+		body.apply(deltaVelocity, deltaPosition);
 	}
 
 }

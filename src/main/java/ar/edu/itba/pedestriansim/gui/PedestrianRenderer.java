@@ -29,7 +29,6 @@ public class PedestrianRenderer extends ShapeRenderer {
 		for (Pedestrian pedestrian : pedestrians) {
 			if (_pedestrianArearenderer.isRenderStats()) {
 				drawPath(g, pedestrian);
-//				drawStats(g, pedestrian);
 			}
 			drawShape(g, pedestrian);
 		}
@@ -42,11 +41,13 @@ public class PedestrianRenderer extends ShapeRenderer {
 	}
 
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
-		Vector2f location = pedestrian.getBody().getCenter();
-		pedestrianPath.set(location, pedestrian.getTarget().getCenter());
-		draw(g, pedestrianPath, Color.white);
-		future.set(location, pedestrian.getFuture().getBody().getCenter());
-		draw(g, future, Color.red);
+		if (pedestrian.getTarget() != null) {
+			Vector2f location = pedestrian.getBody().getCenter();
+			pedestrianPath.set(location, pedestrian.getTarget().getCenter());
+			draw(g, pedestrianPath, Color.white);
+			future.set(location, pedestrian.getFuture().getBody().getCenter());
+			draw(g, future, Color.red);
+		}
 	}
 
 	private void drawShape(Graphics g, Pedestrian pedestrian) {
