@@ -6,16 +6,20 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.pedestriansim.back.DrivingForce;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.PedestrianFutureRepulsionForce;
 import ar.edu.itba.pedestriansim.back.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
 
 public class ForceUpdaterComponent implements Updateable {
 
-	private final Vector2f nullForce = new Vector2f();
+	private static final Vector2f nullForce = new Vector2f();
+	
+	private final Vector2f forces = new Vector2f();
+	private final Vector2f forcesOnFuture = new Vector2f();
 	private final PedestrianArea scene;
 	private final DrivingForce forceModel = new DrivingForce();
 	private final SpringForceModel collisitionModel = new SpringForceModel(10000);
-	private final Vector2f forces = new Vector2f();
+	private final PedestrianFutureRepulsionForce repulsionForce = new PedestrianFutureRepulsionForce();
 
 	public ForceUpdaterComponent(PedestrianArea scene) {
 		this.scene = scene;
@@ -27,6 +31,7 @@ public class ForceUpdaterComponent implements Updateable {
 			// Pedestrian forces
 			forces.set(nullForce);
 			forces.add(getDesireForce(subject, subject.getFuture().getBody().getCenter()));
+			forces.add(getExternalForces(subject));
 			subject.getBody().applyForce(forces);
 		}
 	}
@@ -36,7 +41,15 @@ public class ForceUpdaterComponent implements Updateable {
 		if (subject.getTarget() != null) {
 			forces.add(getDesireForce(subject, subject.getTarget().getCenter()));
 		}
-		forces.add(getExternalForces(subject));
+		Vector2f center = subject.getBody().getCenter();
+		forcesOnFuture.set(nullForce);
+		for (Pedestrian other : scene.getPedestrians()) {
+			if (!other.equals(subject)) {
+				Vector2f otherCenter = other.getBody().getCenter();
+				forcesOnFuture.add(repulsionForce.getForce(center, otherCenter));
+			}
+		}
+		forces.add(forcesOnFuture);
 		subject.getFuture().getBody().applyForce(forces);
 	}
 	
