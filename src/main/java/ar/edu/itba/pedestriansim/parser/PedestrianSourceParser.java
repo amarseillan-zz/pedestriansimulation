@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -29,6 +30,10 @@ public class PedestrianSourceParser {
 		float radius = Float.valueOf(properties.getProperty("radius"));
 		Vector2f location = new Vector2f(x, y);
 		PedestrianSource source = new PedestrianSource(location, radius, parsePedestrianTarget(properties), pedestrianArea, team);
+		String limitString = properties.getProperty("produce.limit");
+		if (!StringUtils.isEmpty(limitString)) {
+			source.setProduceLimit(Integer.valueOf(limitString));
+		}
 		source.setProduceDelayGenerator(parseRandomDistribution(properties.getProperty("produce.delay").split(" ")));
 		source.setPedestrianAmountGenerator(parseRandomDistribution(properties.getProperty("produce.amount").split(" ")));
 		return source;

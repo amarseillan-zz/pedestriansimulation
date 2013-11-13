@@ -22,6 +22,7 @@ public class PedestrianSource implements EventListener {
 	private PedestrianArea _pedestrianArea;
 	private PedestrianTargetList _targetList;
 	private int _team;
+	private int _totalProduced, _produceLimit;
 
 	public PedestrianSource(Vector2f location, float radius, PedestrianTargetList targetList, PedestrianArea pedestrianArea, int team) {
 		_radius = radius;
@@ -30,7 +31,12 @@ public class PedestrianSource implements EventListener {
 		_targetList = targetList;
 		_team = team;
 		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
-		schedule();
+		_totalProduced = 0;
+		_produceLimit = -1;
+	}
+
+	public void setProduceLimit(int produceLimit) {
+		_produceLimit = produceLimit;
 	}
 
 	public void setProduceDelayGenerator(RandomGenerator produceDelayGenerator) {
@@ -41,13 +47,19 @@ public class PedestrianSource implements EventListener {
 		_pedestrianAmountGenerator = pedestrianAmountGenerator;
 	}
 
+	public void start() {
+		schedule();
+	}
+
 	public Vector2f getLocation() {
 		return _location;
 	}
 
 	private void schedule() {
-		float delay = _produceDelayGenerator.generate();
-		dispatcher.dispatch(new ProducePedestrianEvent(this), delay);		
+		if (_produceLimit < 0 || _totalProduced < _produceLimit) {
+			float delay = _produceDelayGenerator.generate();
+			dispatcher.dispatch(new ProducePedestrianEvent(this), delay);
+		}
 	}
 
 	@Override
@@ -60,7 +72,11 @@ public class PedestrianSource implements EventListener {
 
 	public void produce() {
 		int amount = (int) _pedestrianAmountGenerator.generate();
+		if (_produceLimit > 0) {
+			amount = Math.min(amount, _produceLimit - _totalProduced);
+		}
 		for (int i = 0; i < amount; i++) {
+			_totalProduced++;
 			Pedestrian pedestrian = pedestrianFactory.build(new Vector2f(), _team, _targetList);
 			boolean isEmpty;
 			do {
