@@ -9,10 +9,10 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.RigidBody;
 import ar.edu.itba.pedestriansim.back.Updateable;
 
-public class PositionUpdaterComponent implements Updateable {
+public class PedestrianPositionUpdaterComponent implements Updateable {
 
 	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(PositionUpdaterComponent.class);
+	private static final Logger logger = Logger.getLogger(PedestrianPositionUpdaterComponent.class);
 
 	private final Vector2f velocityCache = new Vector2f();
 	private final Vector2f positionCache = new Vector2f();
@@ -20,14 +20,13 @@ public class PositionUpdaterComponent implements Updateable {
 	private EulerMethod _eulerMethod;
 	private PedestrianArea _scene;
 
-	public PositionUpdaterComponent(PedestrianArea scene) {
+	public PedestrianPositionUpdaterComponent(PedestrianArea scene) {
 		_scene = scene;
 		_eulerMethod = new EulerMethod();
 	}
 
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian pedestrian : _scene.getPedestrians()) {
-			updateRigidBody(pedestrian.getFuture().getBody(), elapsedTimeInSeconds);
 			updateRigidBody(pedestrian.getBody(), elapsedTimeInSeconds);
 			pedestrian.updateTarget();
 		}

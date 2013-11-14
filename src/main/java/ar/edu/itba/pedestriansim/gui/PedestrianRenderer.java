@@ -10,10 +10,11 @@ import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.back.RigidBody;
 
 public class PedestrianRenderer extends ShapeRenderer {
 
-	private final Color[] TEAM_COLORS = {Color.green, Color.red, Color.blue};
+	private final Color[] TEAM_COLORS = {Color.green, Color.red, Color.blue, Color.white};
 	
 	private PedestrianAreaRenderer _pedestrianArearenderer;
 	private final Line future = new Line(0, 0);
@@ -29,8 +30,9 @@ public class PedestrianRenderer extends ShapeRenderer {
 		for (Pedestrian pedestrian : pedestrians) {
 			if (_pedestrianArearenderer.isRenderDebugInfo()) {
 				drawPath(g, pedestrian);
+				drawShape(g, pedestrian.getFuture().getBody(), 3);
 			}
-			drawShape(g, pedestrian);
+			drawShape(g, pedestrian.getBody(), pedestrian.getTeam());
 		}
 		if (_pedestrianArearenderer.isRenderDebugInfo()) {
 			String mousePositionStr = String.format("(%d, %d)", gc.getInput().getMouseX(), gc.getInput().getMouseY());
@@ -50,12 +52,12 @@ public class PedestrianRenderer extends ShapeRenderer {
 		}
 	}
 
-	private void drawShape(Graphics g, Pedestrian pedestrian) {
-		Vector2f location = pedestrian.getBody().getCenter();
-		pedestrianShape.setRadius(pedestrian.getBody().getRadius());
+	private void drawShape(Graphics g, RigidBody pedestrian, int color) {
+		Vector2f location = pedestrian.getCenter();
+		pedestrianShape.setRadius(pedestrian.getRadius());
 		pedestrianShape.setCenterX(location.x);
 		pedestrianShape.setCenterY(location.y);
-		fill(g, pedestrianShape, TEAM_COLORS[pedestrian.getTeam()]);
+		fill(g, pedestrianShape, TEAM_COLORS[color]);
 		draw(g, pedestrianShape, Color.white);
 	}
 

@@ -3,10 +3,12 @@ package ar.edu.itba.pedestriansim.back;
 import java.util.LinkedList;
 import java.util.List;
 
-import ar.edu.itba.pedestriansim.back.component.ForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
+import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
-import ar.edu.itba.pedestriansim.back.component.PositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
 
 public class PedestrianSim implements Updateable {
@@ -17,8 +19,10 @@ public class PedestrianSim implements Updateable {
 
 	public PedestrianSim(int width, int height, int gridSize) {
 		_scene = new PedestrianArea(width, height, gridSize);
-		_components.add(new ForceUpdaterComponent(_scene));
-		_components.add(new PositionUpdaterComponent(_scene));
+		_components.add(new FutureForceUpdaterComponent(_scene));
+		_components.add(new FuturePositionUpdaterComponent(_scene));
+		_components.add(new PedestrianForceUpdaterComponent(_scene));
+		_components.add(new PedestrianPositionUpdaterComponent(_scene));
 		_components.add(new PedestrianRemoverComponent(_scene));
 		_components.add(new GridPedestrianPositionUpdater(_scene));
 	}

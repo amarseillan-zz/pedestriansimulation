@@ -14,4 +14,10 @@ public class DrivingForce {
 		velocity.sub(body.getVelocity());
 		return velocity.scale(body.getMass() / TAU);
 	}
+	
+	public Vector2f getForceWithoutVelocity(RigidBody body, Vector2f target) {
+		cache.set(target);
+		Vector2f forceDir = cache.sub(body.getCenter()).normalise();		
+		return forceDir.copy().scale(100);
+	}
 }

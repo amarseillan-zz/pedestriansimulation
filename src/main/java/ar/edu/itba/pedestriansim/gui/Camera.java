@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
 
 public class Camera {
+	
 
 	private Transform transform = new Transform();
 	private float width, height;
