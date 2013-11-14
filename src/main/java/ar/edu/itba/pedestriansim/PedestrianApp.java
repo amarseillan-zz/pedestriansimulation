@@ -1,7 +1,9 @@
 package ar.edu.itba.pedestriansim;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -19,9 +21,7 @@ public class PedestrianApp extends BasicGame {
 
 	public static void main(String[] args) {
 		try {
-//			String room = "./src/main/resources/room1/room1.desc";
-			String room = "./src/main/resources/9JulioYLavalle/room2.desc";
-			AppGameContainer app = new AppGameContainer(new PedestrianApp(room));
+			AppGameContainer app = new AppGameContainer(new PedestrianApp("./src/main/resources/room1/setup.properties"));
 			app.setUpdateOnlyWhenVisible(false);
 			app.setDisplayMode(1200, 700, false);
 			app.start();
@@ -32,26 +32,27 @@ public class PedestrianApp extends BasicGame {
 
 	private static final float TIME_STEP = 1 / 100f;
 
-	private String _roomDirectory;
+	private File _configFile;
 	private Camera _camera;
 	private PedestrianAreaRenderer _renderer;
 	private PedestrianSim _simulation;
 
-	public PedestrianApp(String roomDirectory) {
+	public PedestrianApp(String configurationFilePath) {
 		super("Pedestrian simulation");
-		_roomDirectory = roomDirectory;
+		_configFile = new File(configurationFilePath);
 	}
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		gc.setAlwaysRender(true);
-		gc.setTargetFrameRate(60);
-		_camera = new Camera();
-		_simulation = new PedestrianSim();
-		_renderer = new PedestrianAreaRenderer(_camera);
-		gc.getInput().addKeyListener(new KeyHandler(gc, _camera, _renderer));
 		try {
-			new AreaFileParser().load(_simulation, new File(_roomDirectory),_camera);
+			gc.setAlwaysRender(true);
+			gc.setTargetFrameRate(60);
+			_camera = new Camera();
+			_renderer = new PedestrianAreaRenderer(_camera);
+			gc.getInput().addKeyListener(new KeyHandler(gc, _camera, _renderer));
+			Properties configuration = new Properties();
+			configuration.load(new FileInputStream(_configFile));
+			_simulation = new AreaFileParser().load(_configFile.getParentFile().getAbsolutePath(), _camera, configuration);
 		} catch (IOException e) {
 			throw new IllegalStateException("Error aprsing configuration file!", e);
 		}
