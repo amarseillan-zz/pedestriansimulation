@@ -83,7 +83,7 @@ public class PedestrianSource implements EventListener {
 				float x = _location.x + _initialLocationGenerator.generate();
 				float y = _location.y + _initialLocationGenerator.generate();
 				pedestrian.getBody().setLocation(new Vector2f(x, y));
-				isEmpty = _pedestrianArea.collides(pedestrian.getBody().getCollitionShape().getShape());
+				isEmpty = _pedestrianArea.hasCollitions(pedestrian);
 			} while (!isEmpty);
 			_pedestrianArea.addPedestrian(pedestrian);
 		}

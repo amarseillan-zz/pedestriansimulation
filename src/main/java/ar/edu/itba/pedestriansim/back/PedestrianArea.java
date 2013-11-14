@@ -6,14 +6,50 @@ import java.util.List;
 
 import org.newdawn.slick.geom.Shape;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 public class PedestrianArea {
 
+	private final List<Pedestrian> collitions = Lists.newLinkedList();
+	
+	private final GridSpace<Pedestrian> _map;
 	private final List<Pedestrian> _pedestrians = new ArrayList<>();
 	private final List<Shape> _obstacles = new ArrayList<>();
 	private final List<PedestrianSource> _sources = new ArrayList<>();
 
+	public PedestrianArea(int width, int height, int gridSize) {
+		_map = new GridSpace<>(width, height, gridSize, new Function<Pedestrian, Shape>() {
+			public Shape apply(Pedestrian pedestrian) {
+				return pedestrian.getShape();
+			}
+		});
+	}
+
+	public GridSpace<Pedestrian> getMap() {
+		return _map;
+	}
+
 	public void addPedestrian(Pedestrian pedestrian) {
 		_pedestrians.add(pedestrian);
+	}
+
+	public void removePedestrians(Collection<Pedestrian> pedestrians) {
+		_pedestrians.removeAll(pedestrians);
+	}
+
+	public Collection<Pedestrian> getCollitions(Pedestrian pedestrian) {
+		return _map.getPossibleCollitions(pedestrian, collitions);
+	}
+
+	public boolean hasCollitions(Pedestrian pedestrian) {
+		for (Pedestrian possible : getCollitions(pedestrian)) {
+			if (Collitions.touching(possible.getShape(), pedestrian.getShape())) {
+				return false;
+			}
+		}
+		// XXX: marse, acordate que me dijsite que no iban a chocar contra las paredes...
+		return true;
 	}
 
 	public void addObstacle(Shape obstacte) {
@@ -35,20 +71,5 @@ public class PedestrianArea {
 
 	public Collection<PedestrianSource> getSources() {
 		return _sources;
-	}
-	
-	public void removePedestrians(Collection<Pedestrian> pedestrians) {
-		_pedestrians.removeAll(pedestrians);
-	}
-	
-	public boolean collides(Shape shape) {
-		for (Pedestrian pedestrian : _pedestrians) {
-			Shape pedestrianShape = pedestrian.getBody().getCollitionShape().getShape();
-			if (Collitions.touching(pedestrianShape, shape)) {
-				return false;
-			}
-		}
-		// XXX: marse, acordate que me dijsite que no iban a chocar contra las paredes...
-		return true;
 	}
 }

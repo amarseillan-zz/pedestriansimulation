@@ -36,7 +36,7 @@ public class KeyHandler implements KeyListener {
 		handlers.add(new KeyMapping(Input.KEY_A, new ScrollLeft()));
 		handlers.add(new KeyMapping(Input.KEY_D, new ScrollRight()));
 		
-		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderStats()));
+		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderDebugInfo()));
 	}
 
 	@Override
@@ -138,13 +138,14 @@ public class KeyHandler implements KeyListener {
 			_camera.scrollDown();
 		}
 	}
-	private final class ToggleRenderStats extends InputKey {
-		public ToggleRenderStats() {
+	private final class ToggleRenderDebugInfo extends InputKey {
+		public ToggleRenderDebugInfo() {
 			super(true);
 		}
 		@Override
 		public void pressed() {
-			_renderer.toggleRenderStats();
+			_renderer.toggleRenderDebugInfo();
 		}
 	}
+
 }

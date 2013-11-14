@@ -4,14 +4,16 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
+import ar.edu.itba.pedestriansim.back.Grid;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
 
 public class PedestrianAreaRenderer extends ShapeRenderer {
 
-	private boolean renderStats;
+	private boolean renderDebugInfo;
 	private PedestrianRenderer _pedestrianRenderer;
 	private final Circle _sourceShape = new Circle(0, 0, 5);
 
@@ -20,8 +22,18 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 		_pedestrianRenderer = new PedestrianRenderer(camera, this);
 	}
 
+	@SuppressWarnings("rawtypes") 
 	public void render(GameContainer gc, Graphics g, PedestrianArea pedestrianArea) {
 		g.setColor(Color.pink);
+		if (renderDebugInfo) {
+			for (Grid[] grids : pedestrianArea.getMap().getGrid()) {
+				for (Grid grid : grids) {
+					Rectangle area = grid.getArea(); 
+					draw(g, area, Color.green);
+					drawString(g, grid.size() + "", area.getX(), area.getY());
+				}
+			}
+		}
 		for (PedestrianSource source : pedestrianArea.getSources()) {
 			_sourceShape.setRadius(source.getRadius());
 			_sourceShape.setCenterX(source.getLocation().x);
@@ -35,11 +47,11 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 		}
 	}
 	
-	public void toggleRenderStats() {
-		renderStats = !renderStats;
+	public void toggleRenderDebugInfo() {
+		renderDebugInfo = !renderDebugInfo;
 	}
 	
-	public boolean isRenderStats() {
-		return renderStats;
+	public boolean isRenderDebugInfo() {
+		return renderDebugInfo;
 	}
 }
