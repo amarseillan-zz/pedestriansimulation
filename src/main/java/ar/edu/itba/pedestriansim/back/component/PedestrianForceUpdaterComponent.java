@@ -30,7 +30,6 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 			subject.getBody().applyForce(forces);
 		}
 	}
-
 	
 	private Vector2f getDesireForce(Pedestrian subject, Vector2f target) {
 		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity());

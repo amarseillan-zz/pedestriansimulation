@@ -59,8 +59,7 @@ public class GridSpace<T> {
 			Shape boundary = _boundaryGetter.apply(entity);
 			int i = (int) (boundary.getCenterX() / _gridSize);
 			int j = (int) (boundary.getCenterY() / _gridSize);
-			Grid<T> grid;
-				grid = _allGrids[i][j];
+			Grid<T> grid = _allGrids[i][j];
 			grid.getEntities().add(entity);
 			gridForEntity.add(grid);
 			if (!grid.getArea().contains(boundary)) {

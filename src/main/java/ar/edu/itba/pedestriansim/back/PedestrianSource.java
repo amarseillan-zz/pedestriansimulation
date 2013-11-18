@@ -13,7 +13,6 @@ public class PedestrianSource implements EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
 	private static final PedestrianFactory pedestrianFactory = PedestrianFactory.instance();
-	private static final float FUTURE_LENGTH = 1.5f;
 
 	private RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(3, 2);
 	private RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
@@ -83,11 +82,8 @@ public class PedestrianSource implements EventListener {
 			do {
 				float x = _location.x + _initialLocationGenerator.generate();
 				float y = _location.y + _initialLocationGenerator.generate();
-				pedestrian.getBody().setLocation(new Vector2f(x, y));
-				PedestrianFuture future = pedestrian.getFuture();
-				Vector2f futurePosition = pedestrian.getBody().getCenter().copy();
-				futurePosition.sub(pedestrian.getTarget().getCenter()).normalise().scale(FUTURE_LENGTH);
-				future.getBody().setLocation(futurePosition);
+				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
+				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
 				isEmpty = _pedestrianArea.hasCollitions(pedestrian);
 			} while (!isEmpty);
 			_pedestrianArea.addPedestrian(pedestrian);

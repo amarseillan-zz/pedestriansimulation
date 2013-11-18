@@ -14,7 +14,7 @@ public class RigidBody {
 
 	public RigidBody(float mass, Vector2f location, float radius) {
 		_mass = mass;
-		_center = location;
+		_center = new Vector2f(location);
 		_velocity = new Vector2f();
 		_appliedForce = new Vector2f();
 		_collitionShape = new CircularShape(this, radius);
@@ -33,7 +33,7 @@ public class RigidBody {
 	}
 
 	public void setVelocity(Vector2f velocity) {
-		this._velocity = velocity;
+		this._velocity.set(velocity);
 	}
 
 	public Vector2f getCenter() {

@@ -8,6 +8,8 @@ import org.newdawn.slick.geom.Shape;
 
 public class Pedestrian {
 
+	public static final float REACTION_DISTANCE = 1.5f;
+	
 	private Serializable _id;
 	private int _team;
 	private PedestrianTargetList _targetList;
@@ -42,7 +44,7 @@ public class Pedestrian {
 	}
 
 	public float getETA() {
-		if (_currentTarget == null || _currentTarget.onTarget(getShape())) {
+		if (_currentTarget.onTarget(getShape())) {
 			return 0;
 		} else {
 			float velocity = getBody().getVelocity().length();
@@ -51,17 +53,16 @@ public class Pedestrian {
 	}
 
 	public boolean isOnFinalTarget() {
-		if (_currentTarget == null) {
-			return true;
-		}
 		return _currentTarget.onTarget(getShape()) && !_targetList.hasNextTarget(_currentTarget);
 	}
 
 	public void updateTarget() {
-		if (_currentTarget != null && _currentTarget.onTarget(getShape())) {
+		boolean onTarget = _currentTarget.onTarget(getShape()); 
+		if (onTarget && _targetList.hasNextTarget(_currentTarget)) {
 			_currentTarget = _targetList.nextTarget(_currentTarget);
+			onTarget = false;
 		}
-		if (_currentTarget == null) {
+		if (onTarget) {
 			stop();
 		}
 	}
@@ -86,13 +87,21 @@ public class Pedestrian {
 	public void setMaxVelocity(float maxVelocity) {
 		_maxVelocity = maxVelocity;
 	}
+
+	public void translate(float dx, float dy) {
+		_future.getBody().getCenter().x += dx;
+		_future.getBody().getCenter().y += dy;
+		_body.getCenter().x += dx;
+		_body.getCenter().y += dy;
+	}
 	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.append("id", getId())
 			.append("location", getBody().getCenter())
-			.append("target", getBody().getVelocity())
+			.append("velocity", getBody().getVelocity())
+			.append("target(center)", getTarget().getCenter())
 			.build();
 	}
 }

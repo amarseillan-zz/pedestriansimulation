@@ -19,10 +19,8 @@ public class PedestrianFactory {
 
 	private int lastId = 0;
 
-	public Pedestrian build(Vector2f location, int team,
-			PedestrianTargetList targets) {
-		RigidBody body = new RigidBody(_massGenerator.generate(), location,
-				_radiusGenerator.generate());
+	public Pedestrian build(Vector2f location, int team, PedestrianTargetList targets) {
+		RigidBody body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
 		Pedestrian pedestrian = new Pedestrian(lastId++, targets, team, body);
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
 		return pedestrian;

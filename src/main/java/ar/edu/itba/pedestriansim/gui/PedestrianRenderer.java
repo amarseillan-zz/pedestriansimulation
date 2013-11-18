@@ -49,6 +49,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 			draw(g, pedestrianPath, Color.white);
 			future.set(location, pedestrian.getFuture().getBody().getCenter());
 			draw(g, future, Color.red);
+			
 		}
 	}
 
