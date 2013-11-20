@@ -8,7 +8,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class Pedestrian {
 
-	public static final float REACTION_DISTANCE = 1.5f;
+	private static final float REACTION_DISTANCE = 1.5f;
 	
 	private Serializable _id;
 	private int _team;
@@ -52,8 +52,12 @@ public class Pedestrian {
 		}
 	}
 
+	public boolean isOnTarget() {
+		return _currentTarget.onTarget(getShape());
+	}
+	
 	public boolean isOnFinalTarget() {
-		return _currentTarget.onTarget(getShape()) && !_targetList.hasNextTarget(_currentTarget);
+		return isOnTarget() && !_targetList.hasNextTarget(_currentTarget);
 	}
 
 	public void updateTarget() {
@@ -95,6 +99,10 @@ public class Pedestrian {
 		_body.getCenter().y += dy;
 	}
 	
+	public float getReactionDistance() {
+		return REACTION_DISTANCE;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

@@ -29,24 +29,28 @@ public class FutureForceUpdaterComponent implements Updateable {
 	}
 
 	private void updatePedestrianFuture(Pedestrian subject) {
-		Vector2f center = subject.getBody().getCenter();
-		Vector2f target = subject.getTarget().getCenter();
-		vectors.pointBetween(center, target, Pedestrian.REACTION_DISTANCE, pointAtReactionDistance);
 		Vector2f futureLocation = subject.getFuture().getBody().getCenter();
-		futureLocation.set(pointAtReactionDistance);
-		externalForcesOnFuture.set(Vectors.nullVector());
-		for (Pedestrian other : scene.getPedestrians()) {
-			if (!other.equals(subject)) {
-				Vector2f otherFuture = getPedestrianFutureLocation(other);
-				externalForcesOnFuture.add(repulsionForceModel.repulsionForce(futureLocation, otherFuture));
+		Vector2f center = subject.getBody().getCenter();
+		if (!subject.isOnTarget()) {
+			Vector2f target = subject.getTarget().getCenter();
+			vectors.pointBetween(center, target, subject.getReactionDistance(), pointAtReactionDistance);
+			futureLocation.set(pointAtReactionDistance);
+			externalForcesOnFuture.set(Vectors.nullVector());
+			for (Pedestrian other : scene.getPedestrians()) {
+				if (!other.equals(subject)) {
+					Vector2f otherFuture = getPedestrianFutureLocation(other);
+					externalForcesOnFuture.add(repulsionForceModel.repulsionForce(futureLocation, otherFuture));
+				}
 			}
-		}
-		float externalForceMod = externalForcesOnFuture.length();
-		if (EXTERNAL_FORCE_THRESHOLD_NEWTON <= externalForceMod) {
-			subject.getFuture().getBody().applyForce(externalForcesOnFuture);
+			float externalForceMod = externalForcesOnFuture.length();
+			if (EXTERNAL_FORCE_THRESHOLD_NEWTON <= externalForceMod) {
+				subject.getFuture().getBody().applyForce(externalForcesOnFuture);
+			} else {
+				subject.getFuture().getBody().applyForce(Vectors.nullVector());
+				subject.getFuture().getBody().setVelocity(Vectors.nullVector());
+			}
 		} else {
-			subject.getFuture().getBody().applyForce(Vectors.nullVector());
-			subject.getFuture().getBody().setVelocity(Vectors.nullVector());
+			futureLocation.set(center);
 		}
 	}
 
