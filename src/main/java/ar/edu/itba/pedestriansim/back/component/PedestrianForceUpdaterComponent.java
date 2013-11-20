@@ -32,7 +32,9 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 	}
 	
 	private Vector2f getDesireForce(Pedestrian subject, Vector2f target) {
-		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity());
+		float distance = subject.getBody().getCenter().distance(target);
+		float p = distance / subject.getReactionDistance();
+		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity()).scale(p);
 	}
 
 	private Vector2f getExternalForces(Pedestrian subject) {
@@ -46,6 +48,7 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 			Vector2f force = collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
 			externalForces.add(force);
 		}
+		externalForces.add(subject.getFuture().getBody().getAppliedForce());
 		return externalForces;
 	}
 }
