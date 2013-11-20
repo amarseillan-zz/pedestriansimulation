@@ -3,7 +3,6 @@ package ar.edu.itba.pedestriansim.gui;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 
@@ -14,13 +13,13 @@ public class KeyHandler implements KeyListener {
 
 	private final List<KeyMapping> handlers = new LinkedList<>();
 	
-	public KeyHandler(GameContainer gc, Camera camera, PedestrianAreaRenderer renderer) {
+	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer) {
 		_camera = camera;
 		_renderer = renderer;
-		initialize(gc);
+		initialize();
 	}
 	
-	private void initialize(GameContainer gc) {
+	private void initialize() {
 		handlers.add(new KeyMapping(13, new ZoomIn()));
 		handlers.add(new KeyMapping(Input.KEY_ADD, new ZoomIn()));
 		handlers.add(new KeyMapping(Input.KEY_MINUS, new ZoomOut()));
@@ -147,5 +146,4 @@ public class KeyHandler implements KeyListener {
 			_renderer.toggleRenderDebugInfo();
 		}
 	}
-
 }

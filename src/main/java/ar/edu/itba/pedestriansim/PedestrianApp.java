@@ -9,6 +9,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import ar.edu.itba.pedestriansim.back.PedestrianSim;
@@ -49,7 +50,7 @@ public class PedestrianApp extends BasicGame {
 			gc.setTargetFrameRate(60);
 			_camera = new Camera();
 			_renderer = new PedestrianAreaRenderer(_camera);
-			gc.getInput().addKeyListener(new KeyHandler(gc, _camera, _renderer));
+			gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer));
 			Properties configuration = new Properties();
 			configuration.load(new FileInputStream(_configFile));
 			_simulation = new AreaFileParser().load(_configFile.getParentFile().getAbsolutePath(), _camera, configuration);
@@ -65,6 +66,13 @@ public class PedestrianApp extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		_camera.update(gc);
-		_simulation.update(TIME_STEP);
+		if (delta > 0) { // 0 = means paused! 
+			_simulation.update(TIME_STEP);
+		}
+		if (gc.getInput().isKeyDown(Input.KEY_R)) {
+			gc.reinit();
+		} else if (gc.getInput().isKeyDown(Input.KEY_P)) {
+			gc.setPaused(!gc.isPaused());
+		}
 	}
 }
