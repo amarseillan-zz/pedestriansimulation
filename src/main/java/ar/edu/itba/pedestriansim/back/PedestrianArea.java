@@ -69,6 +69,10 @@ public class PedestrianArea {
 		return _pedestrians;
 	}
 
+	public Iterable<Pedestrian> getOtherPedestrians(Pedestrian pedestrian) {
+		return Pedestrians.others(pedestrian, getPedestrians());
+	}
+
 	public Collection<PedestrianSource> getSources() {
 		return _sources;
 	}
