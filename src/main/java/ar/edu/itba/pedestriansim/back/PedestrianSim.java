@@ -10,6 +10,8 @@ import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
 import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
+import ar.edu.itba.pedestriansim.back.replusionforce.FutureRepulsionForce1;
+import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
 
 public class PedestrianSim implements Updateable {
 
@@ -19,7 +21,8 @@ public class PedestrianSim implements Updateable {
 
 	public PedestrianSim(int width, int height, int gridSize) {
 		_scene = new PedestrianArea(width, height, gridSize);
-		_components.add(new FutureForceUpdaterComponent(_scene));
+		RepulsionForce repulsionForce = new FutureRepulsionForce1(40, 10);
+		_components.add(new FutureForceUpdaterComponent(_scene, Pedestrians.getFutureLocation(), 5, repulsionForce));
 		_components.add(new FuturePositionUpdaterComponent(_scene));
 		_components.add(new PedestrianForceUpdaterComponent(_scene));
 		_components.add(new PedestrianPositionUpdaterComponent(_scene));

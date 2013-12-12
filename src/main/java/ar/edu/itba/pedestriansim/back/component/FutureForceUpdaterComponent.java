@@ -4,22 +4,29 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.PedestrianFutureRepulsionForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
 import ar.edu.itba.pedestriansim.back.Vectors;
+import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
+
+import com.google.common.base.Function;
 
 public class FutureForceUpdaterComponent implements Updateable {
 
-	private final static float EXTERNAL_FORCE_THRESHOLD_NEWTON = 5;
-	private final PedestrianArea scene;
-	private final PedestrianFutureRepulsionForceModel repulsionForceModel = new PedestrianFutureRepulsionForceModel();
 	private final Vectors vectors = new Vectors();
 
 	private final Vector2f externalForcesOnFuture = new Vector2f();
 	private final Vector2f pointAtReactionDistance = new Vector2f();
 
-	public FutureForceUpdaterComponent(PedestrianArea scene) {
+	private final PedestrianArea scene;
+	private final RepulsionForce _repulsionForceModel;
+	private final Function<Pedestrian, Vector2f> _interactionLocation;
+	private float _externalForceThreshold;
+	
+	public FutureForceUpdaterComponent(PedestrianArea scene, Function<Pedestrian, Vector2f> interactionLocation, float externalForceThreshold, RepulsionForce repulsionForceModel) {
 		this.scene = scene;
+		_interactionLocation = interactionLocation;
+		_externalForceThreshold = externalForceThreshold;
+		_repulsionForceModel = repulsionForceModel;
 	}
 
 	public void update(float elapsedTimeInSeconds) {
@@ -41,7 +48,7 @@ public class FutureForceUpdaterComponent implements Updateable {
 				externalForcesOnFuture.add(_repulsionForceModel.apply(futureLocation, otherFuture));
 			}
 			float externalForceMod = externalForcesOnFuture.length();
-			if (EXTERNAL_FORCE_THRESHOLD_NEWTON <= externalForceMod) {
+			if (_externalForceThreshold <= externalForceMod) {
 				subject.getFuture().getBody().applyForce(externalForcesOnFuture);
 			} else {
 				subject.getFuture().getBody().applyForce(Vectors.nullVector());
@@ -50,9 +57,5 @@ public class FutureForceUpdaterComponent implements Updateable {
 		} else {
 			futureLocation.set(center);
 		}
-	}
-
-	private Vector2f getPedestrianFutureLocation(Pedestrian pedestrian) {
-		return pedestrian.getFuture().getBody().getCenter();
 	}
 }
