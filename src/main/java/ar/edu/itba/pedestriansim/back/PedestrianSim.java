@@ -9,6 +9,7 @@ import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
 import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
+import ar.edu.itba.pedestriansim.back.desireforce.ReactionDistanceDesireForce;
 import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
 import ar.edu.itba.pedestriansim.back.replusionforce.FutureRepulsionForce1;
 import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
@@ -24,7 +25,7 @@ public class PedestrianSim implements Updateable {
 		RepulsionForce repulsionForce = new FutureRepulsionForce1(40, 10);
 		_components.add(new FutureForceUpdaterComponent(_scene, Pedestrians.getFutureLocation(), 5, repulsionForce));
 		_components.add(new FuturePositionUpdaterComponent(_scene));
-		_components.add(new PedestrianForceUpdaterComponent(_scene));
+		_components.add(new PedestrianForceUpdaterComponent(_scene, new ReactionDistanceDesireForce(), new SpringForceModel(10000)));
 		_components.add(new PedestrianPositionUpdaterComponent(_scene));
 		_components.add(new PedestrianRemoverComponent(_scene));
 		_components.add(new GridPedestrianPositionUpdater(_scene));

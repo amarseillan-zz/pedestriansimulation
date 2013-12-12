@@ -3,11 +3,11 @@ package ar.edu.itba.pedestriansim.back.component;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.DrivingForce;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
+import ar.edu.itba.pedestriansim.back.desireforce.DesireForce;
 
 public class PedestrianForceUpdaterComponent implements Updateable {
 
@@ -15,37 +15,31 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 	
 	private final Vector2f forces = new Vector2f();
 	private final PedestrianArea scene;
-	private final DrivingForce forceModel = new DrivingForce();
-	private final SpringForceModel collisitionModel = new SpringForceModel(10000);
+	private final DesireForce _desireForce;
+	private final SpringForceModel _collisitionModel;
 
-	public PedestrianForceUpdaterComponent(PedestrianArea scene) {
+	public PedestrianForceUpdaterComponent(PedestrianArea scene, DesireForce desireForce, SpringForceModel collisitionModel) {
 		this.scene = scene;
+		_desireForce = desireForce;
+		_collisitionModel = collisitionModel;
 	}
 
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian subject : scene.getPedestrians()) {
 			forces.set(nullForce);
-			forces.add(getDesireForce(subject, subject.getFuture().getBody().getCenter()));
+			forces.add(_desireForce.exertedBy(subject));
 			forces.add(getExternalForces(subject));
 			subject.getBody().applyForce(forces);
 		}
 	}
-	
-	private Vector2f getDesireForce(Pedestrian subject, Vector2f target) {
-		float distance = subject.getBody().getCenter().distance(target);
-		float p = distance / subject.getReactionDistance();
-		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity()).scale(p);
-	}
 
 	private Vector2f getExternalForces(Pedestrian subject) {
 		Vector2f externalForces = new Vector2f();
-		for (Pedestrian other : scene.getCollitions(subject)) {
-			if (other != subject) {
-				externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
-			}
+		for (Pedestrian other : scene.getOtherPedestrians(subject)) {
+			externalForces.add(_collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 		}
 		for (Shape shape : scene.getObstacles()) {
-			Vector2f force = collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
+			Vector2f force = _collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
 			externalForces.add(force);
 		}
 		externalForces.add(subject.getFuture().getBody().getAppliedForce());
