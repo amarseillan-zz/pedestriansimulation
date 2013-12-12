@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.newdawn.slick.geom.Shape;
 
+import ar.edu.itba.pedestriansim.back.spatial.GridSpace;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 

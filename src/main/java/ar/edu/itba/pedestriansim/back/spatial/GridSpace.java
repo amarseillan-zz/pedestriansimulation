@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back;
+package ar.edu.itba.pedestriansim.back.spatial;
 
 import java.util.Collection;
 import java.util.Map;
