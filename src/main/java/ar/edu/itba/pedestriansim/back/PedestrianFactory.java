@@ -2,8 +2,8 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
+import ar.edu.itba.common.rand.RandomGenerator;
+import ar.edu.itba.common.rand.UniformRandomGenerator;
 
 public class PedestrianFactory {
 

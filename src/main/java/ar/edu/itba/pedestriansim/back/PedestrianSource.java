@@ -2,12 +2,12 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.common.rand.GaussianRandomGenerator;
+import ar.edu.itba.common.rand.RandomGenerator;
+import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.event.Event;
 import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
 import ar.edu.itba.pedestriansim.back.event.EventListener;
-import ar.edu.itba.pedestriansim.back.rand.GaussianRandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class PedestrianSource implements EventListener {
 

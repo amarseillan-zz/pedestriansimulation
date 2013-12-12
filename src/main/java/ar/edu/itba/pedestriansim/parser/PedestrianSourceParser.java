@@ -9,13 +9,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.common.rand.GaussianRandomGenerator;
+import ar.edu.itba.common.rand.RandomGenerator;
+import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetArea;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
-import ar.edu.itba.pedestriansim.back.rand.GaussianRandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.RandomGenerator;
-import ar.edu.itba.pedestriansim.back.rand.UniformRandomGenerator;
 
 public class PedestrianSourceParser {
 

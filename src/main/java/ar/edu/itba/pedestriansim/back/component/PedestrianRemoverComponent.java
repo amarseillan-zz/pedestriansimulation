@@ -1,7 +1,6 @@
 package ar.edu.itba.pedestriansim.back.component;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,11 +12,13 @@ import ar.edu.itba.pedestriansim.back.event.Event;
 import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
 import ar.edu.itba.pedestriansim.back.event.EventListener;
 
+import com.google.common.collect.Sets;
+
 public class PedestrianRemoverComponent implements Updateable, EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
 	
-	private Set<Pedestrian> pendingForRemoval = new HashSet<>();
+	private Set<Pedestrian> pendingForRemoval = Sets.newHashSet();
 	private final PedestrianArea _scene;
 	
 	public PedestrianRemoverComponent(PedestrianArea scene) {
