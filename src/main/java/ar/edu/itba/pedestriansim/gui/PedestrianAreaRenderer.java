@@ -7,9 +7,9 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
+import ar.edu.itba.common.spatial.Grid;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
-import ar.edu.itba.pedestriansim.back.spatial.Grid;
 
 public class PedestrianAreaRenderer extends ShapeRenderer {
 
