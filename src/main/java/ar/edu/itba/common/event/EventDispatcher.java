@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back.event;
+package ar.edu.itba.common.event;
 
 import java.util.Iterator;
 import java.util.LinkedList;

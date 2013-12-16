@@ -1,5 +1,4 @@
-package ar.edu.itba.pedestriansim.back.event;
-
+package ar.edu.itba.common.event;
 
 public class Event {
 

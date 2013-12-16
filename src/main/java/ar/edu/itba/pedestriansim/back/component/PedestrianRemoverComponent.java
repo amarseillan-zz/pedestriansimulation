@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import ar.edu.itba.common.event.Event;
+import ar.edu.itba.common.event.EventDispatcher;
+import ar.edu.itba.common.event.EventListener;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.Updateable;
-import ar.edu.itba.pedestriansim.back.event.Event;
-import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
-import ar.edu.itba.pedestriansim.back.event.EventListener;
 
 import com.google.common.collect.Sets;
 

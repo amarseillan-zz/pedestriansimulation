@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
+import ar.edu.itba.common.event.EventDispatcher;
 import ar.edu.itba.pedestriansim.creator.PedestrianAreaCreator;
 import ar.edu.itba.pedestriansim.creator.UpdateListCreator;
 import ar.edu.itba.pedestriansim.gui.Camera;
