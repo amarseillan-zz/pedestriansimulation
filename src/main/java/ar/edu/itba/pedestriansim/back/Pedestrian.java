@@ -8,7 +8,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class Pedestrian {
 
-	private static final float REACTION_DISTANCE = 1.5f;
+	private static final float DEFAULT_REACTION_DISTANCE = 1.5f;
 	
 	private Serializable _id;
 	private int _team;
@@ -17,6 +17,7 @@ public class Pedestrian {
 	private PedestrianFuture _future;
 	private RigidBody _body;
 	private float _maxVelocity;
+	private float _reactionDistance;
 
 	public Pedestrian(Serializable id, PedestrianTargetList targets, int team, RigidBody body) {
 		_id = id;
@@ -25,6 +26,7 @@ public class Pedestrian {
 		_body = body;
 		_currentTarget = _targetList.getFirst();
 		_future = new PedestrianFuture(this);
+		setReactionDistance(DEFAULT_REACTION_DISTANCE);
 	}
 
 	public Serializable getId() {
@@ -99,8 +101,12 @@ public class Pedestrian {
 		_body.getCenter().y += dy;
 	}
 	
+	public void setReactionDistance(float reactionDistance) {
+		_reactionDistance = reactionDistance;
+	}
+
 	public float getReactionDistance() {
-		return REACTION_DISTANCE;
+		return _reactionDistance;
 	}
 
 	@Override

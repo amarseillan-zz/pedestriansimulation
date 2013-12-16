@@ -1,66 +1,62 @@
 package ar.edu.itba.pedestriansim;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import ar.edu.itba.pedestriansim.back.PedestrianSim;
 import ar.edu.itba.pedestriansim.gui.Camera;
 import ar.edu.itba.pedestriansim.gui.KeyHandler;
 import ar.edu.itba.pedestriansim.gui.PedestrianAreaRenderer;
-import ar.edu.itba.pedestriansim.parser.AreaFileParser;
 
+@Component
 public class PedestrianApp extends BasicGame {
 
 	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context.refresh();
 		try {
-			AppGameContainer app = new AppGameContainer(new PedestrianApp("./src/main/resources/9JulioYLavalle/setup.properties"));
-			app.setUpdateOnlyWhenVisible(false);
-			app.setDisplayMode(1200, 700, false);
-			app.start();
+			PedestrianApp app = context.getBean(PedestrianApp.class);
+			AppGameContainer appContainer = new AppGameContainer(app);
+			appContainer.setUpdateOnlyWhenVisible(false);
+			appContainer.setDisplayMode(1200, 700, false);
+			appContainer.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+		context.close();
 	}
 
 	private static final float TIME_STEP = 1 / 100f;
 
-	private File _configFile;
 	private Camera _camera;
 	private PedestrianAreaRenderer _renderer;
+
+	@Autowired
 	private PedestrianSim _simulation;
 
-	public PedestrianApp(String configurationFilePath) {
+	public PedestrianApp() {
 		super("Pedestrian simulation");
-		_configFile = new File(configurationFilePath);
 	}
-
+	
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		try {
-			gc.setAlwaysRender(true);
-			gc.setTargetFrameRate(60);
-			_camera = new Camera();
-			_renderer = new PedestrianAreaRenderer(_camera);
-			gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer));
-			Properties configuration = new Properties();
-			configuration.load(new FileInputStream(_configFile));
-			_simulation = new AreaFileParser().load(_configFile.getParentFile().getAbsolutePath(), _camera, configuration);
-		} catch (IOException e) {
-			throw new IllegalStateException("Error aprsing configuration file!", e);
-		}
+		_camera = new Camera();
+		_simulation.init(_camera);
+		gc.setAlwaysRender(true);
+		gc.setTargetFrameRate(60);
+		_renderer = new PedestrianAreaRenderer(_camera);
+		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer));
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		_renderer.render(gc, g, _simulation.getScene());
+		_renderer.render(gc, g, _simulation.getPedestrianArea());
 	}
 
 	@Override

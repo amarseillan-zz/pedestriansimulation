@@ -1,34 +1,32 @@
 package ar.edu.itba.pedestriansim.back;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
-import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
-import ar.edu.itba.pedestriansim.back.desireforce.ReactionDistanceDesireForce;
-import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
-import ar.edu.itba.pedestriansim.back.replusionforce.FutureRepulsionForce1;
-import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
+import ar.edu.itba.pedestriansim.creator.PedestrianAreaCreator;
+import ar.edu.itba.pedestriansim.creator.UpdateListCreator;
+import ar.edu.itba.pedestriansim.gui.Camera;
+
+@Component
 public class PedestrianSim implements Updateable {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
-	private final PedestrianArea _scene;
-	private final List<Updateable> _components = new LinkedList<Updateable>();
 
-	public PedestrianSim(int width, int height, int gridSize) {
-		_scene = new PedestrianArea(width, height, gridSize);
-		RepulsionForce repulsionForce = new FutureRepulsionForce1(40, 10);
-		_components.add(new FutureForceUpdaterComponent(_scene, Pedestrians.getFutureLocation(), 5, repulsionForce));
-		_components.add(new FuturePositionUpdaterComponent(_scene));
-		_components.add(new PedestrianForceUpdaterComponent(_scene, new ReactionDistanceDesireForce(), new SpringForceModel(10000)));
-		_components.add(new PedestrianPositionUpdaterComponent(_scene));
-		_components.add(new PedestrianRemoverComponent(_scene));
-		_components.add(new GridPedestrianPositionUpdater(_scene));
+	@Autowired
+	private PedestrianAreaCreator pedestrianAreaCreator;
+
+	@Autowired
+	private UpdateListCreator updateListCreator;
+
+	private PedestrianArea _pedestrianArea;
+	private List<Updateable> _components;
+
+	public void init(Camera camera) {
+		_pedestrianArea = pedestrianAreaCreator.produce(camera);
+		_components = updateListCreator.produce(_pedestrianArea);
 	}
 
 	public void update(float elapsedTimeInSeconds) {
@@ -38,8 +36,8 @@ public class PedestrianSim implements Updateable {
 		}
 	}
 
-	public PedestrianArea getScene() {
-		return _scene;
+	public PedestrianArea getPedestrianArea() {
+		return _pedestrianArea;
 	}
 
 }

@@ -1,8 +1,14 @@
 package ar.edu.itba.common.rand;
 
+import com.google.common.collect.Range;
+
 public class UniformRandomGenerator implements RandomGenerator {
 
     private float _min, _max;
+
+    public UniformRandomGenerator(Range<Float> range) {
+    	this(range.lowerEndpoint(), range.upperEndpoint());
+    }
 
     public UniformRandomGenerator(float min, float max) {
     	if (_min < _max) {
