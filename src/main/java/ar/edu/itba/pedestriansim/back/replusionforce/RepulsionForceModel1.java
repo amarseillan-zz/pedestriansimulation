@@ -2,12 +2,12 @@ package ar.edu.itba.pedestriansim.back.replusionforce;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class FutureRepulsionForce1 implements RepulsionForce {
+public class RepulsionForceModel1 implements RepulsionForce {
 
 	private final Vector2f cache = new Vector2f();
 	private float _max, _alpha;
 
-	public FutureRepulsionForce1(float max, float alpha) {
+	public RepulsionForceModel1(float max, float alpha) {
 		_max = max;
 		_alpha = alpha;
 	}
