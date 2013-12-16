@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back;
+package ar.edu.itba.pedestriansim.physics;
 
 import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Circle;

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Shape;
 
+import ar.edu.itba.pedestriansim.physics.RigidBody;
+
 public class Pedestrian {
 
 	private static final float DEFAULT_REACTION_DISTANCE = 1.5f;

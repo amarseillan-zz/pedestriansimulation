@@ -2,8 +2,8 @@ package ar.edu.itba.pedestriansim.back.desireforce;
 
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.DrivingForce;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.physics.DrivingForce;
 
 public class ReactionDistanceDesireForce implements DesireForce {
 

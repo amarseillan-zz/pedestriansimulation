@@ -2,6 +2,8 @@ package ar.edu.itba.pedestriansim.back;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.pedestriansim.physics.RigidBody;
+
 
 public class PedestrianFuture {
 

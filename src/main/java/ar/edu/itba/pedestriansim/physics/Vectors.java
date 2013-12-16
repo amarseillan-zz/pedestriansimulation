@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back;
+package ar.edu.itba.pedestriansim.physics;
 
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;

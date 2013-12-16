@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.RigidBody;
+import ar.edu.itba.pedestriansim.physics.RigidBody;
 
 public class PedestrianRenderer extends ShapeRenderer {
 

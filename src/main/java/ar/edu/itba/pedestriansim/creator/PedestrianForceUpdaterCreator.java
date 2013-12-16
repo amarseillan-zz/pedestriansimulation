@@ -2,11 +2,11 @@ package ar.edu.itba.pedestriansim.creator;
 
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.Updateable;
 import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.desireforce.DesireForce;
 import ar.edu.itba.pedestriansim.back.desireforce.ReactionDistanceDesireForce;
+import ar.edu.itba.pedestriansim.physics.SpringForceModel;
 
 public class PedestrianForceUpdaterCreator {
 	

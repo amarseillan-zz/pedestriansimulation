@@ -5,8 +5,8 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.Updateable;
-import ar.edu.itba.pedestriansim.back.Vectors;
 import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
+import ar.edu.itba.pedestriansim.physics.Vectors;
 
 import com.google.common.base.Function;
 

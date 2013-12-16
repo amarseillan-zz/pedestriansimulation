@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
+import ar.edu.itba.pedestriansim.physics.RigidBody;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Range;

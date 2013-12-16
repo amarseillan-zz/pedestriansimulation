@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.back;
+package ar.edu.itba.pedestriansim.physics;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
