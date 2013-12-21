@@ -42,7 +42,6 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 			Vector2f force = _collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
 			externalForces.add(force);
 		}
-		externalForces.add(subject.getFuture().getBody().getAppliedForce());
 		return externalForces;
 	}
 }

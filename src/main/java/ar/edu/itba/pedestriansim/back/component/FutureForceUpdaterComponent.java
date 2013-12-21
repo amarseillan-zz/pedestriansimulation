@@ -41,7 +41,6 @@ public class FutureForceUpdaterComponent implements Updateable {
 		if (!subject.isOnTarget()) {
 			Vector2f target = subject.getTarget().getCenter();
 			vectors.pointBetween(center, target, subject.getReactionDistance(), pointAtReactionDistance);
-			futureLocation.set(pointAtReactionDistance);
 			externalForcesOnFuture.set(Vectors.nullVector());
 			for (Pedestrian other : scene.getOtherPedestrians(subject)) {
 				Vector2f otherFuture = _interactionLocation.apply(other);
@@ -49,11 +48,13 @@ public class FutureForceUpdaterComponent implements Updateable {
 			}
 			float externalForceMod = externalForcesOnFuture.length();
 			if (_externalForceThreshold <= externalForceMod) {
+				vectors.pointBetween(center, subject.getFuture().getBody().getCenter(), subject.getReactionDistance(), pointAtReactionDistance);
 				subject.getFuture().getBody().applyForce(externalForcesOnFuture);
 			} else {
 				subject.getFuture().getBody().applyForce(Vectors.nullVector());
 				subject.getFuture().getBody().setVelocity(Vectors.nullVector());
 			}
+			futureLocation.set(pointAtReactionDistance);
 		} else {
 			futureLocation.set(center);
 		}

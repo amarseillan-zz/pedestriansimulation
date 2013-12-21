@@ -52,8 +52,8 @@ public class FutureForceUpdaterComponentCreator {
 		switch (repulsionForceType) {
 			case MODEL_1:
 				repulsionForce = new RepulsionForceModel1(
-					_config.getEnumParam(repulsionForceType, "max", Float.class),
-					_config.getEnumParam(repulsionForceType, "alpha", Float.class));
+					_config.getEnumParam(repulsionForceType, "alpha", Float.class),
+					_config.getEnumParam(repulsionForceType, "beta", Float.class));
 				break;
 			default:
 				throw new IllegalStateException("Unknown type for RepulsionForceModel: " + repulsionForceType);
