@@ -38,8 +38,10 @@ public class PedestrianApp extends BasicGame {
 	private Camera _camera;
 	private PedestrianAreaRenderer _renderer;
 
-	@Autowired
 	private PedestrianSim _simulation;
+	
+	@Autowired
+	private PedestrianAppConfig _config;
 
 	public PedestrianApp() {
 		super("Pedestrian simulation");
@@ -48,10 +50,10 @@ public class PedestrianApp extends BasicGame {
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		_camera = new Camera();
-		_simulation.init(_camera);
+		_simulation = new PedestrianSim(_config, _camera);
+		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
-		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer));
 	}
 

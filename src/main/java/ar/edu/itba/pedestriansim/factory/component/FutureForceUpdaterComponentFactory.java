@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.creator;
+package ar.edu.itba.pedestriansim.factory.component;
 
 import org.newdawn.slick.geom.Vector2f;
 
@@ -13,14 +13,14 @@ import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForceModel1;
 
 import com.google.common.base.Function;
 
-public class FutureForceUpdaterComponentCreator {
+public class FutureForceUpdaterComponentFactory {
 
 	private static enum RepulsionForceType {MODEL_1};
 	private static enum PedestrianInteractionType {BODY_LOCATION, FUTURE_LOCATION};
 	
 	private PedestrianAppConfig _config;
 	
-	public FutureForceUpdaterComponentCreator(PedestrianAppConfig config) {
+	public FutureForceUpdaterComponentFactory(PedestrianAppConfig config) {
 		_config = config;
 	}
 

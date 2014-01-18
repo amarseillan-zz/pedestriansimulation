@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.creator;
+package ar.edu.itba.pedestriansim.factory;
 
 import java.util.Properties;
 
@@ -10,32 +10,31 @@ import ar.edu.itba.common.rand.GaussianRandomGenerator;
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.PedestrianFactory;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetArea;
 import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
 
-public class PedestrianSourceCreator {
+public class PedestrianSourceFactory {
 
 	private PedestrianArea _pedestrianArea;
 	
-	public PedestrianSourceCreator(PedestrianArea pedestrianArea) {
+	public PedestrianSourceFactory(PedestrianArea pedestrianArea) {
 		_pedestrianArea = pedestrianArea;
 	}
 	
-	public PedestrianSource produce(Properties properties, PedestrianFactory pedestrianFactory) {
-		int team = Integer.parseInt(properties.getProperty("team"));
-		float x = Float.valueOf(properties.getProperty("x"));
-		float y = Float.valueOf(properties.getProperty("y"));
-		float radius = Float.valueOf(properties.getProperty("radius"));
+	public PedestrianSource produce(Properties pedestrianSourceConfig, PedestrianFactory pedestrianFactory) {
+		int team = Integer.parseInt(pedestrianSourceConfig.getProperty("team"));
+		float x = Float.valueOf(pedestrianSourceConfig.getProperty("x"));
+		float y = Float.valueOf(pedestrianSourceConfig.getProperty("y"));
+		float radius = Float.valueOf(pedestrianSourceConfig.getProperty("radius"));
 		Vector2f location = new Vector2f(x, y);
-		PedestrianSource source = new PedestrianSource(pedestrianFactory, location, radius, parsePedestrianTarget(properties), _pedestrianArea, team);
-		String limitString = properties.getProperty("produce.limit");
+		PedestrianSource source = new PedestrianSource(pedestrianFactory, location, radius, parsePedestrianTarget(pedestrianSourceConfig), _pedestrianArea, team);
+		String limitString = pedestrianSourceConfig.getProperty("produce.limit");
 		if (!StringUtils.isEmpty(limitString)) {
 			source.setProduceLimit(Integer.valueOf(limitString));
 		}
-		source.setProduceDelayGenerator(parseRandomDistribution(properties.getProperty("produce.delay").split(" ")));
-		source.setPedestrianAmountGenerator(parseRandomDistribution(properties.getProperty("produce.amount").split(" ")));
+		source.setProduceDelayGenerator(parseRandomDistribution(pedestrianSourceConfig.getProperty("produce.delay").split(" ")));
+		source.setPedestrianAmountGenerator(parseRandomDistribution(pedestrianSourceConfig.getProperty("produce.amount").split(" ")));
 		return source;
 	}
 	

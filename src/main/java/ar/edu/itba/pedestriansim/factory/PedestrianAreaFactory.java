@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.creator;
+package ar.edu.itba.pedestriansim.factory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,28 +7,24 @@ import java.util.Scanner;
 
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Rectangle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.PedestrianFactory;
 import ar.edu.itba.pedestriansim.gui.Camera;
 
 import com.google.common.base.Optional;
 
-@Component
-public class PedestrianAreaCreator {
+public class PedestrianAreaFactory {
 
-	@Autowired
-	private PedestrianAppConfig config;
-
-	@Autowired
-	private PedestrianFactory pedestrianfactory;
+	private PedestrianAppConfig _config;
+	
+	public PedestrianAreaFactory(PedestrianAppConfig config) {
+		_config = config;
+	}
 	
 	public PedestrianArea produce(Camera camera) {
 		try {
-			PedestrianArea pedestrianArea = config.getPedestrianArea();
+			PedestrianArea pedestrianArea = _config.getPedestrianArea();
 			loadSources(pedestrianArea);
 			loadObstacles(pedestrianArea);
 			setupView(camera);
@@ -39,14 +35,15 @@ public class PedestrianAreaCreator {
 	}
 	
 	private void loadSources(PedestrianArea pedestrianArea) throws IOException {
-		PedestrianSourceCreator	sourceCreator = new PedestrianSourceCreator(pedestrianArea);
-		for (Properties sourceConfig : config.getPedestrianSources()) {
+		PedestrianSourceFactory	sourceCreator = new PedestrianSourceFactory(pedestrianArea);
+		PedestrianFactory pedestrianfactory = new PedestrianFactory(_config);
+		for (Properties sourceConfig : _config.getPedestrianSources()) {
 			pedestrianArea.addSource(sourceCreator.produce(sourceConfig, pedestrianfactory));
 		}
 	}
 	
 	private void loadObstacles(PedestrianArea pedestrianArea) {
-		InputStream is = config.getObjectFile();
+		InputStream is = _config.getObjectFile();
 		if (is == null) {
 			return;
 		}
@@ -82,11 +79,11 @@ public class PedestrianAreaCreator {
 	}
 
 	private void setupView(Camera camera) {
-		Optional<Integer> zoom = config.getOptional("zoom", Integer.class);
+		Optional<Integer> zoom = _config.getOptional("zoom", Integer.class);
 		if (zoom.isPresent()) {
 			camera.setZoom(zoom.get());
 		}
-		Optional<String[]> location = config.getLocation();
+		Optional<String[]> location = _config.getLocation();
 		if (location.isPresent()) {
 			camera.scrollX(Float.parseFloat(location.get()[0]));
 			camera.scrollY(Float.parseFloat(location.get()[1]));

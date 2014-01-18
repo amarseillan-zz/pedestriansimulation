@@ -1,4 +1,4 @@
-package ar.edu.itba.pedestriansim.creator;
+package ar.edu.itba.pedestriansim.factory.component;
 
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
@@ -8,11 +8,11 @@ import ar.edu.itba.pedestriansim.back.desireforce.DesireForce;
 import ar.edu.itba.pedestriansim.back.desireforce.ReactionDistanceDesireForce;
 import ar.edu.itba.pedestriansim.physics.SpringForceModel;
 
-public class PedestrianForceUpdaterCreator {
+public class PedestrianForceUpdaterFactory {
 	
 	private PedestrianAppConfig _config;
 	
-	public PedestrianForceUpdaterCreator(PedestrianAppConfig config) {
+	public PedestrianForceUpdaterFactory(PedestrianAppConfig config) {
 		_config = config;
 	}
 	

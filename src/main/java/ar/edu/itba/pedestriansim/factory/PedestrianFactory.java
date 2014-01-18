@@ -1,18 +1,17 @@
-package ar.edu.itba.pedestriansim.back;
+package ar.edu.itba.pedestriansim.factory;
 
 import org.newdawn.slick.geom.Vector2f;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
+import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 
-@Component
 public class PedestrianFactory {
 
 	private int lastId = 0;
@@ -21,12 +20,11 @@ public class PedestrianFactory {
 	private final RandomGenerator _radiusGenerator;
 	private final Optional<Float> _reactionDistance;
 
-	@Autowired
-	public PedestrianFactory(PedestrianAppConfig _config) {
-		_massGenerator = new UniformRandomGenerator(getRange("pedestrian.mass", _config));
-		_velocityGenerator = new UniformRandomGenerator(getRange("pedestrian.velocity", _config));
-		_radiusGenerator = new UniformRandomGenerator(getRange("pedestrian.radius", _config));
-		_reactionDistance = _config.getOptional("pedestrian.reactionDistance", Float.class);
+	public PedestrianFactory(PedestrianAppConfig config) {
+		_massGenerator = new UniformRandomGenerator(getRange("pedestrian.mass", config));
+		_velocityGenerator = new UniformRandomGenerator(getRange("pedestrian.velocity", config));
+		_radiusGenerator = new UniformRandomGenerator(getRange("pedestrian.radius", config));
+		_reactionDistance = config.getOptional("pedestrian.reactionDistance", Float.class);
 	}
 	
 	private Range<Float> getRange(String name, PedestrianAppConfig _config) {
