@@ -34,7 +34,7 @@ public class PedestrianForceUpdaterComponent implements Updateable {
 	private Vector2f getExternalForces(Pedestrian subject) {
 		Vector2f externalForces = new Vector2f();
 		SpringForceModel collisitionModel = _pedestrianForces.getCollisitionModel();
-		for (Pedestrian other : scene.getOtherPedestrians(subject)) {
+		for (Pedestrian other : scene.getPedestriansAndSkip(subject)) {
 			externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 		}
 		for (Shape shape : scene.getObstacles()) {

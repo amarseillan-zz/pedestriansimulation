@@ -10,6 +10,7 @@ import ar.edu.itba.common.spatial.GridSpace;
 import ar.edu.itba.pedestriansim.physics.Collitions;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class PedestrianArea {
@@ -72,8 +73,8 @@ public class PedestrianArea {
 		return _pedestrians;
 	}
 
-	public Iterable<Pedestrian> getOtherPedestrians(Pedestrian pedestrian) {
-		return Pedestrians.others(pedestrian, getPedestrians());
+	public Iterable<Pedestrian> getPedestriansAndSkip(Pedestrian pedestrian) {
+		return Iterables.filter(_pedestrians, Pedestrians.not(pedestrian));
 	}
 
 	public Collection<PedestrianSource> getSources() {

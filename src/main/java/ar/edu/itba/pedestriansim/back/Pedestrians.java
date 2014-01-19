@@ -4,12 +4,11 @@ import org.newdawn.slick.geom.Vector2f;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 public class Pedestrians {
 
-	public static final Iterable<Pedestrian> others(Pedestrian me, Iterable<Pedestrian> all) {
-		return Iterables.filter(all, new SkipPedetrian(me));
+	public static final Predicate<Pedestrian> not(Pedestrian pedestrian) {
+		return new SkipPedetrian(pedestrian);
 	}
 
 	public static final Function<Pedestrian, Vector2f> getFutureLocation() {
