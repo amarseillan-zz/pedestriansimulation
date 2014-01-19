@@ -64,6 +64,8 @@ public class PedestrianMouseController implements MouseListener {
 	public void mouseReleased(int button, int x, int y) {
 		_pedestrian.getMission().clear();
 		Vector2f worldCoord = getMouseInWorldCoord();
+		// XXX: Place the target away from the pedestrian!
+		worldCoord.x += _pedestrian.getBody().getRadius() * 3;
 		PedestrianTargetArea newTarget = new PedestrianTargetArea(new Circle(worldCoord.x, worldCoord.y, 0.5f));
 		_pedestrian.getMission().putFirst(newTarget);
 	}
