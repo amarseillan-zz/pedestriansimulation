@@ -1,11 +1,11 @@
-package ar.edu.itba.pedestriansim.back.desireforce;
+package ar.edu.itba.pedestriansim.back.force;
 
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.physics.DrivingForce;
 
-public class ReactionDistanceDesireForce implements DesireForce {
+public class ReactionDistanceDesireForce implements PedestrianForce {
 
 	private final DrivingForce forceModel;
 	
@@ -14,7 +14,7 @@ public class ReactionDistanceDesireForce implements DesireForce {
 	}
 	
 	@Override
-	public Vector2f exertedBy(Pedestrian subject) {
+	public Vector2f apply(Pedestrian subject) {
 		Vector2f target = subject.getFuture().getBody().getCenter();
 		float distance = subject.getBody().getCenter().distance(target);
 		float p = distance / subject.getReactionDistance();

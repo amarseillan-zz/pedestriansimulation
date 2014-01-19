@@ -28,7 +28,7 @@ public class PedestrianPositionUpdaterComponent implements Updateable {
 	public void update(float elapsedTimeInSeconds) {
 		for (Pedestrian pedestrian : _scene.getPedestrians()) {
 			updateRigidBody(pedestrian.getBody(), elapsedTimeInSeconds);
-			pedestrian.updateTarget();
+			pedestrian.getTargetSelection().updateTarget();
 		}
 	}
 

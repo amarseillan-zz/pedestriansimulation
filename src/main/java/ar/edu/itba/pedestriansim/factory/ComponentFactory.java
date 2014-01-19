@@ -2,23 +2,20 @@ package ar.edu.itba.pedestriansim.factory;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.Updateable;
+import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
+import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
-import ar.edu.itba.pedestriansim.factory.component.FutureForceUpdaterComponentFactory;
-import ar.edu.itba.pedestriansim.factory.component.PedestrianForceUpdaterFactory;
 
 import com.google.common.collect.Lists;
 
 public class ComponentFactory {
 
-	@Autowired
 	private PedestrianAppConfig _config;
 
 	public ComponentFactory(PedestrianAppConfig config) {
@@ -26,13 +23,15 @@ public class ComponentFactory {
 	}
 
 	public List<Updateable> produce(PedestrianArea pedestrianArea) {
+		PedestrianForces pedestrianForces = new PedestrianForcesFactory(_config).produce();
 		List<Updateable> components = Lists.newLinkedList();
-		components.add(new FutureForceUpdaterComponentFactory(_config).produce(pedestrianArea));
+		components.add(new FutureForceUpdaterComponent(pedestrianArea, pedestrianForces));
 		components.add(new FuturePositionUpdaterComponent(pedestrianArea));
-		components.add(new PedestrianForceUpdaterFactory(_config).produce(pedestrianArea));
+		components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));
 		components.add(new PedestrianPositionUpdaterComponent(pedestrianArea));
-		components.add(new PedestrianRemoverComponent(pedestrianArea));
+//		components.add(new PedestrianRemoverComponent(pedestrianArea));
 		components.add(new GridPedestrianPositionUpdater(pedestrianArea));
 		return components;
 	}
+	
 }

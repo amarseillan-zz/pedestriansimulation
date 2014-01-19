@@ -29,7 +29,7 @@ public class PedestrianRemoverComponent implements Updateable, EventListener {
 	public void update(float elapsedTimeInSeconds) {
 		List<Pedestrian> toRemove = new LinkedList<>();
 		for (Pedestrian subject : _scene.getPedestrians()) {
-			if (!pendingForRemoval.contains(subject) && subject.isOnFinalTarget()) {
+			if (!pendingForRemoval.contains(subject) && subject.getTargetSelection().isOnFinalTarget()) {
 				toRemove.add(subject);
 			}
 		}

@@ -11,8 +11,8 @@ import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianSource;
-import ar.edu.itba.pedestriansim.back.PedestrianTargetArea;
-import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
+import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
+import ar.edu.itba.pedestriansim.back.mision.PedestrianTargetArea;
 
 public class PedestrianSourceFactory {
 
@@ -38,14 +38,14 @@ public class PedestrianSourceFactory {
 		return source;
 	}
 	
-	private PedestrianTargetList parsePedestrianTarget(Properties properties) {
-		PedestrianTargetList targetList = new PedestrianTargetList();
+	private PedestrianMision parsePedestrianTarget(Properties properties) {
+		PedestrianMision targetList = new PedestrianMision();
 		int targets = Integer.parseInt(properties.getProperty("target"));
 		PedestrianTargetArea current = new PedestrianTargetArea(readLine(properties.getProperty("target.1").split(" ")));
 		targetList.putFirst(current);
 		for (int i = 2; i <= targets; i++) {
 			PedestrianTargetArea next = new PedestrianTargetArea(readLine(properties.getProperty("target." + i).split(" ")));
-			targetList.put(current, next);
+			targetList.putTransition(current, next);
 			current = next;
 		}
 		return targetList;

@@ -22,6 +22,10 @@ public class Vectors {
 		return nullVector;
 	}
 
+	public static boolean isLeft(Vector2f start, Vector2f end, Vector2f pt) {
+		return ((end.x - start.x) * (pt.y - start.y) - (end.y - start.y) * (pt.x - start.x)) > 0;
+	}
+
 	public Vector2f pointBetween(Vector2f start, Vector2f end, float distanceFromStart, Vector2f result) {
 		dir.set(end);
 		dir.sub(start).normalise();

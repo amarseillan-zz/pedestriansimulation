@@ -21,8 +21,9 @@ public class RepulsionForceModel1 implements RepulsionForce {
 	}
 
 	private float intensity(Vector2f p1, Vector2f p2) {
-		float distance = p1.distance(p2);
-		return (float) (_alpha * Math.exp(-distance / _beta));
+		return 500 / p1.distance(p2);
+//		float distance = p1.distance(p2);
+//		return (float) (_alpha * Math.exp(-distance / _beta));
 	}
 
 }

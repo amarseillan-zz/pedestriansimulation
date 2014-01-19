@@ -4,29 +4,20 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.Updateable;
-import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
 import ar.edu.itba.pedestriansim.physics.Vectors;
-
-import com.google.common.base.Function;
 
 public class FutureForceUpdaterComponent implements Updateable {
 
-	private final Vectors vectors = new Vectors();
-
 	private final Vector2f externalForcesOnFuture = new Vector2f();
-	private final Vector2f pointAtReactionDistance = new Vector2f();
 
 	private final PedestrianArea scene;
-	private final RepulsionForce _repulsionForceModel;
-	private final Function<Pedestrian, Vector2f> _interactionLocation;
-	private float _externalForceThreshold;
-	
-	public FutureForceUpdaterComponent(PedestrianArea scene, Function<Pedestrian, Vector2f> interactionLocation, float externalForceThreshold, RepulsionForce repulsionForceModel) {
+	private final PedestrianForces _pedestrianForces;
+
+	public FutureForceUpdaterComponent(PedestrianArea scene, PedestrianForces pedestrianForces) {
 		this.scene = scene;
-		_interactionLocation = interactionLocation;
-		_externalForceThreshold = externalForceThreshold;
-		_repulsionForceModel = repulsionForceModel;
+		_pedestrianForces = pedestrianForces;
 	}
 
 	public void update(float elapsedTimeInSeconds) {
@@ -36,27 +27,19 @@ public class FutureForceUpdaterComponent implements Updateable {
 	}
 
 	private void updatePedestrianFuture(Pedestrian subject) {
-		Vector2f futureLocation = subject.getFuture().getBody().getCenter();
-		Vector2f center = subject.getBody().getCenter();
-		if (!subject.isOnTarget()) {
-			Vector2f target = subject.getTarget().getCenter();
-			vectors.pointBetween(center, target, subject.getReactionDistance(), pointAtReactionDistance);
-			externalForcesOnFuture.set(Vectors.nullVector());
-			for (Pedestrian other : scene.getOtherPedestrians(subject)) {
-				Vector2f otherFuture = _interactionLocation.apply(other);
-				externalForcesOnFuture.add(_repulsionForceModel.apply(futureLocation, otherFuture));
-			}
-			float externalForceMod = externalForcesOnFuture.length();
-			if (_externalForceThreshold <= externalForceMod) {
-				vectors.pointBetween(center, subject.getFuture().getBody().getCenter(), subject.getReactionDistance(), pointAtReactionDistance);
-				subject.getFuture().getBody().applyForce(externalForcesOnFuture);
-			} else {
-				subject.getFuture().getBody().applyForce(Vectors.nullVector());
-				subject.getFuture().getBody().setVelocity(Vectors.nullVector());
-			}
-			futureLocation.set(pointAtReactionDistance);
-		} else {
-			futureLocation.set(center);
+		Vector2f future = subject.getFuture().getBody().getCenter();
+		externalForcesOnFuture.set(Vectors.nullVector());
+		for (Pedestrian pedestrian : scene.getOtherPedestrians(subject)) {
+			Vector2f other = _pedestrianForces.getInteractionLocation().apply(pedestrian);
+			Vector2f repulsionForce = _pedestrianForces.getRepulsionForceModel().apply(future, other);
+			externalForcesOnFuture.add(repulsionForce);
 		}
+		float threshold = _pedestrianForces.getExternalForceThreshold();
+		if (externalForcesOnFuture.lengthSquared() < threshold * threshold) {
+			externalForcesOnFuture.set(Vectors.nullVector());	
+		}
+		externalForcesOnFuture.add(_pedestrianForces.getForceOnFuture().apply(subject));
+		subject.getFuture().getBody().applyForce(externalForcesOnFuture);
 	}
+
 }
