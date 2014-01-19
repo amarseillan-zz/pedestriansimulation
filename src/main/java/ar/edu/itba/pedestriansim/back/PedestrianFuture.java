@@ -4,13 +4,12 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
-
 public class PedestrianFuture {
 
 	private RigidBody _body;
 
-	public PedestrianFuture(Pedestrian owner) {
-		_body = new RigidBody(1, new Vector2f(), 0.1f);
+	public PedestrianFuture(float mass, Pedestrian owner) {
+		_body = new RigidBody(mass, new Vector2f(), 0.1f);
 	}
 
 	public RigidBody getBody() {

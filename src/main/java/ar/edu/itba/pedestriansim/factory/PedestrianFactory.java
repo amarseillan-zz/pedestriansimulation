@@ -6,7 +6,7 @@ import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.PedestrianTargetList;
+import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
 import com.google.common.base.Optional;
@@ -34,9 +34,9 @@ public class PedestrianFactory {
 			Float.parseFloat(values[1].trim()));
 	}
 
-	public Pedestrian build(Vector2f location, int team, PedestrianTargetList targets) {
+	public Pedestrian build(Vector2f location, int team, PedestrianMision mission) {
 		RigidBody body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
-		Pedestrian pedestrian = new Pedestrian(lastId++, targets, team, body);
+		Pedestrian pedestrian = new Pedestrian(lastId++, mission, team, body);
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
 		if (_reactionDistance.isPresent()) {
 			pedestrian.setReactionDistance(_reactionDistance.get());

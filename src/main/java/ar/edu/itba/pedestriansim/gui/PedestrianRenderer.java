@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
+import ar.edu.itba.pedestriansim.back.TargetSelection;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
 public class PedestrianRenderer extends ShapeRenderer {
@@ -43,9 +44,9 @@ public class PedestrianRenderer extends ShapeRenderer {
 	}
 
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
-		if (pedestrian.getTarget() != null) {
+		if (pedestrian.getTargetSelection().getTarget() != null) {
 			Vector2f location = pedestrian.getBody().getCenter();
-			pedestrianPath.set(location, pedestrian.getTarget().getCenter());
+			pedestrianPath.set(location, pedestrian.getTargetSelection().getTarget().getCenter());
 			draw(g, pedestrianPath, Color.white);
 			future.set(location, pedestrian.getFuture().getBody().getCenter());
 			draw(g, future, Color.red);
@@ -65,10 +66,11 @@ public class PedestrianRenderer extends ShapeRenderer {
 	private void drawStats(Graphics g, Pedestrian pedestrian) {
 		g.setColor(Color.cyan);
 		Vector2f location = pedestrian.getBody().getCenter();
-		float distance = location.distance(pedestrian.getTarget().getCenter());
+		TargetSelection targetSelection = pedestrian.getTargetSelection();
+		float distance = location.distance(targetSelection.getTarget().getCenter());
 		String positionString = String.format("x = (%.2f, %.2f) | D = %.3f [m]", location.x, location.y, distance);
 		drawString(g, positionString, location.x, location.y);
-		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), pedestrian.getETA());
+		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), targetSelection.getETA());
 		drawString(g, velocityString, location.x, location.y - 2);
 	}
 	

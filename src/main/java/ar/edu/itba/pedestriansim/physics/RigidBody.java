@@ -45,7 +45,7 @@ public class RigidBody {
 	}
 
 	public void setLocation(Vector2f location) {
-		this._center.set(location);
+		_center.set(location);
 	}
 
 	public CircularShape getCollitionShape() {
@@ -64,7 +64,7 @@ public class RigidBody {
 		getVelocity().add(deltaVelocity);
 		getCenter().add(deltaPosition);
 	}
-	
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)

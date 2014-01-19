@@ -8,6 +8,7 @@ import ar.edu.itba.common.event.EventListener;
 import ar.edu.itba.common.rand.GaussianRandomGenerator;
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
+import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.factory.PedestrianFactory;
 
 public class PedestrianSource implements EventListener {
@@ -21,11 +22,11 @@ public class PedestrianSource implements EventListener {
 	private float _radius;
 	private Vector2f _location;
 	private PedestrianArea _pedestrianArea;
-	private PedestrianTargetList _targetList;
+	private PedestrianMision _targetList;
 	private int _team;
 	private int _totalProduced, _produceLimit;
 
-	public PedestrianSource(PedestrianFactory pedestrianFactory, Vector2f location, float radius, PedestrianTargetList targetList, PedestrianArea pedestrianArea, int team) {
+	public PedestrianSource(PedestrianFactory pedestrianFactory, Vector2f location, float radius, PedestrianMision targetList, PedestrianArea pedestrianArea, int team) {
 		_pedestrianFactory = pedestrianFactory;
 		_radius = radius;
 		_location = location;
@@ -81,7 +82,7 @@ public class PedestrianSource implements EventListener {
 			// FIXME: aqui se podria simplemente crear el Body de un peaton y ver si etsa libre,
 			// SI el lugar esta libre, ahi recien crear el peaton
 			_totalProduced++;
-			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), _team, _targetList);
+			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), _team, _targetList.clone());
 			boolean isEmpty;
 			do {
 				float x = _location.x + _initialLocationGenerator.generate();

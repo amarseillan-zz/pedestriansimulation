@@ -5,8 +5,12 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
+
+import com.google.common.base.Preconditions;
 
 public class Pedestrian {
 
@@ -14,21 +18,21 @@ public class Pedestrian {
 	
 	private Serializable _id;
 	private int _team;
-	private PedestrianTargetList _targetList;
-	private PedestrianTargetArea _currentTarget;
+	private TargetSelection targetSelection;
+	private PedestrianMision _mission;
 	private PedestrianFuture _future;
 	private RigidBody _body;
 	private float _maxVelocity;
 	private float _reactionDistance;
 
-	public Pedestrian(Serializable id, PedestrianTargetList targets, int team, RigidBody body) {
-		_id = id;
+	public Pedestrian(Serializable id, PedestrianMision mission, int team, RigidBody body) {
+		_id = Preconditions.checkNotNull(id);
 		_team = team;
-		_targetList = targets;
-		_body = body;
-		_currentTarget = _targetList.getFirst();
-		_future = new PedestrianFuture(this);
+		_body = Preconditions.checkNotNull(body);
+		_mission = Preconditions.checkNotNull(mission);
+		_future = new PedestrianFuture(1, this);
 		setReactionDistance(DEFAULT_REACTION_DISTANCE);
+		targetSelection = new TargetSelection(this);
 	}
 
 	public Serializable getId() {
@@ -38,44 +42,16 @@ public class Pedestrian {
 	public int getTeam() {
 		return _team;
 	}
-
-	public PedestrianTargetArea getTarget() {
-		return _currentTarget;
+	
+	public PedestrianMision getMission() {
+		return _mission;
 	}
 
 	public PedestrianFuture getFuture() {
 		return _future;
 	}
 
-	public float getETA() {
-		if (_currentTarget.onTarget(getShape())) {
-			return 0;
-		} else {
-			float velocity = getBody().getVelocity().length();
-			return Math.abs(velocity) < 0.01 ? Float.NaN  : getTarget().distanceTo(getBody().getCenter()) / velocity;
-		}
-	}
-
-	public boolean isOnTarget() {
-		return _currentTarget.onTarget(getShape());
-	}
-	
-	public boolean isOnFinalTarget() {
-		return isOnTarget() && !_targetList.hasNextTarget(_currentTarget);
-	}
-
-	public void updateTarget() {
-		boolean onTarget = _currentTarget.onTarget(getShape()); 
-		if (onTarget && _targetList.hasNextTarget(_currentTarget)) {
-			_currentTarget = _targetList.nextTarget(_currentTarget);
-			onTarget = false;
-		}
-		if (onTarget) {
-			stop();
-		}
-	}
-
-	private void stop() {
+	public void stop() {
 		_body.getVelocity().set(0, 0);
 		getFuture().getBody().getCenter().set(getBody().getCenter());
 	}
@@ -83,7 +59,7 @@ public class Pedestrian {
 	public RigidBody getBody() {
 		return _body;
 	}
-	
+
 	public Shape getShape() {
 		return _body.getCollitionShape().getShape();
 	}
@@ -103,12 +79,18 @@ public class Pedestrian {
 		_body.getCenter().y += dy;
 	}
 	
-	public void setReactionDistance(float reactionDistance) {
+	public final void setReactionDistance(float reactionDistance) {
 		_reactionDistance = reactionDistance;
+		Vector2f center = getBody().getCenter().copy(); 
+		_future.getBody().setLocation(center.add(new Vector2f(1, 0).scale(reactionDistance)));
 	}
 
 	public float getReactionDistance() {
 		return _reactionDistance;
+	}
+	
+	public TargetSelection getTargetSelection() {
+		return targetSelection;
 	}
 
 	@Override
@@ -117,7 +99,7 @@ public class Pedestrian {
 			.append("id", getId())
 			.append("location", getBody().getCenter())
 			.append("velocity", getBody().getVelocity())
-			.append("target(center)", getTarget().getCenter())
+			.append("target(center)", getTargetSelection().getTarget().getCenter())
 			.build();
 	}
 }
