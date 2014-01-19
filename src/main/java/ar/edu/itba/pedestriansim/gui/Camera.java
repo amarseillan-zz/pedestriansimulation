@@ -2,21 +2,22 @@ package ar.edu.itba.pedestriansim.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
+
+import ar.edu.itba.contrib.slick.BetterTransform;
 
 public class Camera {
 
-	private Transform transform = new Transform();
+	private BetterTransform transform = new BetterTransform();
 	private float width, height;
 	private static final float SMOOTHER = 20f;
 	private static final float SCROLL = 0.63f;
-	
+
 	public void update(GameContainer gc) {
 		width = gc.getWidth();
 		height = gc.getHeight();
 	}
-	
+
 	public void zoomOut() {
 		setZoom(0.99f);
 		this.scrollX(SCROLL);
@@ -28,45 +29,49 @@ public class Camera {
 		this.scrollX(-SCROLL);
 		this.scrollY(-SCROLL);
 	}
-	
+
 	public void setZoom(float zoom) {
-		transform.concatenate(Transform.createScaleTransform(zoom, zoom));
+		transform.scale(zoom);
 	}
-	
+
 	public void scrollLeft() {
-		scrollX(getHorizontalScroll()/SMOOTHER);
+		scrollX(getHorizontalScroll() / SMOOTHER);
 	}
 
 	public void scrollRight() {
-		scrollX(-getHorizontalScroll()/SMOOTHER);
+		scrollX(-getHorizontalScroll() / SMOOTHER);
 	}
 
 	public void scrollX(float amount) {
-		transform.concatenate(Transform.createTranslateTransform(amount, 0));
+		transform.translate(amount, 0);
 	}
-	
+
 	public void scrollUp() {
-		scrollY(getVerticalScroll()/SMOOTHER);
+		scrollY(getVerticalScroll() / SMOOTHER);
 	}
 
 	public void scrollDown() {
-		scrollY(-getVerticalScroll()/SMOOTHER);
+		scrollY(-getVerticalScroll() / SMOOTHER);
 	}
 
 	public void scrollY(float amount) {
-		transform.concatenate(Transform.createTranslateTransform(0, amount));
+		transform.translate(0, amount);
 	}
 
 	private float getVerticalScroll() {
 		return height * 0.005f;
 	}
-	
+
 	private float getHorizontalScroll() {
 		return width * 0.005f;
 	}
 
 	public Shape transform(Shape shape) {
-		return shape.transform(transform);
+		return transform.transform(shape);
+	}
+
+	public Vector2f inverseTransform(Vector2f pt) {
+		return transform.inverse().transform(pt);
 	}
 
 	public Vector2f transform(Vector2f vector) {

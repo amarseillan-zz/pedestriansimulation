@@ -35,13 +35,15 @@ public class PedestrianAppConfig {
     public List<Properties> getPedestrianSources() throws IOException {
     	List<Properties> sources = Lists.newArrayList();
     	String sourceString = Strings.nullToEmpty(env.getProperty("source"));
-    	ClassLoader loader = getClass().getClassLoader();
-    	for (String fileName : Arrays.asList(sourceString.split(","))) {
-    		Properties property = new Properties();
-    		InputStream stream = loader.getResourceAsStream(fileName.trim());
-			property.load(stream);
-    		stream.close();
-    		sources.add(property);
+    	if (!sourceString.isEmpty()) {
+    		ClassLoader loader = getClass().getClassLoader();
+    		for (String fileName : Arrays.asList(sourceString.split(","))) {
+    			Properties property = new Properties();
+    			InputStream stream = loader.getResourceAsStream(fileName.trim());
+    			property.load(stream);
+    			stream.close();
+    			sources.add(property);
+    		}
     	}
     	return sources;
     }

@@ -3,6 +3,7 @@ package ar.edu.itba.pedestriansim.gui;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 
@@ -10,12 +11,14 @@ public class KeyHandler implements KeyListener {
 
 	private PedestrianAreaRenderer _renderer;
 	private Camera _camera;
+	private GameContainer _gc;
 
 	private final List<KeyMapping> handlers = new LinkedList<>();
 	
-	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer) {
+	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer, GameContainer gc) {
 		_camera = camera;
 		_renderer = renderer;
+		_gc = gc;
 		initialize();
 	}
 	
@@ -36,6 +39,8 @@ public class KeyHandler implements KeyListener {
 		handlers.add(new KeyMapping(Input.KEY_D, new ScrollRight()));
 		
 		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderDebugInfo()));
+		handlers.add(new KeyMapping(Input.KEY_P, new PauseToogle()));
+		
 	}
 
 	@Override
@@ -145,5 +150,17 @@ public class KeyHandler implements KeyListener {
 		public void pressed() {
 			_renderer.toggleRenderDebugInfo();
 		}
+	}
+	private final class PauseToogle extends InputKey {
+
+		public PauseToogle() {
+			super(true);
+		}
+		
+		@Override
+		public void pressed() {
+			_gc.setPaused(!_gc.isPaused());
+		}
+		
 	}
 }
