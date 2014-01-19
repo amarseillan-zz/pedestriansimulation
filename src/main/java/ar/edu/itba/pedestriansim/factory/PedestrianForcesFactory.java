@@ -6,11 +6,11 @@ import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.Pedestrians;
-import ar.edu.itba.pedestriansim.back.force.ConstantValueForce;
+import ar.edu.itba.pedestriansim.back.force.SpringFutureAdjustementForce;
 import ar.edu.itba.pedestriansim.back.force.PedestrianForce;
 import ar.edu.itba.pedestriansim.back.force.ReactionDistanceDesireForce;
 import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
-import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForceModel1;
+import ar.edu.itba.pedestriansim.back.replusionforce.ExponentialRepulsionForce;
 import ar.edu.itba.pedestriansim.physics.SpringForceModel;
 
 import com.google.common.base.Function;
@@ -62,7 +62,7 @@ public class PedestrianForcesFactory {
 		RepulsionForceType repulsionForceType = _config.getEnum(RepulsionForceType.class);
 		switch (repulsionForceType) {
 			case MODEL_1:
-				repulsionForce = new RepulsionForceModel1(
+				repulsionForce = new ExponentialRepulsionForce(
 					_config.getEnumParam(repulsionForceType, "alpha", Float.class),
 					_config.getEnumParam(repulsionForceType, "beta", Float.class));
 				break;
@@ -90,7 +90,7 @@ public class PedestrianForcesFactory {
 		ForceOnFutureType desireForceType = _config.getEnum(ForceOnFutureType.class);
 		switch (desireForceType) {
 			case CONSTANT:
-				forceOnFuture = new ConstantValueForce();
+				forceOnFuture = new SpringFutureAdjustementForce();
 				break;
 			default:
 				throw new IllegalStateException("Unknown type for DesireForceType: " + desireForceType);
