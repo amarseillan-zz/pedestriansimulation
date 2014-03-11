@@ -26,10 +26,12 @@ import ar.edu.itba.pedestriansim.gui.PedestrianMouseController;
 public class PedestrianApp extends BasicGame {
 
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+				"applicationContext.xml");
 		context.refresh();
 		try {
-			AppGameContainer appContainer = new AppGameContainer(context.getBean(PedestrianApp.class));
+			AppGameContainer appContainer = new AppGameContainer(
+					context.getBean(PedestrianApp.class));
 			appContainer.setUpdateOnlyWhenVisible(false);
 			appContainer.setDisplayMode(1200, 700, false);
 			appContainer.start();
@@ -51,7 +53,7 @@ public class PedestrianApp extends BasicGame {
 	public PedestrianApp() {
 		super("Pedestrian simulation");
 	}
-	
+
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		_camera = new Camera();
@@ -60,19 +62,25 @@ public class PedestrianApp extends BasicGame {
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
-		PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
-		mouseController.setInput(gc.getInput());	// FIXME: no se porque Slick no esta llamando a este metodo
-		gc.getInput().addMouseListener(mouseController);
+		if (_config.get("mouseEnabled") != null
+				&& _config.get("mouseEnabled").equals("true")) {
+			PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
+			mouseController.setInput(gc.getInput()); // FIXME: no se porque Slick no esta llamando a este metodo
+			gc.getInput().addMouseListener(mouseController);
+		}
 	}
 
-	private PedestrianMouseController createMouseControlledPedestrian(GameContainer gc) {
+	private PedestrianMouseController createMouseControlledPedestrian(
+			GameContainer gc) {
 		PedestrianFactory factory = new PedestrianFactory(_config);
 		// FIXME: safely delete these lines of codes, used for debugging
 		PedestrianMision mission = new PedestrianMision();
 		mission.putFirst(new PedestrianTargetArea(new Circle(15, 15, 0.5f)));
-		_simulation.getPedestrianArea().addPedestrian(factory.build(new Vector2f(10, 10),  1, mission));
+		_simulation.getPedestrianArea().addPedestrian(
+				factory.build(new Vector2f(10, 10), 1, mission));
 		// ===================
-		Pedestrian pedestrian = factory.build(new Vector2f(), 0, new PedestrianMision());
+		Pedestrian pedestrian = factory.build(new Vector2f(), 0,
+				new PedestrianMision());
 		_simulation.getPedestrianArea().addPedestrian(pedestrian);
 		return new PedestrianMouseController(pedestrian, _camera);
 	}
@@ -84,7 +92,7 @@ public class PedestrianApp extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		_camera.update(gc);
-		if (delta > 0) { // 0 = means paused! 
+		if (delta > 0) { // 0 = means paused!
 			_simulation.update(TIME_STEP);
 		}
 		if (gc.getInput().isKeyDown(Input.KEY_R)) {
