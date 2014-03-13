@@ -33,20 +33,31 @@ public class FutureForceUpdaterComponent implements Updateable {
 	}
 
 	private void updatePedestrianFuture(Pedestrian me) {
-		Vector2f future = me.getFuture().getBody().getCenter();
+		Vector2f futureLocation = me.getFuture().getBody().getCenter();
 		externalForcesOnFuture.set(Vectors.nullVector());
-		Iterable<Pedestrian> pedestriansToAvoid = removeOnBack(me, scene.getPedestriansAndSkip(me));
-		for (Pedestrian other : pedestriansToAvoid) {
-			Vector2f interactionLocation = _pedestrianForces.getInteractionLocation().apply(other);
-			Vector2f repulsionForce = _pedestrianForces.getRepulsionForceModel().apply(future, interactionLocation);
-			externalForcesOnFuture.add(repulsionForce);
-		}
-		float threshold = _pedestrianForces.getExternalForceThreshold();
-		if (externalForcesOnFuture.lengthSquared() < threshold * threshold) {
-			externalForcesOnFuture.set(Vectors.nullVector());	
+		float radiusThresshold = _pedestrianForces.getExternalForceRadiusThreshold();
+		if (futureIsFurtherThan(radiusThresshold, me)) {
+			Iterable<Pedestrian> pedestriansToAvoid = removeOnBack(me, scene.getPedestriansAndSkip(me));
+			for (Pedestrian other : pedestriansToAvoid) {
+				// TODO: the repulsion force is calculated once for (A,B) and then for (B,A) event though
+				// the result is the same, use a cache objet here!
+				Vector2f interactionLocation = _pedestrianForces.getInteractionLocation().apply(other);
+				Vector2f repulsionForce = _pedestrianForces.getRepulsionForceModel().apply(futureLocation, interactionLocation);
+				externalForcesOnFuture.add(repulsionForce);
+			}
+			float threshold = _pedestrianForces.getExternalForceThreshold();
+			if (externalForcesOnFuture.lengthSquared() < threshold * threshold) {
+				externalForcesOnFuture.set(Vectors.nullVector());	
+			}
 		}
 		externalForcesOnFuture.add(_pedestrianForces.getForceOnFuture().apply(me));
 		me.getFuture().getBody().applyForce(externalForcesOnFuture);
+	}
+	
+	private boolean futureIsFurtherThan(float distance, Pedestrian me) {
+		Vector2f futureLocation = me.getFuture().getBody().getCenter();
+		float radiusSum = me.getBody().getRadius() + me.getFuture().getBody().getRadius();
+		return (me.getBody().getCenter().distance(futureLocation) - radiusSum) > distance;
 	}
 	
 	private Iterable<Pedestrian> removeOnBack(Pedestrian me, Iterable<Pedestrian> others) {
@@ -55,7 +66,7 @@ public class FutureForceUpdaterComponent implements Updateable {
 		cache.set(meToTargetLine.getStart());
 		cache.x += normal[0];
 		cache.y += normal[1];
-		// TODO: esto crea demasiada basura, podrai hacerse mas eficiente
+		// TODO: esto crea demasiada basura, podria hacerse mas eficiente
 		return Iterables.filter(others, new Predicate<Pedestrian>() {
 			@Override
 			public boolean apply(Pedestrian input) {

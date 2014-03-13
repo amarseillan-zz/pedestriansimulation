@@ -32,8 +32,8 @@ public class PedestrianForcesFactory {
 		PedestrianForces forces = new PedestrianForces();
 		float springConstant = _config.get("springConstant", Float.class);
 		forces.setCollisitionModel(new SpringForceModel(springConstant));
-		float externalForceThreshold  = _config.get("externalForceThreshold", Float.class);
-		forces.setExternalForceThreshold(externalForceThreshold);
+		forces.setExternalForceThreshold(_config.get("externalForceThreshold", Float.class));
+		forces.setExternalForceRadiusThreshold(_config.get("externalForceRadiusThreshold", Float.class));
 		forces.setInteractionLocation(buildInteractionLocation());
 		forces.setRepulsionForceModel(buildRepulsionForce());
 		forces.setDesireForce(buildDesireForce());
