@@ -62,8 +62,7 @@ public class PedestrianApp extends BasicGame {
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
-		if (_config.get("mouseEnabled") != null
-				&& _config.get("mouseEnabled").equals("true")) {
+		if ("true".equalsIgnoreCase(_config.get("mouseEnabled"))) {
 			PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
 			mouseController.setInput(gc.getInput()); // FIXME: no se porque Slick no esta llamando a este metodo
 			gc.getInput().addMouseListener(mouseController);

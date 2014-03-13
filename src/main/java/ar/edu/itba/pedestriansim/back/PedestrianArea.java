@@ -1,6 +1,5 @@
 package ar.edu.itba.pedestriansim.back;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class PedestrianArea {
 	private final List<Pedestrian> collitions = Lists.newLinkedList();
 	
 	private final GridSpace<Pedestrian> _map;
-	private final List<Pedestrian> _pedestrians = new ArrayList<>();
-	private final List<Shape> _obstacles = new ArrayList<>();
-	private final List<PedestrianSource> _sources = new ArrayList<>();
+	private final List<Pedestrian> _pedestrians = Lists.newLinkedList();
+	private final List<Shape> _obstacles = Lists.newArrayList();
+	private final List<PedestrianSource> _sources = Lists.newArrayList();
 
 	public PedestrianArea(int width, int height, int gridSize) {
 		_map = new GridSpace<>(width, height, gridSize, new Function<Pedestrian, Shape>() {
