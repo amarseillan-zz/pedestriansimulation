@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 public class PedestrianAreaStatFileWriter extends Component {
 
 	private final static String LINE_BREAK = "\n";
-	private final static String SPEARATOR = ",";
+	private final static String SEPARATOR = " ";
 	
 	private PedestrianArea _pedestrianArea;
 	private BufferedWriter _outputWriter;
@@ -46,8 +46,9 @@ public class PedestrianAreaStatFileWriter extends Component {
 		_timeSiceLastWrite = 0;
 		_step = _step.add(new BigDecimal(elapsedTimeInSeconds)).setScale(2, RoundingMode.HALF_DOWN);
 		try {
-			_outputWriter.write(_step.toString() + LINE_BREAK);
+			_outputWriter.write(_step.toString() + SEPARATOR);
 			logPedestrianArea();
+			_outputWriter.write(LINE_BREAK);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
@@ -55,15 +56,17 @@ public class PedestrianAreaStatFileWriter extends Component {
 	}
 
 	private void logPedestrianArea() throws IOException {
+		StringBuilder line = new StringBuilder();
 		for (Pedestrian pedestrian : _pedestrianArea.getPedestrians()) {
-			StringBuilder line = new StringBuilder();
 			line.append(pedestrian.getId().toString());
+			line.append(SEPARATOR);
 			Vector2f center = pedestrian.getBody().getCenter();
-			line.append(SPEARATOR + center.x);
-			line.append(SPEARATOR + center.y);
-			line.append(LINE_BREAK);
-			_outputWriter.write(line.toString());
+			line.append(String.format("%.2f", center.x));
+			line.append(SEPARATOR);
+			line.append(String.format("%.2f", center.y));
+			line.append(SEPARATOR);
 		}
+		_outputWriter.write(line.toString());
 	}
 
 	@Override
