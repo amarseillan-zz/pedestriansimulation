@@ -35,6 +35,7 @@ public class FutureForceUpdaterComponent extends Componenent {
 		Vector2f futureLocation = me.getFuture().getBody().getCenter();
 		externalForcesOnFuture.set(Vectors.nullVector());
 		float radiusThresshold = _pedestrianForces.getExternalForceRadiusThreshold();
+		boolean externalForcesUnderThresshold = false;
 		if (futureIsFurtherThan(radiusThresshold, me)) {
 			Iterable<Pedestrian> pedestriansToAvoid = removeOnBack(me, scene.getPedestriansAndSkip(me));
 			for (Pedestrian other : pedestriansToAvoid) {
@@ -46,11 +47,17 @@ public class FutureForceUpdaterComponent extends Componenent {
 			}
 			float threshold = _pedestrianForces.getExternalForceThreshold();
 			if (externalForcesOnFuture.lengthSquared() < threshold * threshold) {
-				externalForcesOnFuture.set(Vectors.nullVector());	
+				externalForcesOnFuture.set(Vectors.nullVector());
+				setFutureInDesiredPath(me);
+				externalForcesUnderThresshold = true;
 			}
 		}
-		externalForcesOnFuture.add(_pedestrianForces.getForceOnFuture().apply(me));
-		me.getFuture().getBody().applyForce(externalForcesOnFuture);
+		if (!externalForcesUnderThresshold) {
+			// XXX: no need to apply force on future if no external forces exists
+			// because it is positioned on the desired path
+			externalForcesOnFuture.add(_pedestrianForces.getForceOnFuture().apply(me));
+		}
+		me.getFuture().getBody().setAppliedForce(externalForcesOnFuture);
 	}
 	
 	private boolean futureIsFurtherThan(float distance, Pedestrian me) {
@@ -73,5 +80,14 @@ public class FutureForceUpdaterComponent extends Componenent {
 				return Vectors.isLeft(meToTargetLine.getStart(), cache, inputLocation);	
 			}
 		});
+	}
+	
+	private void setFutureInDesiredPath(Pedestrian me) {
+		Vector2f targetCenter = me.getTargetSelection().getTarget().getCenter();
+		float distance = me.getReactionDistance();
+		Vectors.pointBetween(me.getBody().getCenter(), targetCenter, distance, cache);
+		me.getFuture().getBody().setLocation(cache);
+		me.getFuture().getBody().setAppliedForce(Vectors.nullVector());
+		me.getFuture().getBody().setVelocity(Vectors.nullVector());
 	}
 }

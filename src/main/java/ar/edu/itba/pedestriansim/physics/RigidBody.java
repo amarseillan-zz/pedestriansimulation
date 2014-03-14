@@ -52,7 +52,7 @@ public class RigidBody {
 		return _collitionShape;
 	}
 
-	public void applyForce(Vector2f force) {
+	public void setAppliedForce(Vector2f force) {
 		_appliedForce.set(force);
 	}
 

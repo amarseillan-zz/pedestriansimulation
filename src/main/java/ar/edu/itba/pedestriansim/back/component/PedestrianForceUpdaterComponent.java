@@ -26,7 +26,7 @@ public class PedestrianForceUpdaterComponent extends Componenent {
 			forces.set(nullForce);
 			forces.add(_pedestrianForces.getDesireForce().apply(subject));
 			forces.add(getExternalForces(subject));
-			subject.getBody().applyForce(forces);
+			subject.getBody().setAppliedForce(forces);
 		}
 	}
 
