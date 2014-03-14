@@ -97,5 +97,9 @@ public class PedestrianApp extends BasicGame {
 		if (gc.getInput().isKeyDown(Input.KEY_R)) {
 			gc.reinit();
 		}
+		if (gc.getInput().isKeyDown(Input.KEY_X)) {
+			_simulation.end();
+			gc.exit();
+		}
 	}
 }
