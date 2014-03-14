@@ -1,6 +1,9 @@
 package ar.edu.itba.pedestriansim.factory;
 
+import java.io.File;
 import java.util.List;
+
+import org.springframework.util.StringUtils;
 
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
@@ -9,6 +12,7 @@ import ar.edu.itba.pedestriansim.back.component.Componenent;
 import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
+import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStatFileWriter;
 import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
 
@@ -31,6 +35,11 @@ public class ComponentFactory {
 		components.add(new PedestrianPositionUpdaterComponent(pedestrianArea));
 //		components.add(new PedestrianRemoverComponent(pedestrianArea));
 		components.add(new GridPedestrianPositionUpdater(pedestrianArea));
+		String outputFile = _config.get("log.file");
+		if (!StringUtils.isEmpty(outputFile)) {
+			float stepInterval = _config.get("log.stepInterval", Float.class);
+			components.add(new PedestrianAreaStatFileWriter(pedestrianArea, new File(outputFile), stepInterval));
+		}
 		return components;
 	}
 	
