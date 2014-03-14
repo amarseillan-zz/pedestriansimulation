@@ -34,9 +34,9 @@ public class FutureForceUpdaterComponent extends Component {
 	private void updatePedestrianFuture(Pedestrian me) {
 		Vector2f futureLocation = me.getFuture().getBody().getCenter();
 		externalForcesOnFuture.set(Vectors.nullVector());
-		float radiusThresshold = _pedestrianForces.getExternalForceRadiusThreshold();
-		boolean externalForcesUnderThresshold = false;
-		if (futureIsFurtherThan(radiusThresshold, me)) {
+		float radiusThreshold = _pedestrianForces.getExternalForceRadiusThreshold();
+		boolean externalForcesUnderThreshold = false;
+		if (futureIsFurtherThan(radiusThreshold, me)) {
 			Iterable<Pedestrian> pedestriansToAvoid = removeOnBack(me, scene.getPedestriansAndSkip(me));
 			for (Pedestrian other : pedestriansToAvoid) {
 				// TODO: the repulsion force is calculated once for (A,B) and then for (B,A) event though
@@ -49,10 +49,10 @@ public class FutureForceUpdaterComponent extends Component {
 			if (externalForcesOnFuture.lengthSquared() < threshold * threshold) {
 				externalForcesOnFuture.set(Vectors.nullVector());
 				setFutureInDesiredPath(me);
-				externalForcesUnderThresshold = true;
+				externalForcesUnderThreshold = true;
 			}
 		}
-		if (!externalForcesUnderThresshold) {
+		if (!externalForcesUnderThreshold) {
 			// XXX: no need to apply force on future if no external forces exists
 			// because it is positioned on the desired path
 			externalForcesOnFuture.add(_pedestrianForces.getForceOnFuture().apply(me));

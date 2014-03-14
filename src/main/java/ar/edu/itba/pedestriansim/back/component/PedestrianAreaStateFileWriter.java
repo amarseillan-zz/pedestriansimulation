@@ -14,7 +14,7 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 
 import com.google.common.base.Preconditions;
 
-public class PedestrianAreaStatFileWriter extends Component {
+public class PedestrianAreaStateFileWriter extends Component {
 
 	private final static String LINE_BREAK = "\n";
 	private final static String SEPARATOR = " ";
@@ -23,14 +23,14 @@ public class PedestrianAreaStatFileWriter extends Component {
 	private PedestrianArea _pedestrianArea;
 	private BufferedWriter _outputWriter;
 	private final float _stepInterval;
-	private float _timeSiceLastWrite;
+	private float _timeSinceLastWrite;
 	private BigDecimal _step = new BigDecimal(0).setScale(2);
 
-	public PedestrianAreaStatFileWriter(PedestrianArea pedestrianArea, File outputFile, float stepInterval) {
+	public PedestrianAreaStateFileWriter(PedestrianArea pedestrianArea, File outputFile, float stepInterval) {
 		_pedestrianArea = pedestrianArea;
 		Preconditions.checkArgument(stepInterval >= 0);
 		_stepInterval = stepInterval;
-		_timeSiceLastWrite = 0;
+		_timeSinceLastWrite = 0;
 		try {
 			_outputWriter = new BufferedWriter(new FileWriter(outputFile));
 		} catch (IOException e) {
@@ -40,11 +40,11 @@ public class PedestrianAreaStatFileWriter extends Component {
 
 	@Override
 	public void update(float elapsedTimeInSeconds) {
-		_timeSiceLastWrite += elapsedTimeInSeconds;
-		if (_timeSiceLastWrite < _stepInterval) {
+		_timeSinceLastWrite += elapsedTimeInSeconds;
+		if (_timeSinceLastWrite < _stepInterval) {
 			return; // Not ready to write to file yet...
 		}
-		_timeSiceLastWrite = 0;
+		_timeSinceLastWrite = 0;
 		_step = _step.add(new BigDecimal(elapsedTimeInSeconds)).setScale(2, RoundingMode.HALF_DOWN);
 		try {
 			_outputWriter.write(_step.toString() + LINE_BREAK);

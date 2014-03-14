@@ -12,7 +12,7 @@ import ar.edu.itba.pedestriansim.back.component.Component;
 import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
-import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStatFileWriter;
+import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStateFileWriter;
 import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
 
@@ -38,7 +38,7 @@ public class ComponentFactory {
 		String outputFile = _config.get("log.file");
 		if (!StringUtils.isEmpty(outputFile)) {
 			float stepInterval = _config.get("log.stepInterval", Float.class);
-			components.add(new PedestrianAreaStatFileWriter(pedestrianArea, new File(outputFile), stepInterval));
+			components.add(new PedestrianAreaStateFileWriter(pedestrianArea, new File(outputFile), stepInterval));
 		}
 		return components;
 	}
