@@ -13,7 +13,7 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 
 import com.google.common.collect.Sets;
 
-public class PedestrianRemoverComponent extends Componenent implements EventListener {
+public class PedestrianRemoverComponent extends Component implements EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
 	

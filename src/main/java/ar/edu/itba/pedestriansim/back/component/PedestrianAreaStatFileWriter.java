@@ -14,7 +14,7 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 
 import com.google.common.base.Preconditions;
 
-public class PedestrianAreaStatFileWriter extends Componenent {
+public class PedestrianAreaStatFileWriter extends Component {
 
 	private final static String LINE_BREAK = "\n";
 	private final static String SPEARATOR = ",";

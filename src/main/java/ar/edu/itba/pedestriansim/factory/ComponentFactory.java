@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
-import ar.edu.itba.pedestriansim.back.component.Componenent;
+import ar.edu.itba.pedestriansim.back.component.Component;
 import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
@@ -26,9 +26,9 @@ public class ComponentFactory {
 		_config = config;
 	}
 
-	public List<Componenent> produce(PedestrianArea pedestrianArea) {
+	public List<Component> produce(PedestrianArea pedestrianArea) {
 		PedestrianForces pedestrianForces = new PedestrianForcesFactory(_config).produce();
-		List<Componenent> components = Lists.newLinkedList();
+		List<Component> components = Lists.newLinkedList();
 		components.add(new FutureForceUpdaterComponent(pedestrianArea, pedestrianForces));
 		components.add(new FuturePositionUpdaterComponent(pedestrianArea));
 		components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));

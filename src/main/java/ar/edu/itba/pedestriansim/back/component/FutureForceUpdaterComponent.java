@@ -11,7 +11,7 @@ import ar.edu.itba.pedestriansim.physics.Vectors;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class FutureForceUpdaterComponent extends Componenent {
+public class FutureForceUpdaterComponent extends Component {
 
 	private final Vector2f externalForcesOnFuture = new Vector2f();
 

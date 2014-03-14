@@ -8,7 +8,7 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.physics.EulerMethod;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
-public class PedestrianPositionUpdaterComponent extends Componenent {
+public class PedestrianPositionUpdaterComponent extends Component {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(PedestrianPositionUpdaterComponent.class);

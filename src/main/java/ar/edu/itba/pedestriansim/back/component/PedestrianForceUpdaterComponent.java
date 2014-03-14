@@ -8,7 +8,7 @@ import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
 import ar.edu.itba.pedestriansim.physics.SpringForceModel;
 
-public class PedestrianForceUpdaterComponent extends Componenent {
+public class PedestrianForceUpdaterComponent extends Component {
 
 	private static final Vector2f nullForce = new Vector2f();
 	

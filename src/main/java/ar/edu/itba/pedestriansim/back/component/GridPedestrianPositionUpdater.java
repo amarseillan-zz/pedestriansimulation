@@ -4,7 +4,7 @@ import ar.edu.itba.common.spatial.GridSpace;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 
-public class GridPedestrianPositionUpdater extends Componenent {
+public class GridPedestrianPositionUpdater extends Component {
 
 	private PedestrianArea _pedestrianArea;
 
