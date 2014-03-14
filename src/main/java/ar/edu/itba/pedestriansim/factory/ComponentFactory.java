@@ -5,7 +5,7 @@ import java.util.List;
 import ar.edu.itba.pedestriansim.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
-import ar.edu.itba.pedestriansim.back.Updateable;
+import ar.edu.itba.pedestriansim.back.component.Componenent;
 import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
@@ -22,9 +22,9 @@ public class ComponentFactory {
 		_config = config;
 	}
 
-	public List<Updateable> produce(PedestrianArea pedestrianArea) {
+	public List<Componenent> produce(PedestrianArea pedestrianArea) {
 		PedestrianForces pedestrianForces = new PedestrianForcesFactory(_config).produce();
-		List<Updateable> components = Lists.newLinkedList();
+		List<Componenent> components = Lists.newLinkedList();
 		components.add(new FutureForceUpdaterComponent(pedestrianArea, pedestrianForces));
 		components.add(new FuturePositionUpdaterComponent(pedestrianArea));
 		components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));

@@ -5,11 +5,10 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.Updateable;
 import ar.edu.itba.pedestriansim.physics.EulerMethod;
 import ar.edu.itba.pedestriansim.physics.RigidBody;
 
-public class FuturePositionUpdaterComponent implements Updateable {
+public class FuturePositionUpdaterComponent extends Componenent {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FuturePositionUpdaterComponent.class);

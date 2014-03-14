@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 public class PedestrianArea {
 
 	private final List<Pedestrian> collitions = Lists.newLinkedList();
-	
+
 	private final GridSpace<Pedestrian> _map;
 	private final List<Pedestrian> _pedestrians = Lists.newLinkedList();
 	private final List<Shape> _obstacles = Lists.newArrayList();

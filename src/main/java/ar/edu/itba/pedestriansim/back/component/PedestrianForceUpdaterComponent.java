@@ -6,10 +6,9 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
-import ar.edu.itba.pedestriansim.back.Updateable;
 import ar.edu.itba.pedestriansim.physics.SpringForceModel;
 
-public class PedestrianForceUpdaterComponent implements Updateable {
+public class PedestrianForceUpdaterComponent extends Componenent {
 
 	private static final Vector2f nullForce = new Vector2f();
 	

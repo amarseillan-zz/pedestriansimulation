@@ -10,11 +10,10 @@ import ar.edu.itba.common.event.EventDispatcher;
 import ar.edu.itba.common.event.EventListener;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.Updateable;
 
 import com.google.common.collect.Sets;
 
-public class PedestrianRemoverComponent implements Updateable, EventListener {
+public class PedestrianRemoverComponent extends Componenent implements EventListener {
 
 	private static final EventDispatcher dispatcher = EventDispatcher.instance();
 	

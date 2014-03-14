@@ -6,13 +6,12 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.pedestriansim.back.Pedestrian;
 import ar.edu.itba.pedestriansim.back.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.PedestrianForces;
-import ar.edu.itba.pedestriansim.back.Updateable;
 import ar.edu.itba.pedestriansim.physics.Vectors;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-public class FutureForceUpdaterComponent implements Updateable {
+public class FutureForceUpdaterComponent extends Componenent {
 
 	private final Vector2f externalForcesOnFuture = new Vector2f();
 
