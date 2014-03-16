@@ -1,0 +1,4 @@
+Sum of every collition in every instant:
+59
+Number of collitions:
+3
