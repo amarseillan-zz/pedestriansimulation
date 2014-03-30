@@ -29,7 +29,8 @@ Con estos parámetros y la elección del escenario, se inicializa el programa, s
 ##Ejecución
 
 Cuando empieza la ejecución, en cada instante de tiempo se ejecutan en orden los siguientes componentes:
-1. [FutureForceUpdaterComponent](#futureforceupdatorcomponent "FutureForceUpdaterComponent")
+
+1. [FutureForceUpdaterComponent](#futureforceupdatercomponent "FutureForceUpdaterComponent")
 2. [FuturePositionUpdaterComponent](#futurepositionupdatercomponent "FuturePositionUpdaterComponent")
 3. [PedestrianForceUpdaterComponent](#PedestrianForceUpdaterComponent "PedestrianForceUpdaterComponent")
 4. [PedestrianPositionUpdaterComponent](#PedestrianPositionUpdaterComponent "PedestrianPositionUpdaterComponent")
