@@ -12,16 +12,16 @@ Se setean por configuración los siguientes parámetros:
 >TODO
 
 * _SpringConstant_
->TODO
+>Constante de resorte para calcular colisiones
 
 * _ReactionDistance_
->TODO
+>Distancia máxima y deseada desde el peatón al future
 
 * _alpha & beta_
->TODO
+>Constantes usadas en el [modelo de repulsión](#futureforceupdatercomponent "FutureForceUpdaterComponent")
 
 * _t_
->TODO
+>Tiempo que transcurre entre cada instante de la ejecución
 
 
 Con estos parámetros y la elección del escenario, se inicializa el programa, se deja a criterio del lector como implementar los generadores y sumideros.
