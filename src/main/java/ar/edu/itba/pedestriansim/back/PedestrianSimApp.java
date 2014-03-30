@@ -1,102 +1,80 @@
 package ar.edu.itba.pedestriansim.back;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Vector2f;
+import java.io.File;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
-import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.component.Component;
+import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
+import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStateFileWriter;
+import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
-import ar.edu.itba.pedestriansim.back.factory.PedestrianFactory;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianTargetArea;
-import ar.edu.itba.pedestriansim.front.Camera;
-import ar.edu.itba.pedestriansim.front.KeyHandler;
-import ar.edu.itba.pedestriansim.front.PedestrianAreaRenderer;
-import ar.edu.itba.pedestriansim.front.PedestrianMouseController;
+import ar.edu.itba.pedestriansim.back.factory.PedestrianForcesFactory;
+import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
 
-@Component
-public class PedestrianSimApp extends BasicGame {
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
+
+@org.springframework.stereotype.Component
+public class PedestrianSimApp {
 
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		context.refresh();
-		try {
-			AppGameContainer appContainer = new AppGameContainer(context.getBean(PedestrianSimApp.class));
-			appContainer.setUpdateOnlyWhenVisible(false);
-			appContainer.setDisplayMode(1200, 700, false);
-			appContainer.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		PedestrianSimApp simulation = context.getBean(PedestrianSimApp.class);
+		simulation.run();
 		context.close();
 	}
 
+	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
+	
 	private static final float TIME_STEP = 1 / 100f;
 
 	@Autowired
 	private PedestrianAppConfig _config;
 
-	private Camera _camera;
-	private PedestrianSim _simulation;
-	private PedestrianAreaRenderer _renderer;
-
-	public PedestrianSimApp() {
-		super("Pedestrian simulation");
+	public void run() {
+		logger.info("Loading simulation...");
+		Predicate<PedestrianArea> cutCondition = new Predicate<PedestrianArea>() {
+			@Override
+			public boolean apply(PedestrianArea input) {
+				return input.elapsedTime().floatValue() > 10;
+			}
+		};
+		PedestrianSim simulation = new PedestrianSim(_config, new SimulationComponentsFactoryImpl(), cutCondition);
+		logger.info("Starting simulation...");
+		simulation.start();
+		do {
+			simulation.update(TIME_STEP);
+		} while(!simulation.isFinished());
+		logger.info("Simulation finished OK!");
 	}
+	
+	public static class SimulationComponentsFactoryImpl implements SimulationComponentsFactory {
 
-	@Override
-	public void init(GameContainer gc) throws SlickException {
-		_camera = new Camera();
-		_simulation = new PedestrianSim(_config, _camera);
-		_renderer = new PedestrianAreaRenderer(_camera);
-		gc.setAlwaysRender(true);
-		gc.setTargetFrameRate(60);
-		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
-		if ("true".equalsIgnoreCase(_config.get("mouseEnabled"))) {
-			PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
-			mouseController.setInput(gc.getInput()); // FIXME: no se porque Slick no esta llamando a este metodo
-			gc.getInput().addMouseListener(mouseController);
+		public List<Component> produce(PedestrianAppConfig config, PedestrianArea pedestrianArea) {
+			PedestrianForces pedestrianForces = new PedestrianForcesFactory(config).produce();
+			List<Component> components = Lists.newLinkedList();
+			components.add(new FutureForceUpdaterComponent(pedestrianArea, pedestrianForces));
+			components.add(new FuturePositionUpdaterComponent(pedestrianArea));
+			components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));
+			components.add(new PedestrianPositionUpdaterComponent(pedestrianArea));
+//			components.add(new PedestrianRemoverComponent(pedestrianArea));
+			components.add(new GridPedestrianPositionUpdater(pedestrianArea));
+			File outputDirectory = new File(config.get("log.directory"));
+			float logInterval = config.get("log.interval", Float.class);
+			components.add(new PedestrianAreaStateFileWriter(pedestrianArea, outputDirectory, logInterval));
+			return components;
 		}
+		
 	}
 
-	private PedestrianMouseController createMouseControlledPedestrian(
-			GameContainer gc) {
-		PedestrianFactory factory = new PedestrianFactory(_config);
-		// FIXME: safely delete these lines of codes, used for debugging
-		PedestrianMision mission = new PedestrianMision();
-		mission.putFirst(new PedestrianTargetArea(new Circle(15, 15, 0.5f)));
-		_simulation.getPedestrianArea().addPedestrian(factory.build(new Vector2f(10, 10), 1, mission));
-		// ===================
-		Pedestrian pedestrian = factory.build(new Vector2f(), 0,
-				new PedestrianMision());
-		_simulation.getPedestrianArea().addPedestrian(pedestrian);
-		return new PedestrianMouseController(pedestrian, _camera);
-	}
-
-	public void render(GameContainer gc, Graphics g) throws SlickException {
-		_renderer.render(gc, g, _simulation.getPedestrianArea());
-	}
-
-	@Override
-	public void update(GameContainer gc, int delta) throws SlickException {
-		_camera.update(gc);
-		if (delta > 0) { // 0 = means paused!
-			_simulation.update(TIME_STEP);
-		}
-		if (gc.getInput().isKeyDown(Input.KEY_R)) {
-			gc.reinit();
-		}
-		if (gc.getInput().isKeyDown(Input.KEY_X)) {
-			_simulation.end();
-			gc.exit();
-		}
-	}
 }

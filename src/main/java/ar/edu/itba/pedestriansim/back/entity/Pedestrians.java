@@ -11,6 +11,15 @@ public class Pedestrians {
 		return new SkipPedetrian(pedestrian);
 	}
 
+	public static final Function<Pedestrian, Integer> getId() {
+		return new Function<Pedestrian, Integer>() {
+			@Override
+			public Integer apply(Pedestrian input) {
+				return input.getId();
+			}
+		};
+	}
+
 	public static final Function<Pedestrian, Vector2f> getFutureLocation() {
 		return new Function<Pedestrian, Vector2f>() {
 			@Override

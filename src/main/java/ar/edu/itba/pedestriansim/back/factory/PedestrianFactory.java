@@ -36,7 +36,8 @@ public class PedestrianFactory {
 
 	public Pedestrian build(Vector2f location, int team, PedestrianMision mission) {
 		RigidBody body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
-		Pedestrian pedestrian = new Pedestrian(lastId++, mission, team, body);
+		Pedestrian pedestrian = new Pedestrian(lastId++, team, body);
+		pedestrian.setMission(mission);
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
 		if (_reactionDistance.isPresent()) {
 			pedestrian.setReactionDistance(_reactionDistance.get());

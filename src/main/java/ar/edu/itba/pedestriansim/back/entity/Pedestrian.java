@@ -1,7 +1,5 @@
 package ar.edu.itba.pedestriansim.back.entity;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Shape;
@@ -16,7 +14,7 @@ public class Pedestrian {
 
 	private static final float DEFAULT_REACTION_DISTANCE = 1.5f;
 	
-	private Serializable _id;
+	private Integer _id;
 	private int _team;
 	private TargetSelection targetSelection;
 	private PedestrianMision _mission;
@@ -25,17 +23,20 @@ public class Pedestrian {
 	private float _maxVelocity;
 	private float _reactionDistance;
 
-	public Pedestrian(Serializable id, PedestrianMision mission, int team, RigidBody body) {
+	public Pedestrian(Integer id, int team, RigidBody body) {
 		_id = Preconditions.checkNotNull(id);
 		_team = team;
 		_body = Preconditions.checkNotNull(body);
-		_mission = Preconditions.checkNotNull(mission);
 		_future = new PedestrianFuture(1, this);
 		setReactionDistance(DEFAULT_REACTION_DISTANCE);
 		targetSelection = new TargetSelection(this);
 	}
 
-	public Serializable getId() {
+	public void setMission(PedestrianMision mission) {
+		_mission = Preconditions.checkNotNull(mission);
+	}
+
+	public Integer getId() {
 		return _id;
 	}
 

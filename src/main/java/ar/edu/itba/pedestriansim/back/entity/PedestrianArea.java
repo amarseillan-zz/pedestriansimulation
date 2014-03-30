@@ -1,5 +1,7 @@
 package ar.edu.itba.pedestriansim.back.entity;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import ar.edu.itba.pedestriansim.back.physics.Collitions;
 import ar.edu.itba.pedestriansim.back.spatial.GridSpace;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -20,6 +23,7 @@ public class PedestrianArea {
 	private final List<Pedestrian> _pedestrians = Lists.newLinkedList();
 	private final List<Shape> _obstacles = Lists.newArrayList();
 	private final List<PedestrianSource> _sources = Lists.newArrayList();
+	private BigDecimal _elapsedTime = BigDecimal.ZERO;
 
 	public PedestrianArea(int width, int height, int gridSize) {
 		_map = new GridSpace<>(width, height, gridSize, new Function<Pedestrian, Shape>() {
@@ -29,12 +33,24 @@ public class PedestrianArea {
 		});
 	}
 
+	public void addElapsedTime(float delta) {
+		_elapsedTime = _elapsedTime.add(new BigDecimal(delta)).setScale(2, RoundingMode.HALF_DOWN);
+	}
+
+	public BigDecimal elapsedTime() {
+		return _elapsedTime;
+	}
+
 	public GridSpace<Pedestrian> getMap() {
 		return _map;
 	}
 
 	public void addPedestrian(Pedestrian pedestrian) {
 		_pedestrians.add(pedestrian);
+	}
+
+	public void removePedestrians(Predicate<Pedestrian> predicate) {
+		Iterables.removeIf(getPedestrians(), predicate);
 	}
 
 	public void removePedestrians(Collection<Pedestrian> pedestrians) {

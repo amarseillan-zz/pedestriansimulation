@@ -10,9 +10,6 @@ import org.newdawn.slick.geom.Rectangle;
 
 import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
-import ar.edu.itba.pedestriansim.front.Camera;
-
-import com.google.common.base.Optional;
 
 public class PedestrianAreaFactory {
 
@@ -22,12 +19,11 @@ public class PedestrianAreaFactory {
 		_config = config;
 	}
 	
-	public PedestrianArea produce(Camera camera) {
+	public PedestrianArea produce() {
 		try {
-			PedestrianArea pedestrianArea = _config.getPedestrianArea();
+			PedestrianArea pedestrianArea = _config.buildPedestrianArea();
 			loadSources(pedestrianArea);
 			loadObstacles(pedestrianArea);
-			setupView(camera);
 			return pedestrianArea;
 		} catch (IOException e) {
     		throw new IllegalStateException(e);
@@ -78,15 +74,4 @@ public class PedestrianAreaFactory {
 		scanner.close();
 	}
 
-	private void setupView(Camera camera) {
-		Optional<Integer> zoom = _config.getOptional("zoom", Integer.class);
-		if (zoom.isPresent()) {
-			camera.setZoom(zoom.get());
-		}
-		Optional<String[]> location = _config.getLocation();
-		if (location.isPresent()) {
-			camera.scrollX(Float.parseFloat(location.get()[0]));
-			camera.scrollY(Float.parseFloat(location.get()[1]));
-		}
-	}
 }

@@ -32,8 +32,6 @@ public class MetricsComponent extends Component{
 	@Override
 	public void update(float elapsedTimeInSeconds) {
 		List<Pedestrian> pedestrians = Lists.newArrayList(scene.getPedestrians());
-		
-
 		collitionCountPerInstant.onIterationStart();
 		collitionCount.onIterationStart();
 		for (int i = 0; i<pedestrians.size(); i++) {
@@ -53,7 +51,7 @@ public class MetricsComponent extends Component{
 	}
 	
 	@Override
-	public void onEnd(){
+	public void onEnd() {
 		super.onEnd();
 		FileWriter writer;
 		try {
@@ -65,5 +63,4 @@ public class MetricsComponent extends Component{
 			e.printStackTrace();
 		}
 	}
-
 }

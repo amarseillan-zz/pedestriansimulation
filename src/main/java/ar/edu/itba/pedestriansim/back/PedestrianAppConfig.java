@@ -25,7 +25,7 @@ public class PedestrianAppConfig {
 	@Autowired
 	private Environment env;
 
-    public PedestrianArea getPedestrianArea() {
+    public PedestrianArea buildPedestrianArea() {
     	int size = env.getProperty("grid.size", Integer.class);
     	int width = env.getProperty("grid.wAmount", Integer.class);
     	int height = env.getProperty("grid.hAmount", Integer.class);
