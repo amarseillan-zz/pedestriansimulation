@@ -32,9 +32,8 @@ Cuando empieza la ejecución, en cada instante de tiempo se ejecutan en orden lo
 
 1. [FutureForceUpdaterComponent](#futureforceupdatercomponent "FutureForceUpdaterComponent")
 2. [FuturePositionUpdaterComponent](#futurepositionupdatercomponent "FuturePositionUpdaterComponent")
-3. [PedestrianForceUpdaterComponent](#PedestrianForceUpdaterComponent "PedestrianForceUpdaterComponent")
-4. [PedestrianPositionUpdaterComponent](#PedestrianPositionUpdaterComponent "PedestrianPositionUpdaterComponent")
-5. [GridPedestrianPositionUpdater](#GridPedestrianPositionUpdater "GridPedestrianPositionUpdater")
+3. [PedestrianForceUpdaterComponent](#pedestrianforceupdatercomponent "PedestrianForceUpdaterComponent")
+4. [PedestrianPositionUpdaterComponent](#pedestrianpositionupdatercomponent "PedestrianPositionUpdaterComponent")
 
 ###FutureForceUpdaterComponent
 ```bash
