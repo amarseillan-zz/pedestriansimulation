@@ -1,6 +1,6 @@
 package ar.edu.itba.pedestriansim.back.component;
 
-import ar.edu.itba.pedestriansim.back.Updateable;
+import ar.edu.itba.pedestriansim.back.entity.Updateable;
 
 public abstract class Component implements Updateable {
 

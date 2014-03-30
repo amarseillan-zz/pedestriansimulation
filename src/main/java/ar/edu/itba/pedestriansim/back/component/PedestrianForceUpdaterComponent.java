@@ -3,10 +3,10 @@ package ar.edu.itba.pedestriansim.back.component;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.back.PedestrianForces;
-import ar.edu.itba.pedestriansim.physics.SpringForceModel;
+import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
+import ar.edu.itba.pedestriansim.back.physics.SpringForceModel;
 
 public class PedestrianForceUpdaterComponent extends Component {
 

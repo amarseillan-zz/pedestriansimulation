@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.newdawn.slick.geom.Shape;
 
-import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.metric.CollitionCount;
 import ar.edu.itba.pedestriansim.back.metric.CollitionCountPerInstant;
-import ar.edu.itba.pedestriansim.physics.Collitions;
+import ar.edu.itba.pedestriansim.back.physics.Collitions;
 
 import com.google.common.collect.Lists;
 

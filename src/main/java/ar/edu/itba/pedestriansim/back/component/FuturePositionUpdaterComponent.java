@@ -3,10 +3,10 @@ package ar.edu.itba.pedestriansim.back.component;
 import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.PedestrianArea;
-import ar.edu.itba.pedestriansim.physics.EulerMethod;
-import ar.edu.itba.pedestriansim.physics.RigidBody;
+import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.physics.EulerMethod;
+import ar.edu.itba.pedestriansim.back.physics.RigidBody;
 
 public class FuturePositionUpdaterComponent extends Component {
 

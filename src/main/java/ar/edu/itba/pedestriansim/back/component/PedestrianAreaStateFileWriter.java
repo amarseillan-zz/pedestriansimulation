@@ -9,8 +9,8 @@ import java.math.RoundingMode;
 
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.Pedestrian;
-import ar.edu.itba.pedestriansim.back.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 
 import com.google.common.base.Preconditions;
 
