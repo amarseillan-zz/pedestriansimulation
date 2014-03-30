@@ -32,12 +32,12 @@ public class PedestrianForceUpdaterComponent extends Component {
 
 	private Vector2f getExternalForces(Pedestrian subject) {
 		Vector2f externalForces = new Vector2f();
-		SpringForceModel collisitionModel = _pedestrianForces.getCollisitionModel();
+		SpringForceModel collitionModel = _pedestrianForces.getCollisitionModel();
 		for (Pedestrian other : scene.getPedestriansAndSkip(subject)) {
-			externalForces.add(collisitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
+			externalForces.add(collitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
 		}
 		for (Shape shape : scene.getObstacles()) {
-			Vector2f force = collisitionModel.getForce(subject.getBody().getCollitionShape(), shape);
+			Vector2f force = collitionModel.getForce(subject.getBody().getCollitionShape(), shape);
 			externalForces.add(force);
 		}
 		return externalForces;
