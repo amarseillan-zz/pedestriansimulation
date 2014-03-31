@@ -34,6 +34,9 @@ public class TargetSelection {
 	}
 
 	private Optional<PedestrianTarget> getOptionalTarget() {
+		if (getMission() == null) {
+			return Optional.absent();
+		}
 		return getMission().current();
 	}
 
