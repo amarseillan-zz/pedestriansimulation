@@ -25,6 +25,7 @@ public class PedestrianSource implements EventListener {
 	private PedestrianMision _targetList;
 	private int _team;
 	private int _totalProduced, _produceLimit;
+	private boolean _enabled;
 
 	public PedestrianSource(PedestrianFactory pedestrianFactory, Vector2f location, float radius, PedestrianMision targetList, PedestrianArea pedestrianArea, int team) {
 		_pedestrianFactory = pedestrianFactory;
@@ -36,6 +37,7 @@ public class PedestrianSource implements EventListener {
 		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		_totalProduced = 0;
 		_produceLimit = -1;
+		_enabled = true;
 	}
 
 	public void setProduceLimit(int produceLimit) {
@@ -50,6 +52,10 @@ public class PedestrianSource implements EventListener {
 		_pedestrianAmountGenerator = pedestrianAmountGenerator;
 	}
 
+	public void disable() {
+		_enabled = false;
+	}
+
 	public void start() {
 		schedule();
 	}
@@ -59,7 +65,7 @@ public class PedestrianSource implements EventListener {
 	}
 
 	private void schedule() {
-		if (_produceLimit < 0 || _totalProduced < _produceLimit) {
+		if (_enabled && (_produceLimit < 0 || _totalProduced < _produceLimit)) {
 			float delay = _produceDelayGenerator.generate();
 			dispatcher.dispatch(new ProducePedestrianEvent(this), delay);
 		}

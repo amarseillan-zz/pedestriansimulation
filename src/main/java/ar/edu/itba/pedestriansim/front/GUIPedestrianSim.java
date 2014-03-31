@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
+import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.component.Component;
 import ar.edu.itba.pedestriansim.back.component.MetricsComponent;
 import ar.edu.itba.pedestriansim.back.component.UpdatePedestrialPositionFromFileComponent;
@@ -24,6 +25,7 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
 import ar.edu.itba.pedestriansim.back.factory.PedestrianFactory;
 import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
 import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
@@ -75,6 +77,7 @@ public class GUIPedestrianSim extends BasicGame {
 				return _simulationIsFinished;
 			}
 		});
+		disableSources();
 		setupView();
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
@@ -84,6 +87,12 @@ public class GUIPedestrianSim extends BasicGame {
 			PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
 			mouseController.setInput(gc.getInput()); // FIXME: no se porque Slick no esta llamando a este metodo
 			gc.getInput().addMouseListener(mouseController);
+		}
+	}
+	
+	private void disableSources() {
+		for (PedestrianSource source : _simulation.getPedestrianArea().getSources()) {
+			source.disable();
 		}
 	}
 

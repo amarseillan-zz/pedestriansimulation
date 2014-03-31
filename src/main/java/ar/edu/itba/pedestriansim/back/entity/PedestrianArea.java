@@ -33,6 +33,12 @@ public class PedestrianArea {
 		});
 	}
 
+	public void init() {
+		for (PedestrianSource source : getSources()) {
+			source.start();
+		}
+	}
+
 	public void addElapsedTime(float delta) {
 		_elapsedTime = _elapsedTime.add(new BigDecimal(delta)).setScale(2, RoundingMode.HALF_DOWN);
 	}
@@ -76,7 +82,6 @@ public class PedestrianArea {
 	}
 
 	public void addSource(PedestrianSource source) {
-		source.start();
 		_sources.add(source);
 	}
 

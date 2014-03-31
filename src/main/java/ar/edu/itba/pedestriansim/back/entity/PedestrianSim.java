@@ -26,6 +26,7 @@ public class PedestrianSim {
 	}
 
 	public void start() {
+		_pedestrianArea.init();
 		for (Component component : _components) {
 			component.onStart();
 		}
