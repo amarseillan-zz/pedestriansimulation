@@ -40,6 +40,7 @@ import com.google.common.collect.Lists;
 public class GUIPedestrianSim extends BasicGame {
 
 	public static void main(String[] args) {
+		PedestrianSimApp.main(new String[] {});	// Run backend first!
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		context.refresh();
 		try {
