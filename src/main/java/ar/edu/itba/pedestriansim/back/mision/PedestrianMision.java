@@ -60,7 +60,7 @@ public class PedestrianMision {
 	}
 
 	public boolean hasNextTarget() {
-		return next() == null;
+		return next() != null;
 	}
 
 	public PedestrianMision clone() {

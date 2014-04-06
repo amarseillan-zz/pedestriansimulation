@@ -14,6 +14,7 @@ import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
 import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStateFileWriter;
 import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
@@ -44,7 +45,7 @@ public class PedestrianSimApp {
 		Predicate<PedestrianArea> cutCondition = new Predicate<PedestrianArea>() {
 			@Override
 			public boolean apply(PedestrianArea input) {
-				return input.elapsedTime().floatValue() > 10;
+				return input.elapsedTime().floatValue() > 100;
 			}
 		};
 		PedestrianSim simulation = new PedestrianSim(_config, new SimulationComponentsFactoryImpl(), cutCondition);
@@ -65,7 +66,7 @@ public class PedestrianSimApp {
 			components.add(new FuturePositionUpdaterComponent(pedestrianArea));
 			components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));
 			components.add(new PedestrianPositionUpdaterComponent(pedestrianArea));
-//			components.add(new PedestrianRemoverComponent(pedestrianArea));
+			components.add(new PedestrianRemoverComponent(pedestrianArea));
 			components.add(new GridPedestrianPositionUpdater(pedestrianArea));
 			File outputDirectory = new File(config.get("log.directory"));
 			float logInterval = config.get("log.interval", Float.class);
