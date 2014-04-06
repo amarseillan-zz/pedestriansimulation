@@ -36,8 +36,6 @@ public class PedestrianSimApp {
 
 	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
 	
-	private static final float TIME_STEP = 1 / 100f;
-
 	@Autowired
 	private PedestrianAppConfig _config;
 
@@ -53,7 +51,7 @@ public class PedestrianSimApp {
 		logger.info("Starting simulation...");
 		simulation.start();
 		do {
-			simulation.update(TIME_STEP);
+			simulation.update(simulation.getPedestrianArea().delta());
 		} while(!simulation.isFinished());
 		logger.info("Simulation finished OK!");
 	}

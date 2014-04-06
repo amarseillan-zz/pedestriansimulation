@@ -18,7 +18,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.component.Component;
-import ar.edu.itba.pedestriansim.back.component.MetricsComponent;
 import ar.edu.itba.pedestriansim.back.component.UpdatePedestrialPositionFromFileComponent;
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
@@ -40,7 +39,7 @@ import com.google.common.collect.Lists;
 public class GUIPedestrianSim extends BasicGame {
 
 	public static void main(String[] args) {
-		PedestrianSimApp.main(new String[] {});	// Run backend first!
+		//PedestrianSimApp.main(new String[] {});	// Run backend first!
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		context.refresh();
 		try {
@@ -158,7 +157,6 @@ public class GUIPedestrianSim extends BasicGame {
 			} catch (FileNotFoundException e) {
 				throw new IllegalStateException(e);
 			}
-			components.add(new MetricsComponent(pedestrianArea, new File(config.get("metrics.file"))));
 			return components;
 		}
 		

@@ -29,7 +29,7 @@ public class PedestrianAppConfig {
     	int size = env.getProperty("grid.size", Integer.class);
     	int width = env.getProperty("grid.wAmount", Integer.class);
     	int height = env.getProperty("grid.hAmount", Integer.class);
-    	return new PedestrianArea(width, height, size);
+    	return new PedestrianArea(width, height, size, 1/100f);
     }
     
     public List<Properties> getPedestrianSources() throws IOException {

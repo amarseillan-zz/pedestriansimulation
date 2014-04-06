@@ -1,13 +1,12 @@
-package ar.edu.itba.pedestriansim.back.metric;
+package ar.edu.itba.pedestriansim.metric.component;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class CollitionCount implements Metric {
+public class CollitionCount implements CollitionMetric {
 
 	long count;
 	Map<Serializable, Serializable> lastCollitions;
@@ -27,7 +26,7 @@ public class CollitionCount implements Metric {
 	}
 
 	@Override
-	public void update(float miliseconds, Serializable p1, Serializable p2) {
+	public void onCollition(float miliseconds, Serializable p1, Serializable p2) {
 		Serializable candidate = lastCollitions.get(p1);
 		if (candidate == null || !candidate.equals(p2)) {
 			count++;

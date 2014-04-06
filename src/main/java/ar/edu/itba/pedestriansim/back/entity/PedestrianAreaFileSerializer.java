@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 import org.newdawn.slick.geom.Vector2f;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Lists;
 
@@ -23,17 +22,25 @@ public class PedestrianAreaFileSerializer {
 	private final static String LINE_BREAK = "\n";
 	private final static String SPACE = " ";
 	private final static String COMMA = ",";
+	
+	private Float delta;
 
 	private File _directory;
 	private PedestrianArea _pedestrianArea;
 
 	public PedestrianAreaFileSerializer(PedestrianArea pedestrianArea, File directory) {
-		_pedestrianArea = Preconditions.checkNotNull(pedestrianArea);
+		//_pedestrianArea = Preconditions.checkNotNull(pedestrianArea);
+		_pedestrianArea = pedestrianArea;
 		_directory = directory;
 	}
 	
 	public BufferedWriter createStaticFile() throws IOException {
 		return new BufferedWriter(new FileWriter(buildPath(STATIC_FILE_NAME)));
+	}
+	
+	public void saveSimulationTime(BufferedWriter staticFileWriter, float time) throws IOException{
+		staticFileWriter.append(String.valueOf(time));
+		staticFileWriter.append(LINE_BREAK);
 	}
 
 	public void saveStaticStep(BufferedWriter staticFileWriter, Pedestrian pedestrian) throws IOException {
@@ -49,6 +56,7 @@ public class PedestrianAreaFileSerializer {
 	
 	public Supplier<StaticFileLine> staticFileInfo() throws FileNotFoundException {
 		final Scanner scanner = new Scanner(new File(buildPath(STATIC_FILE_NAME)));
+		delta = Float.valueOf(scanner.nextLine());
 		return new Supplier<StaticFileLine>() {
 			@Override
 			public StaticFileLine get() {
@@ -83,6 +91,11 @@ public class PedestrianAreaFileSerializer {
 			line.append(SPACE);
 			line.append(String.format("%.2f", center.y));
 			line.append(COMMA);
+			Vector2f speed = pedestrian.getBody().getVelocity();
+			line.append(String.format("%.2f", speed.x));
+			line.append(SPACE);
+			line.append(String.format("%.2f", speed.y));
+			line.append(COMMA);
 			Vector2f futureCenter = pedestrian.getFuture().getBody().getCenter();
 			line.append(String.format("%.2f", futureCenter.x));
 			line.append(SPACE);
@@ -107,9 +120,11 @@ public class PedestrianAreaFileSerializer {
 						String[] centerString = columns[1].split(SPACE);
 						Vector2f center = new Vector2f(Float.valueOf(centerString[0]), Float.valueOf(centerString[1]));
 						// TODO: unharcode this
-						String[] futureCenterString = columns[2].split(SPACE);
+						String[] velocityString = columns[2].split(SPACE);
+						Vector2f velocity = new Vector2f(Float.valueOf(velocityString[0]), Float.valueOf(velocityString[1]));
+						String[] futureCenterString = columns[3].split(SPACE);
 						Vector2f futureCenter = new Vector2f(Float.valueOf(futureCenterString[0]), Float.valueOf(futureCenterString[1]));
-						PedestrianDynamicLineInfo lineInfo = new PedestrianDynamicLineInfo(id, center, futureCenter);
+						PedestrianDynamicLineInfo lineInfo = new PedestrianDynamicLineInfo(id, center, velocity, futureCenter);
 						line.pedestrialsInfo().add(lineInfo);
 					}
 				} else {
@@ -175,11 +190,13 @@ public class PedestrianAreaFileSerializer {
 	public static class PedestrianDynamicLineInfo {
 		private int _id;
 		private Vector2f _center;
+		private Vector2f _velocity;
 		private Vector2f _futureCenter;
 		
-		public PedestrianDynamicLineInfo(int id, Vector2f center, Vector2f futureCenter) {
+		public PedestrianDynamicLineInfo(int id, Vector2f center, Vector2f velocity,Vector2f futureCenter) {
 			_id = id;
 			_center = center;
+			_velocity = velocity;
 			_futureCenter = futureCenter;
 		}
 		
@@ -191,8 +208,16 @@ public class PedestrianAreaFileSerializer {
 			return _center;
 		}
 		
+		public Vector2f velocity() {
+			return _velocity;
+		}
+		
 		public Vector2f futureCenter() {
 			return _futureCenter;
 		}
+	}
+	
+	public Float delta() {
+		return delta;
 	}
 }

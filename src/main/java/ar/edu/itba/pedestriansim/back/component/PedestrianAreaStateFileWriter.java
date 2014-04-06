@@ -37,6 +37,7 @@ public class PedestrianAreaStateFileWriter extends Component {
 		super.onStart();
 		try {
 			_staticFileWriter = _serializer.createStaticFile();
+			_serializer.saveSimulationTime(_staticFileWriter, _pedestrianArea.delta());
 			_dynamicFileWriter = _serializer.createDynamicWriter();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);

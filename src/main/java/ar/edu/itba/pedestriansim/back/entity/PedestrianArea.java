@@ -24,13 +24,15 @@ public class PedestrianArea {
 	private final List<Shape> _obstacles = Lists.newArrayList();
 	private final List<PedestrianSource> _sources = Lists.newArrayList();
 	private BigDecimal _elapsedTime = BigDecimal.ZERO;
+	private float delta;
 
-	public PedestrianArea(int width, int height, int gridSize) {
+	public PedestrianArea(int width, int height, int gridSize, float delta) {
 		_map = new GridSpace<>(width, height, gridSize, new Function<Pedestrian, Shape>() {
 			public Shape apply(Pedestrian pedestrian) {
 				return pedestrian.getShape();
 			}
 		});
+		this.delta = delta;
 	}
 
 	public void init() {
@@ -100,4 +102,9 @@ public class PedestrianArea {
 	public Collection<PedestrianSource> getSources() {
 		return _sources;
 	}
+
+	public float delta() {
+		return delta;
+	}
+
 }

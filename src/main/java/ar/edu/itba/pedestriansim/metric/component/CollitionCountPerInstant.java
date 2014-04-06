@@ -1,10 +1,10 @@
-package ar.edu.itba.pedestriansim.back.metric;
+package ar.edu.itba.pedestriansim.metric.component;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class CollitionCountPerInstant implements Metric{
+public class CollitionCountPerInstant implements CollitionMetric{
 	
 	long count;
 	
@@ -18,7 +18,7 @@ public class CollitionCountPerInstant implements Metric{
 	}
 	
 	@Override
-	public void update(float miliseconds, Serializable p1, Serializable p2) {
+	public void onCollition(float miliseconds, Serializable p1, Serializable p2) {
 		count ++;
 	}
 	
