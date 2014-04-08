@@ -1,16 +1,16 @@
 package ar.edu.itba.pedestriansim.back.mision;
 
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 public class PedestrianTargetArea implements PedestrianTarget {
 
-	private Shape _targetArea;
-	private Vector2f center;
+	private Line _targetArea;
+	private Vector2f _result = new Vector2f();
 
-	public PedestrianTargetArea(Shape targetArea) {
+	public PedestrianTargetArea(Line targetArea) {
 		_targetArea = targetArea;
-		center = new Vector2f(targetArea.getCenter());
 	}
 
 	@Override
@@ -19,13 +19,9 @@ public class PedestrianTargetArea implements PedestrianTarget {
 	}
 
 	@Override
-	public float distanceTo(Vector2f vector) {
-		return getCenter().distance(vector);
-	}
-
-	@Override
-	public Vector2f getCenter() {
-		return center;
+	public Vector2f getClosesPoint(Vector2f point) {
+		_targetArea.getClosestPoint(point, _result);
+		return _result;
 	}
 
 }

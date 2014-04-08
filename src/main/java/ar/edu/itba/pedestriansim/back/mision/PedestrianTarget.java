@@ -7,8 +7,6 @@ public interface PedestrianTarget {
 
 	boolean intersects(Shape shape);
 
-	float distanceTo(Vector2f pt);
-
-	Vector2f getCenter();
+	Vector2f getClosesPoint(Vector2f position);
 
 }

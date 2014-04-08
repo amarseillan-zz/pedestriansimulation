@@ -12,8 +12,8 @@ public class SpringFutureAdjustementForce implements PedestrianForce {
 
 	@Override
 	public Vector2f apply(Pedestrian input) {
-		Vector2f target = input.getTargetSelection().getTarget().getCenter();
 		Vector2f position = input.getBody().getCenter();
+		Vector2f target = input.getTargetSelection().getTarget().getClosesPoint(position);
 		Vectors.pointBetween(position, target, input.getReactionDistance(), forceOnFuture);
 		Vector2f futurePosition = input.getFuture().getBody().getCenter();
 		forceOnFuture.sub(futurePosition);

@@ -10,8 +10,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Vector2f;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -19,16 +17,12 @@ import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.component.Component;
 import ar.edu.itba.pedestriansim.back.component.UpdatePedestrialPositionFromFileComponent;
-import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
-import ar.edu.itba.pedestriansim.back.factory.PedestrianFactory;
 import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianTargetArea;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -83,30 +77,12 @@ public class GUIPedestrianSim extends BasicGame {
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
-		if ("true".equalsIgnoreCase(_config.get("mouseEnabled"))) {
-			PedestrianMouseController mouseController = createMouseControlledPedestrian(gc);
-			mouseController.setInput(gc.getInput()); // FIXME: no se porque Slick no esta llamando a este metodo
-			gc.getInput().addMouseListener(mouseController);
-		}
 	}
 	
 	private void disableSources() {
 		for (PedestrianSource source : _simulation.getPedestrianArea().getSources()) {
 			source.disable();
 		}
-	}
-
-	private PedestrianMouseController createMouseControlledPedestrian(GameContainer gc) {
-		PedestrianFactory factory = new PedestrianFactory(_config);
-		// FIXME: safely delete these lines of codes, used for debugging
-		PedestrianMision mission = new PedestrianMision();
-		mission.putFirst(new PedestrianTargetArea(new Circle(15, 15, 0.5f)));
-		_simulation.getPedestrianArea().addPedestrian(factory.build(new Vector2f(10, 10), 1, mission));
-		// ===================
-		Pedestrian pedestrian = factory.build(new Vector2f(), 0,
-				new PedestrianMision());
-		_simulation.getPedestrianArea().addPedestrian(pedestrian);
-		return new PedestrianMouseController(pedestrian, _camera);
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {

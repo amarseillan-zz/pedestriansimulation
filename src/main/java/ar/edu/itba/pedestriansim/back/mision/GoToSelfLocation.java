@@ -19,13 +19,7 @@ public class GoToSelfLocation implements PedestrianTarget {
 	}
 
 	@Override
-	public float distanceTo(Vector2f pt) {
-		return getCenter().distance(pt);
-	}
-
-	@Override
-	public Vector2f getCenter() {
+	public Vector2f getClosesPoint(Vector2f position) {
 		return _pedestrian.getBody().getCenter();
 	}
-
 }

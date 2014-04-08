@@ -100,7 +100,7 @@ public class Pedestrian {
 			.append("id", getId())
 			.append("location", getBody().getCenter())
 			.append("velocity", getBody().getVelocity())
-			.append("target(center)", getTargetSelection().getTarget().getCenter())
+			.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter()))
 			.build();
 	}
 }
