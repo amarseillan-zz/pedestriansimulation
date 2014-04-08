@@ -97,7 +97,7 @@ public class PedestrianAppConfig {
 		this.optional = optional;
 	}
 
-	static class OptionalConfig {
+	public static class OptionalConfig {
     	
     	private float externalForceThreshold;
 		private float springConstant;
