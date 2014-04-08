@@ -13,6 +13,9 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.Dymaim
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 import ar.edu.itba.pedestriansim.back.physics.Collitions;
+import ar.edu.itba.pedestriansim.metric.component.AverageTravelTime;
+import ar.edu.itba.pedestriansim.metric.component.AverageVelocity;
+import ar.edu.itba.pedestriansim.metric.component.AverageWalkDistance;
 import ar.edu.itba.pedestriansim.metric.component.CollitionCount;
 import ar.edu.itba.pedestriansim.metric.component.CollitionCountPerInstant;
 import ar.edu.itba.pedestriansim.metric.component.CollitionMetric;
@@ -49,17 +52,23 @@ public class CalculateMetricsFromFile {
 		allMetrics = new ArrayList<Metric>(10);
 		CollitionCount collitionCount = new CollitionCount();
 		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
+		AverageVelocity averageVelocity = new AverageVelocity();
+		AverageTravelTime averageTravelTime = new AverageTravelTime();
+		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
 		collitionMetrics.add(collitionCount);
 		allMetrics.add(collitionCount);
 		collitionMetrics.add(collitionCountPerInstant);
 		allMetrics.add(collitionCountPerInstant);
+		simpleMetrics.add(averageVelocity);
+		allMetrics.add(averageVelocity);
+		simpleMetrics.add(averageTravelTime);
+		allMetrics.add(averageTravelTime);
+		simpleMetrics.add(averageWalkDistance);
+		allMetrics.add(averageWalkDistance);
 	}
 
 	public boolean update(float delta) {
-		for (CollitionMetric metric: collitionMetrics) {
-			metric.onIterationStart();
-		}
-		for (SimpleMetric metric: simpleMetrics) {
+		for (Metric metric: allMetrics) {
 			metric.onIterationStart();
 		}
 		DymaimcFileStep step = _stepsSupplier.get();
@@ -77,21 +86,17 @@ public class CalculateMetricsFromFile {
 				Shape cs2 = new Circle(p2.center().getX(), p2.center().getY(), radius2);
 				if (Collitions.touching(cs1, cs2)) {
 					for (CollitionMetric metric: collitionMetrics) {
-					metric.onCollition(delta, p1.id(), p2.id());
+						metric.onCollition(delta, p1.id(), p2.id());
 					}
 				}
 			}
 			for (SimpleMetric metric: simpleMetrics) {
-				metric.update(p1, allPedestrianStaticInfoById.get(p1.id()));
+				metric.update(delta, p1, allPedestrianStaticInfoById.get(p1.id()));
 			}
 		}
-		for (CollitionMetric metric: collitionMetrics) {
+		for (Metric metric: allMetrics) {
 			metric.onIterationEnd();
 		}
-		for (SimpleMetric metric: simpleMetrics) {
-			metric.onIterationEnd();
-		}
-		
 		return true;
 	}
 	
