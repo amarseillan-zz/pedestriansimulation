@@ -5,5 +5,5 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.Static
 
 public interface SimpleMetric extends Metric{
 
-	void update(PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo);
+	void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo);
 }
