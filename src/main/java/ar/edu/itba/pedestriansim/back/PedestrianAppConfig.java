@@ -24,6 +24,8 @@ public class PedestrianAppConfig {
 
 	@Autowired
 	private Environment env;
+	
+	private OptionalConfig optional;
 
     public PedestrianArea buildPedestrianArea() {
     	int size = env.getProperty("grid.size", Integer.class);
@@ -85,5 +87,54 @@ public class PedestrianAppConfig {
 
     public <T> Optional<T> getOptional(String name, Class<T> clazz) {
     	return Optional.fromNullable(get(name, clazz));
+    }
+    
+    public OptionalConfig getOptional() {
+		return optional;
+	}
+
+	public void setOptional(OptionalConfig optional) {
+		this.optional = optional;
+	}
+
+	static class OptionalConfig {
+    	
+    	private float externalForceThreshold;
+		private float springConstant;
+		private float alpha;
+		private float beta;
+		private float reactionDistance;
+		
+		public OptionalConfig(float externalForceThreshold,
+				float springConstant, float alpha, float beta,
+				float reactionDistance) {
+			this.externalForceThreshold = externalForceThreshold;
+			this.springConstant = springConstant;
+			this.alpha = alpha;
+			this.beta = beta;
+			this.reactionDistance = reactionDistance;
+		}
+
+		public float getExternalForceThreshold() {
+			return externalForceThreshold;
+		}
+
+		public float getSpringConstant() {
+			return springConstant;
+		}
+
+		public float getAlpha() {
+			return alpha;
+		}
+
+		public float getBeta() {
+			return beta;
+		}
+
+		public float getReactionDistance() {
+			return reactionDistance;
+		}
+		
+		
     }
 }

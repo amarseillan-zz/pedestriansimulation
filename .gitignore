@@ -9,5 +9,5 @@ target/
 *.ear
 dynamic.txt
 static.txt
-metrics.txt
+metrics*
 

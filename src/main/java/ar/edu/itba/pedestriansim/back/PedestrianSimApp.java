@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import ar.edu.itba.pedestriansim.back.PedestrianAppConfig.OptionalConfig;
 import ar.edu.itba.pedestriansim.back.component.Component;
 import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
@@ -28,19 +29,30 @@ import com.google.common.collect.Lists;
 public class PedestrianSimApp {
 
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+				"applicationContext.xml");
 		context.refresh();
 		PedestrianSimApp simulation = context.getBean(PedestrianSimApp.class);
-		simulation.run();
+		OptionalConfig config = null;
+		if (args.length == 5) {
+			float externalForceThreshold = Float.valueOf(args[0]);
+			float springConstant = Float.valueOf(args[1]);
+			float alpha = Float.valueOf(args[2]);
+			float beta = Float.valueOf(args[3]);
+			float reactionDistance = Float.valueOf(args[4]);
+			config = new OptionalConfig(externalForceThreshold, springConstant, alpha, beta, reactionDistance);
+		} 
+		simulation.run(config);
 		context.close();
 	}
 
-	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
-	
+	private static final Logger logger = Logger
+			.getLogger(PedestrianSimApp.class);
+
 	@Autowired
 	private PedestrianAppConfig _config;
 
-	public void run() {
+	public void run(OptionalConfig config) {
 		logger.info("Loading simulation...");
 		Predicate<PedestrianArea> cutCondition = new Predicate<PedestrianArea>() {
 			@Override
@@ -48,32 +60,41 @@ public class PedestrianSimApp {
 				return input.elapsedTime().floatValue() > 100;
 			}
 		};
-		PedestrianSim simulation = new PedestrianSim(_config, new SimulationComponentsFactoryImpl(), cutCondition);
+		_config.setOptional(config);
+		PedestrianSim simulation = new PedestrianSim(_config,
+				new SimulationComponentsFactoryImpl(), cutCondition);
 		logger.info("Starting simulation...");
 		simulation.start();
 		do {
 			simulation.update(simulation.getPedestrianArea().delta());
-		} while(!simulation.isFinished());
+		} while (!simulation.isFinished());
 		logger.info("Simulation finished OK!");
 	}
-	
-	public static class SimulationComponentsFactoryImpl implements SimulationComponentsFactory {
 
-		public List<Component> produce(PedestrianAppConfig config, PedestrianArea pedestrianArea) {
-			PedestrianForces pedestrianForces = new PedestrianForcesFactory(config).produce();
+	public static class SimulationComponentsFactoryImpl implements
+			SimulationComponentsFactory {
+
+		public List<Component> produce(PedestrianAppConfig config,
+				PedestrianArea pedestrianArea) {
+			PedestrianForces pedestrianForces = new PedestrianForcesFactory(
+					config).produce();
 			List<Component> components = Lists.newLinkedList();
-			components.add(new FutureForceUpdaterComponent(pedestrianArea, pedestrianForces));
+			components.add(new FutureForceUpdaterComponent(pedestrianArea,
+					pedestrianForces));
 			components.add(new FuturePositionUpdaterComponent(pedestrianArea));
-			components.add(new PedestrianForceUpdaterComponent(pedestrianArea, pedestrianForces));
-			components.add(new PedestrianPositionUpdaterComponent(pedestrianArea));
+			components.add(new PedestrianForceUpdaterComponent(pedestrianArea,
+					pedestrianForces));
+			components.add(new PedestrianPositionUpdaterComponent(
+					pedestrianArea));
 			components.add(new PedestrianRemoverComponent(pedestrianArea));
 			components.add(new GridPedestrianPositionUpdater(pedestrianArea));
 			File outputDirectory = new File(config.get("log.directory"));
 			float logInterval = config.get("log.interval", Float.class);
-			components.add(new PedestrianAreaStateFileWriter(pedestrianArea, outputDirectory, logInterval));
+			components.add(new PedestrianAreaStateFileWriter(pedestrianArea,
+					outputDirectory, logInterval));
 			return components;
 		}
-		
+
 	}
 
 }
