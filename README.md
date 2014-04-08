@@ -15,14 +15,14 @@ Simulation of pedestrian avoidance that tries to reflect reality using a novel m
 
 Technologies
 ======
-Java
-Maven
-Git
-Light Weight Java Graphic Library (http://lwjgl.org/)
+ + Java
+ + Maven
+ + Git
+ + Light Weight Java Graphic Library (http://lwjgl.org/)
 
 Tags
 =====
 
-Avoidance
-Pedestrian
-Simulation
+ + Avoidance
+ + Pedestrian
+ + Simulation
