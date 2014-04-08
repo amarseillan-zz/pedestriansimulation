@@ -5,7 +5,6 @@ import org.newdawn.slick.geom.Shape;
 import ar.edu.itba.pedestriansim.back.mision.GoToSelfLocation;
 import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.mision.PedestrianTarget;
-import ar.edu.itba.pedestriansim.back.physics.RigidBody;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -56,20 +55,8 @@ public class TargetSelection {
 		}
 	}
 
-	public float getETA() {
-		float velocity = getBody().getVelocity().length();
-		if (Math.abs(velocity) < 0.01) {
-			return Float.NaN;
-		}
-		return getTarget().distanceTo(getBody().getCenter()) / velocity;
-	}
-
 	private PedestrianMision getMission() {
 		return _pedestrian.getMission();
-	}
-
-	private RigidBody getBody() {
-		return _pedestrian.getBody();
 	}
 
 	private Shape getShape() {

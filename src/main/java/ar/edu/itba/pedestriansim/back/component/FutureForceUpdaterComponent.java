@@ -67,7 +67,8 @@ public class FutureForceUpdaterComponent extends Component {
 	}
 	
 	private Iterable<Pedestrian> removeOnBack(Pedestrian me, Iterable<Pedestrian> others) {
-		final Line meToTargetLine = new Line(me.getBody().getCenter(), me.getTargetSelection().getTarget().getCenter());
+		Vector2f center = me.getBody().getCenter();
+		final Line meToTargetLine = new Line(center, me.getTargetSelection().getTarget().getClosesPoint(center));
 		float[] normal = meToTargetLine.getNormal(0);
 		cache.set(meToTargetLine.getStart());
 		cache.x += normal[0];
@@ -83,7 +84,7 @@ public class FutureForceUpdaterComponent extends Component {
 	}
 	
 	private void setFutureInDesiredPath(Pedestrian me) {
-		Vector2f targetCenter = me.getTargetSelection().getTarget().getCenter();
+		Vector2f targetCenter = me.getTargetSelection().getTarget().getClosesPoint(me.getBody().getCenter());
 		float distance = me.getReactionDistance();
 		Vectors.pointBetween(me.getBody().getCenter(), targetCenter, distance, cache);
 		me.getFuture().getBody().setLocation(cache);

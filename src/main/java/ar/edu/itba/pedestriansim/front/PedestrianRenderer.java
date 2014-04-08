@@ -46,7 +46,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 	private void drawPath(Graphics g, Pedestrian pedestrian) {
 		if (pedestrian.getTargetSelection().getTarget() != null) {
 			Vector2f location = pedestrian.getBody().getCenter();
-			pedestrianPath.set(location, pedestrian.getTargetSelection().getTarget().getCenter());
+			pedestrianPath.set(location, pedestrian.getTargetSelection().getTarget().getClosesPoint(location));
 			draw(g, pedestrianPath, Color.white);
 			future.set(location, pedestrian.getFuture().getBody().getCenter());
 			draw(g, future, Color.red);
@@ -67,10 +67,10 @@ public class PedestrianRenderer extends ShapeRenderer {
 		g.setColor(Color.cyan);
 		Vector2f location = pedestrian.getBody().getCenter();
 		TargetSelection targetSelection = pedestrian.getTargetSelection();
-		float distance = location.distance(targetSelection.getTarget().getCenter());
+		float distance = location.distance(targetSelection.getTarget().getClosesPoint(location));
 		String positionString = String.format("x = (%.2f, %.2f) | D = %.3f [m]", location.x, location.y, distance);
 		drawString(g, positionString, location.x, location.y);
-		String velocityString = String.format("v = %.2f [m/s] | ETA(aprox) = %.3f", pedestrian.getBody().getVelocity().length(), targetSelection.getETA());
+		String velocityString = String.format("v = %.2f [m/s]", pedestrian.getBody().getVelocity().length());
 		drawString(g, velocityString, location.x, location.y - 2);
 	}
 	

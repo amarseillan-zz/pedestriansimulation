@@ -2,6 +2,7 @@ package ar.edu.itba.pedestriansim.back.physics;
 
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -33,6 +34,21 @@ public class SpringForceModel {
 	public Vector2f getForce(CircularShape shape1, Shape shape) {
 		if (shape instanceof Line) {
 			return getForce(shape1, (Line) shape);
+		}
+		if (shape instanceof Rectangle) {
+			Rectangle rectangle = (Rectangle) shape;
+			Line closest = null;
+			float closestDistance = 0;
+			Line border = new Line(0, 0);
+			for (int i =  0; i < 4; i++) {
+				border.set(rectangle.getPoint(i), rectangle.getPoint((i + 1) % 4));
+				float currDistance = border.distance(shape1.getCenter());
+				if (closest == null || currDistance < closestDistance) {
+					closest = border;
+					closestDistance = currDistance;
+				}
+			}
+			return getForce(shape1, closest);
 		}
 		throw new IllegalStateException("Not implemented");
 	}
