@@ -28,9 +28,13 @@ public class CollitionCountPerInstant implements CollitionMetric{
 	}
 
 	@Override
-	public void appendResults(FileWriter writer) throws IOException {
-		writer.append("Sum of every collition in every instant:\n");
-		writer.append(count + "\n");
+	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
+		if (pretty) {
+			writer.append("Sum of every collition in every instant:\n");
+			writer.append(count + "\n");
+		} else {
+			writer.append(count + " ");
+		}
 	}
 
 	public long getCount() {

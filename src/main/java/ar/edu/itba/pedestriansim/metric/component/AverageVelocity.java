@@ -2,9 +2,6 @@ package ar.edu.itba.pedestriansim.metric.component;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import ar.edu.itba.common.util.Average;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
@@ -27,9 +24,13 @@ public class AverageVelocity implements SimpleMetric{
 	}
 
 	@Override
-	public void appendResults(FileWriter writer) throws IOException {
-		writer.append("Average speed:\n");
-		writer.append(avgSpeed.getAverage() + "m/s\n");
+	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
+		if (pretty) {
+			writer.append("Average speed:\n");
+			writer.append(avgSpeed.getAverage() + "m/s\n");
+		} else {
+			writer.append(avgSpeed.getAverage() + " ");
+		}
 	}
 
 	@Override

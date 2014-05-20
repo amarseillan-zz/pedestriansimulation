@@ -29,14 +29,18 @@ public class AverageTravelTime implements SimpleMetric{
 	}
 
 	@Override
-	public void appendResults(FileWriter writer) throws IOException {
+	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
 		Average total = new Average();
 		for (Float average: averageTimePerPedestrian.values()) {
 			total.add(average);
 		}
 		
-		writer.append("Average time to objective: \n");
-		writer.append(total.getAverage() + "s\n");
+		if (pretty) {
+			writer.append("Average time to objective: \n");
+			writer.append(total.getAverage() + "s\n");
+		} else {
+			writer.append(total.getAverage() + " ");
+		}
 	}
 
 	@Override

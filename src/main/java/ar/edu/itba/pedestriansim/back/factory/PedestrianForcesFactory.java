@@ -44,8 +44,7 @@ public class PedestrianForcesFactory {
 		PedestrianForces forces = new PedestrianForces();
 		if (_config.getOptional() != null) {
 			OptionalConfig optional = _config.getOptional();
-			float springConstant = optional.getSpringConstant();
-			forces.setCollisitionModel(new SpringForceModel(springConstant));
+			forces.setCollisitionModel(new SpringForceModel());
 			forces.setExternalForceThreshold(optional
 					.getExternalForceThreshold());
 			forces.setExternalForceRadiusThreshold(_config.get(
@@ -56,8 +55,7 @@ public class PedestrianForcesFactory {
 			forces.setForceOnFuture(buildForceOnFuture());
 			return forces;
 		} else {
-			float springConstant = _config.get("springConstant", Float.class);
-			forces.setCollisitionModel(new SpringForceModel(springConstant));
+			forces.setCollisitionModel(new SpringForceModel());
 			forces.setExternalForceThreshold(_config.get(
 					"externalForceThreshold", Float.class));
 			forces.setExternalForceRadiusThreshold(_config.get(

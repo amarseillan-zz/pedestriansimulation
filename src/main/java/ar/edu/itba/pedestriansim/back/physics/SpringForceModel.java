@@ -11,13 +11,9 @@ public class SpringForceModel {
 	private static final float WALL_MAGIC = 10;
 	private final Vector2f cache = new Vector2f();
 	
-	private final float _K;
+	private final float _K = 10000;
 	private final Vector2f closestPointCache = new  Vector2f();
 	private final Vector2f nullForce = new Vector2f();
-
-	public SpringForceModel(float K) {
-		_K = K;
-	}
 
 	public Vector2f getForce(CircularShape cshape1, CircularShape cshape2) {
 		Circle shape1 = cshape1.getShape();

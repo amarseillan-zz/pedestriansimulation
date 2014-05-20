@@ -26,6 +26,8 @@ public class PedestrianAppConfig {
 	private Environment env;
 	
 	private OptionalConfig optional;
+	private String staticfile;
+	private String dynamicfile;
 
     public PedestrianArea buildPedestrianArea() {
     	int size = env.getProperty("grid.size", Integer.class);
@@ -97,30 +99,20 @@ public class PedestrianAppConfig {
 		this.optional = optional;
 	}
 
-	public static class OptionalConfig {
     	
+	public static class OptionalConfig {
     	private float externalForceThreshold;
-		private float springConstant;
 		private float alpha;
 		private float beta;
-		private float reactionDistance;
 		
-		public OptionalConfig(float externalForceThreshold,
-				float springConstant, float alpha, float beta,
-				float reactionDistance) {
+		public OptionalConfig(float externalForceThreshold, float alpha, float beta) {
 			this.externalForceThreshold = externalForceThreshold;
-			this.springConstant = springConstant;
 			this.alpha = alpha;
 			this.beta = beta;
-			this.reactionDistance = reactionDistance;
 		}
 
 		public float getExternalForceThreshold() {
 			return externalForceThreshold;
-		}
-
-		public float getSpringConstant() {
-			return springConstant;
 		}
 
 		public float getAlpha() {
@@ -131,10 +123,22 @@ public class PedestrianAppConfig {
 			return beta;
 		}
 
-		public float getReactionDistance() {
-			return reactionDistance;
-		}
-		
-		
     }
+
+
+	public String getDynamicfile() {
+		return dynamicfile;
+	}
+
+	public void setDynamicfile(String dynamicfile) {
+		this.dynamicfile = dynamicfile;
+	}
+
+	public String getStaticfile() {
+		return staticfile;
+	}
+
+	public void setStaticfile(String staticfile) {
+		this.staticfile = staticfile;
+	}
 }

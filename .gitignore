@@ -11,3 +11,6 @@ dynamic.txt
 static.txt
 metrics*
 
+avgMetrics.out
+runs/*
+run.files
