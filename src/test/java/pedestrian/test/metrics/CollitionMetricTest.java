@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.Assert;
 
-import static org.junit.Assert.*;
 import ar.edu.itba.pedestriansim.metric.component.CollitionCount;
 
 public class CollitionMetricTest {
