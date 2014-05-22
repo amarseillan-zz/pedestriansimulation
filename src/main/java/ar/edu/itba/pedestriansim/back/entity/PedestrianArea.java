@@ -72,11 +72,11 @@ public class PedestrianArea {
 	public boolean hasCollitions(Pedestrian pedestrian) {
 		for (Pedestrian possible : getCollitions(pedestrian)) {
 			if (Collitions.touching(possible.getShape(), pedestrian.getShape())) {
-				return false;
+				return true;
 			}
 		}
 		// XXX: marse, acordate que me dijsite que no iban a chocar contra las paredes...
-		return true;
+		return false;
 	}
 
 	public void addObstacle(Shape obstacte) {
