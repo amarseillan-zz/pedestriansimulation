@@ -95,6 +95,7 @@ public class PedestrianSource implements EventListener {
 				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
 				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
 			} while (_pedestrianArea.hasCollitions(pedestrian));
+			pedestrian.setReactionDistance(1.5f);
 			_pedestrianArea.getMap().add(pedestrian);
 			_pedestrianArea.addPedestrian(pedestrian);
 		}

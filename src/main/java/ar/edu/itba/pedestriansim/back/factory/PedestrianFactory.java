@@ -18,13 +18,11 @@ public class PedestrianFactory {
 	private final RandomGenerator _massGenerator;
 	private final RandomGenerator _velocityGenerator;
 	private final RandomGenerator _radiusGenerator;
-	private final Optional<Float> _reactionDistance;
 
 	public PedestrianFactory(PedestrianAppConfig config) {
 		_massGenerator = new UniformRandomGenerator(getRange("pedestrian.mass", config));
 		_velocityGenerator = new UniformRandomGenerator(getRange("pedestrian.velocity", config));
 		_radiusGenerator = new UniformRandomGenerator(getRange("pedestrian.radius", config));
-		_reactionDistance = config.getOptional("pedestrian.reactionDistance", Float.class);
 	}
 	
 	private Range<Float> getRange(String name, PedestrianAppConfig _config) {
@@ -39,9 +37,6 @@ public class PedestrianFactory {
 		Pedestrian pedestrian = new Pedestrian(lastId++, team, body);
 		pedestrian.setMission(mission);
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
-		if (_reactionDistance.isPresent()) {
-			pedestrian.setReactionDistance(_reactionDistance.get());
-		}
 		return pedestrian;
 	}
 }
