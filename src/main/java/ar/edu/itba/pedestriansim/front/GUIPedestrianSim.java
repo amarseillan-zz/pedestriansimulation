@@ -33,11 +33,19 @@ import com.google.common.collect.Lists;
 public class GUIPedestrianSim extends BasicGame {
 
 	public static void main(String[] args) {
-		PedestrianSimApp.main(new String[] {});	// Run backend first!
+		if (args.length < 2) {
+			args = new String[2];
+			args[0] = "static.txt";
+			args[1] = "dynamic.txt";
+		}
+		PedestrianSimApp.main(new String[] {args[0], args[1]});	// Run backend first!
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		context.refresh();
 		try {
-			AppGameContainer appContainer = new AppGameContainer(context.getBean(GUIPedestrianSim.class));
+			GUIPedestrianSim sim = context.getBean(GUIPedestrianSim.class);
+			sim._config.setStaticfile(args[0]);
+			sim._config.setDynamicfile(args[1]);
+			AppGameContainer appContainer = new AppGameContainer(sim);
 			appContainer.setUpdateOnlyWhenVisible(false);
 			appContainer.setDisplayMode(1200, 700, false);
 			appContainer.start();
@@ -128,7 +136,7 @@ public class GUIPedestrianSim extends BasicGame {
 		public List<Component> produce(PedestrianAppConfig config, PedestrianArea pedestrianArea) {
 			List<Component> components = Lists.newLinkedList();
 			try {
-				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(pedestrianArea, new File(config.get("log.directory")));
+				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(pedestrianArea, new File(config.get("log.directory")), config.getStaticfile(), config.getDynamicfile());
 				components.add(new UpdatePedestrialPositionFromFileComponent(pedestrianArea, serializer.staticFileInfo(), composeSteps(serializer.steps())));
 			} catch (FileNotFoundException e) {
 				throw new IllegalStateException(e);

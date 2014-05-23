@@ -24,11 +24,11 @@ public class PedestrianAreaStateFileWriter extends Component {
 	private BufferedWriter _staticFileWriter;
 	private Set<Pedestrian> allPedestrianHistory = Sets.newHashSet();
 
-	public PedestrianAreaStateFileWriter(PedestrianArea pedestrianArea, File directory, float stepInterval) {
+	public PedestrianAreaStateFileWriter(PedestrianArea pedestrianArea, File directory, float stepInterval, String staticFile, String dynamicFile) {
 		Preconditions.checkArgument(stepInterval >= 0);
 		_stepInterval = stepInterval;
 		_timeSinceLastWrite = 0;
-		_serializer = new PedestrianAreaFileSerializer(pedestrianArea, directory);
+		_serializer = new PedestrianAreaFileSerializer(pedestrianArea, directory, staticFile, dynamicFile);
 		_pedestrianArea = pedestrianArea;
 	}
 

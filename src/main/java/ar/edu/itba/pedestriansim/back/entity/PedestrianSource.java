@@ -89,14 +89,14 @@ public class PedestrianSource implements EventListener {
 			// SI el lugar esta libre, ahi recien crear el peaton
 			_totalProduced++;
 			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), _team, _targetList.clone());
-			boolean isEmpty;
 			do {
 				float x = _location.x + _initialLocationGenerator.generate();
 				float y = _location.y + _initialLocationGenerator.generate();
 				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
 				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
-				isEmpty = _pedestrianArea.hasCollitions(pedestrian);
-			} while (!isEmpty);
+			} while (_pedestrianArea.hasCollitions(pedestrian));
+			pedestrian.setReactionDistance(1.5f);
+			_pedestrianArea.getMap().add(pedestrian);
 			_pedestrianArea.addPedestrian(pedestrian);
 		}
 	}

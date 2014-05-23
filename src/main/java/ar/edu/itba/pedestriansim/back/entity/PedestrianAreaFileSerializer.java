@@ -16,8 +16,8 @@ import com.google.common.collect.Lists;
 
 public class PedestrianAreaFileSerializer {
 
-	private static final String STATIC_FILE_NAME = "static.txt";
-	private static final String DYNAMIC_FILE_NAME = "dynamic.txt";
+	private static String STATIC_FILE_NAME;
+	private static String DYNAMIC_FILE_NAME;
 	
 	private final static String LINE_BREAK = "\n";
 	private final static String SPACE = " ";
@@ -28,10 +28,12 @@ public class PedestrianAreaFileSerializer {
 	private File _directory;
 	private PedestrianArea _pedestrianArea;
 
-	public PedestrianAreaFileSerializer(PedestrianArea pedestrianArea, File directory) {
+	public PedestrianAreaFileSerializer(PedestrianArea pedestrianArea, File directory, String staticFile, String dynamicFile) {
 		//_pedestrianArea = Preconditions.checkNotNull(pedestrianArea);
 		_pedestrianArea = pedestrianArea;
 		_directory = directory;
+		STATIC_FILE_NAME = staticFile;
+		DYNAMIC_FILE_NAME = dynamicFile;
 	}
 	
 	public BufferedWriter createStaticFile() throws IOException {

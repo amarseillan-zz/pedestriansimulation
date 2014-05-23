@@ -29,14 +29,18 @@ public class AverageWalkDistance implements SimpleMetric{
 	}
 
 	@Override
-	public void appendResults(FileWriter writer) throws IOException {
+	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
 		Average total = new Average();
 		for (Float average: averageWalkPerPedestrian.values()) {
 			total.add(average);
 		}
 		
-		writer.append("Average distance to objective: \n");
-		writer.append(total.getAverage() + "m\n");
+		if (pretty) {
+			writer.append("Average distance to objective: \n");
+			writer.append(total.getAverage() + "m\n");
+		} else {
+			writer.append(total.getAverage() + " ");
+		}
 	}
 
 	@Override

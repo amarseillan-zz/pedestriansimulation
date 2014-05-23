@@ -33,10 +33,12 @@ public class CalculateMetricsFromFile {
 	private List<CollitionMetric> collitionMetrics;
 	private List<SimpleMetric> simpleMetrics;
 	private List<Metric> allMetrics;
-	private String outputFile;
+	private FileWriter outputFileWriter;
+	private Boolean prettyPrint;
 	
-	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, String outputFile) {
+	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter, Boolean prettyPrint) {
 		_stepsSupplier = stepsSupplier;
+		this.prettyPrint = prettyPrint;
 		boolean staticSupplierFinished;
 		do {
 			StaticFileLine fileLine = staticStepSupplier.get();	
@@ -46,7 +48,7 @@ public class CalculateMetricsFromFile {
 			}
 		} while(!staticSupplierFinished);
 		
-		this.outputFile = outputFile;
+		this.outputFileWriter = outputFileWriter;
 		collitionMetrics = new ArrayList<CollitionMetric>(5);
 		simpleMetrics = new ArrayList<SimpleMetric>(5);
 		allMetrics = new ArrayList<Metric>(10);
@@ -101,13 +103,12 @@ public class CalculateMetricsFromFile {
 	}
 	
 	public void onSimulationEnd() {
-		FileWriter writer;
 		try {
-			writer = new FileWriter(outputFile);
 			for (Metric metric: allMetrics) {
-				metric.appendResults(writer);
+				metric.appendResults(outputFileWriter, prettyPrint);
 			}
-			writer.flush();
+			outputFileWriter.append("\n");
+			outputFileWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

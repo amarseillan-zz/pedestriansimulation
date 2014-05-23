@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.physics.RigidBody;
+import ar.edu.itba.pedestriansim.back.physics.Vectors;
 
 import com.google.common.base.Preconditions;
 
@@ -28,7 +29,6 @@ public class Pedestrian {
 		_team = team;
 		_body = Preconditions.checkNotNull(body);
 		_future = new PedestrianFuture(1, this);
-		setReactionDistance(DEFAULT_REACTION_DISTANCE);
 		targetSelection = new TargetSelection(this);
 	}
 
@@ -82,8 +82,11 @@ public class Pedestrian {
 	
 	public final void setReactionDistance(float reactionDistance) {
 		_reactionDistance = reactionDistance;
-		Vector2f center = getBody().getCenter().copy(); 
-		_future.getBody().setLocation(center.add(new Vector2f(1, 0).scale(reactionDistance)));
+		Vector2f targetCenter = getTargetSelection().getTarget().getClosesPoint(getBody().getCenter());
+		float distance = _reactionDistance;
+		Vector2f cache = new Vector2f();
+		Vectors.pointBetween(getBody().getCenter(), targetCenter, distance, cache);
+		getFuture().getBody().setLocation(cache);
 	}
 
 	public float getReactionDistance() {

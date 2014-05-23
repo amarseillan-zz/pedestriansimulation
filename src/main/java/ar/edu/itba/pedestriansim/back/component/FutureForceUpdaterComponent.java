@@ -1,6 +1,8 @@
 package ar.edu.itba.pedestriansim.back.component;
 
+import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
@@ -14,6 +16,7 @@ import com.google.common.collect.Iterables;
 public class FutureForceUpdaterComponent extends Component {
 
 	private final Vector2f externalForcesOnFuture = new Vector2f();
+	private static final Logger LOGGER = Logger.getLogger(FutureForceUpdaterComponent.class);
 
 	private final PedestrianArea scene;
 	private final PedestrianForces _pedestrianForces;
@@ -39,10 +42,20 @@ public class FutureForceUpdaterComponent extends Component {
 		if (futureIsFurtherThan(radiusThreshold, me)) {
 			Iterable<Pedestrian> pedestriansToAvoid = removeOnBack(me, scene.getPedestriansAndSkip(me));
 			for (Pedestrian other : pedestriansToAvoid) {
-				// TODO: the repulsion force is calculated once for (A,B) and then for (B,A) event though
+				// TODO: the repulsion force is calculated once for (A,B) and then for (B,A) even though
 				// the result is the same, use a cache objet here!
 				Vector2f interactionLocation = _pedestrianForces.getInteractionLocation().apply(other);
 				Vector2f repulsionForce = _pedestrianForces.getRepulsionForceModel().apply(futureLocation, interactionLocation);
+				externalForcesOnFuture.add(repulsionForce);
+			}
+			for (Shape shape: scene.getObstacles()) {
+				if (!(shape instanceof Line)) {
+					LOGGER.error("obstacles that are not lines are not yet supported");
+					throw new RuntimeException();
+				}
+				Vector2f closest = new Vector2f();
+				((Line)shape).getClosestPoint(futureLocation, closest);
+				Vector2f repulsionForce = _pedestrianForces.getRepulsionForceModel().apply(futureLocation, closest);
 				externalForcesOnFuture.add(repulsionForce);
 			}
 			float threshold = _pedestrianForces.getExternalForceThreshold();

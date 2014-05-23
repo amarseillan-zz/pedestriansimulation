@@ -29,20 +29,22 @@ import com.google.common.collect.Lists;
 public class PedestrianSimApp {
 
 	public static void main(String[] args) {
+		if (args.length < 2 ){
+			throw new IllegalArgumentException("Too few arguments, you should at least state dynamicfile and staticfile");
+		}
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
 				"applicationContext.xml");
 		context.refresh();
 		PedestrianSimApp simulation = context.getBean(PedestrianSimApp.class);
 		OptionalConfig config = null;
 		if (args.length == 5) {
-			float externalForceThreshold = Float.valueOf(args[0]);
-			float springConstant = Float.valueOf(args[1]);
-			float alpha = Float.valueOf(args[2]);
-			float beta = Float.valueOf(args[3]);
-			float reactionDistance = Float.valueOf(args[4]);
-			config = new OptionalConfig(externalForceThreshold, springConstant, alpha, beta, reactionDistance);
+			
+			float externalForceThreshold = Float.valueOf(args[2]);
+			float alpha = Float.valueOf(args[3]);
+			float beta = Float.valueOf(args[4]);
+			config = new OptionalConfig(externalForceThreshold, alpha, beta);
 		} 
-		simulation.run(config);
+		simulation.run(config, args[0], args[1]);
 		context.close();
 	}
 
@@ -52,15 +54,17 @@ public class PedestrianSimApp {
 	@Autowired
 	private PedestrianAppConfig _config;
 
-	public void run(OptionalConfig config) {
+	public void run(OptionalConfig config, String staticfile, String dynamicfile) {
 		logger.info("Loading simulation...");
 		Predicate<PedestrianArea> cutCondition = new Predicate<PedestrianArea>() {
 			@Override
 			public boolean apply(PedestrianArea input) {
-				return input.elapsedTime().floatValue() > 100;
+				return input.elapsedTime().floatValue() > 20;
 			}
 		};
 		_config.setOptional(config);
+		_config.setStaticfile(staticfile);
+		_config.setDynamicfile(dynamicfile);
 		PedestrianSim simulation = new PedestrianSim(_config,
 				new SimulationComponentsFactoryImpl(), cutCondition);
 		logger.info("Starting simulation...");
@@ -91,7 +95,7 @@ public class PedestrianSimApp {
 			File outputDirectory = new File(config.get("log.directory"));
 			float logInterval = config.get("log.interval", Float.class);
 			components.add(new PedestrianAreaStateFileWriter(pedestrianArea,
-					outputDirectory, logInterval));
+					outputDirectory, logInterval, config.getStaticfile(), config.getDynamicfile()));
 			return components;
 		}
 
