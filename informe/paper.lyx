@@ -1,0 +1,621 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+A Pedestrian Simulation 
+\end_layout
+
+\begin_layout Author
+Daniel Parisi, Agustin Marseillan, Castiglione Gonzalo
+\end_layout
+
+\begin_layout Abstract
+En este paper se presenta un nuevo método para simular peatones virtuales
+ basado en el modelo de la fuerza social.
+ En el modelo presentado, cada peatón posee un punto movil frente a el y
+ camina siempre hasta este.
+ Este punto representa un objetivo a corto plazo que se debe cumplir.
+ Cada peatón se encarga de mover este punto según a donde necesite llegar.
+ 
+\end_layout
+
+\begin_layout Standard
+keywords:
+\end_layout
+
+\begin_layout Standard
+pedestrian, collision avoidance, future, force model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduccion
+\end_layout
+
+\begin_layout Standard
+// Daniel tiene ya preparada una introducción
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+El transito de personas es un factor de suma importancia en el análisis
+ y diseño de instalaciones tales como edificios públicos, peatonales, estaciones
+ de trenes, entre otros.
+ 
+\end_layout
+
+\begin_layout Standard
+// Hace mucho tiempo que se viene estudiando a las personas en grupo y se
+ sabe que 
+\end_layout
+
+\begin_layout Standard
+// Existen efectos de comportamiento colectivos de auto organización tales
+ como cuellos de botellas, formaciones en filas, bloqueos.
+ 
+\end_layout
+
+\begin_layout Standard
+// Decir porque una simulación de peatones es útil para estas situaciones.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Analizar estructuras de transito de peatones usando los cambios propuestos
+ para el modelo de la fuerza social.
+ Implementar una interfaz gráfica para poder visualizar los resultados de
+ cambiar el modelo y cada uno de los parámetros
+\end_layout
+
+\begin_layout Section
+Modelo de agentes
+\end_layout
+
+\begin_layout Standard
+El actual modelo se encuentra definido uncamente por peatones.
+ Estos se encuentran definidos por: 
+\end_layout
+
+\begin_layout Itemize
+Area circular 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Representa el área física que ocupa el peatón.
+ El radio del círculo es generado aleatoriamente con el fin de representar
+ peatones diferentes.
+ El rango de valores se distribuye uniformemente en el intervalo 
+\begin_inset Formula $[0.25,0.29]$
+\end_inset
+
+ 
+\begin_inset Formula $[cm]$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Objetivo a largo plazo 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Se represa por por un segmento de recta, al tocarse, se considera que el
+ objetivo fue cumplido.
+ Se permite la definición de múltiples objetivos, en cuyo caso, se deben
+ cumplir todos de manera secuencial según el orden en que fueron especificados.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Posición objetivo a corto plazo 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Llamado Future, representa un punto a corta distancia del peatón, que debe
+ ser alcanzado.
+ El seguir este punto garantiza que se va a cumplir el objetivo a largo
+ plazo, aunque podría recorrerse un camino no óptimo en cuanto a distancia
+ recorrida.
+ Este punto es un punto móvil y se puede aplicar fuerzas sobre el.
+ La masa de este punto fue definida fija con un valor de 
+\begin_inset Formula $1$
+\end_inset
+
+ 
+\begin_inset Formula $[kg]$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Velocidad objetivo 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Con el fin de representar peatones que puedan estar apurados o tranquilos,
+ se definió la velocidad máxima deseada de un peatón de manera aleatoria.
+ El rango de valores se encuentra definido en el intervalo 
+\begin_inset Formula $[1,1.6]$
+\end_inset
+
+ 
+\begin_inset Formula $[m/s]$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Distancia de reacción 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Representa la distancia a la cual va a tratar de posicionar de sí mismo
+ un peatón su propio future.
+ Una mayor distancia representa un peatón que reacciona más rápido a una
+ posible colisión.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+En la siguiente imagen se puede observar de manera gráfica la descripción
+ de un peatón:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pedestrian-top.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Vista superior de un peaton
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+// FALTA ESPECIFICAR: 
+\end_layout
+
+\begin_layout Standard
+// i representa un peaton e i’ representa el future del peaton 
+\end_layout
+
+\begin_layout Standard
+// que se usa Euler para el calculo del dx de cada cuerpo 
+\end_layout
+
+\begin_layout Standard
+// el dt usado
+\end_layout
+
+\begin_layout Section
+Funcionamiento
+\end_layout
+
+\begin_layout Standard
+Cada peatón en la simulación posee un objetivo a largo plazo que sea desea
+ que alcance.
+ Para asegurar que esto se cumpla, se trata siempre de mantener su future
+ (objetivo a corto plazo) alineado con el camino más óptimo hacia su objetivo.
+ Sin embargo, pueden darse casos en donde exista uno o más peatones en el
+ camino, obligando a tener que buscar rutas alternativas.
+ Es en estas circunstancias en donde el objetivo a corto plazo va a cambiar
+ su dirección según corresponda.
+ 
+\end_layout
+
+\begin_layout Standard
+El movimiento de los peatones se realiza de manera sincrónica y se calcula
+ en cuatro etapas: 
+\end_layout
+
+\begin_layout Enumerate
+Cálculo de la fuerza sobre sobre cada future.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Actualización de la posición de cada future.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Cálculo de la fuerza sobre cada peatón.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Actualización de la posicion de cada peatón.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En donde, cada etapa se define de la siguiente manera:
+\end_layout
+
+\begin_layout Enumerate
+Cálculo de la fuerza sobre sobre cada future.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+En esta etapa, lo que se va a hacer es calcular la fuerza que sufre cada
+ uno de los futures existentes debido a la existencia de otros peatones.
+ Esta se realiza sólo cuando la distancia entre el peatón y su future se
+ encuentra por encima de cierto valor.
+ Esto es así ya que a altos niveles de densidad de personas.
+ Uno ya no intenta moverse ya que simplemente es arrastrado por la masa
+ de gente.
+ 
+\series bold
+(verificar si es correcta esta última frase)
+\end_layout
+
+\begin_layout Standard
+En el caso contrario, cuando que un peatón se encuentra habilitado para
+ moverse, se realiza un filtro de todos aquellos peatones que se encuentran
+ a sus espaldas, ya que estos no son casos que afectam la trayectoria de
+ la persona.
+ La condición que debe cumplirse para considerar un peatón 
+\begin_inset Formula $j$
+\end_inset
+
+ como detrás del peatón 
+\begin_inset Formula $i$
+\end_inset
+
+ es: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v=normal(i,center.target.i)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+v_{x1x0}=v_{x1}-v_{x0}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+v_{x1x0}.x*(i.y-v_{x0}.y)-v_{x1x0}.y*(i.x-v_{x0}.x)>0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez filtrado los peatones, simplemente se calcula por cada future restante,
+ la fuerza de repulsión entre estos.
+ Este se realiza utilizando la fórmula: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{i',j'}=\alpha e^{-dist(i',j')/\beta}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+en donde 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ y 
+\begin_inset Formula $\beta$
+\end_inset
+
+ son constantes predefinidas y fijas.
+ Los valores que se usaron son 
+\begin_inset Formula $?$
+\end_inset
+
+ y 
+\begin_inset Formula $?$
+\end_inset
+
+ respectivamente.
+ Esto produce que los peatones tienda siempre a alejarse de grandes multitudes
+ más de lo que aleja de una sola persona.
+ Si la suma de todas las fuerzas ejercidas sobre todos los demás futures
+ 
+\begin_inset Formula $j’$
+\end_inset
+
+ al future 
+\begin_inset Formula $i’$
+\end_inset
+
+ es menor que cierto umbral, entonces se desprecia esta fuerza y el future
+ 
+\begin_inset Formula $i’$
+\end_inset
+
+ simplemente es posicionado sobre la recta que une al peatón 
+\begin_inset Formula $i$
+\end_inset
+
+ con su objetivo a largo plazo a distancia que indique la distancia de reacción
+ del peatón.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pedestrian-top-forces.png
+	lyxscale 70
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Fuerzas que actúan sobre el Future 
+\begin_inset Formula $i'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Actualización de la posición de cada future.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+En esta etapa, simplemente se actualiza la posición de cada future según
+ el cálculo de la fuerza aplicada en la etapa previa.
+ Este cálculo se realiza utilizando las fórmulas Eulerianas.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Cálculo de la fuerza sobre cada peatón.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+El peatón siempre se mueve hacia la dirección en la que apunta su future
+ y de acuerdo a la fuerza de deseo.
+\end_layout
+
+\begin_layout Standard
+Esta fuerza representa la atracción que un peatón 
+\begin_inset Formula $i$
+\end_inset
+
+ ejerce sobre sí mismo a fin de dar un paso hacia su future y tratar de
+ alcanzarlo.
+ Esta definida por la siguiente fórmula: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{deseo}=\frac{dist(i',i)}{dist_{react}}\frac{v_{desire}-v_{curr}}{\tau}\frac{i'-i}{|i'-i|}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En donde 
+\begin_inset Formula $\tau=0.5$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Actualización de la posición de cada peatón.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+La nueva posicion de cada peatón es calculada en esta etapa utilizando las
+ mismas fórmulas mencionada en la etapa 2.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Validación del modelo 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\series bold
+// Poner Graficos indicando distancias y esquemas del future y la particula.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Conclusiones
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\series bold
+// agregar al final futuras opciones que se abren con este trabajo
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Referencias
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+[1]...
+ Karamouzas?
+\end_layout
+
+\begin_layout Standard
+[2]...
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
