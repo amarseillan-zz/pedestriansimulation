@@ -64,11 +64,11 @@ A Pedestrian Simulation
 \end_layout
 
 \begin_layout Author
-Daniel Parisi, Agustin Marseillan, Castiglione Gonzalo
+Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi
 \end_layout
 
 \begin_layout Abstract
-En este paper se presenta un nuevo método para simular peatones virtuales
+En este paper se presenta un nuevo método para simular peatónes virtuales
  basado en el modelo de la fuerza social.
  En el modelo presentado, cada peatón posee un punto movil frente a el y
  camina siempre hasta este.
@@ -106,7 +106,7 @@ Introduccion
 
 \begin_layout Standard
 El transito de personas es un factor de suma importancia en el análisis
- y diseño de instalaciones tales como edificios públicos, peatonales, estaciones
+ y diseño de instalaciones tales como edificios públicos, peatónales, estaciones
  de trenes, entre otros.
  
 \end_layout
@@ -123,7 +123,7 @@ El transito de personas es un factor de suma importancia en el análisis
 \end_layout
 
 \begin_layout Standard
-// Decir porque una simulación de peatones es útil para estas situaciones.
+// Decir porque una simulación de peatónes es útil para estas situaciones.
 \begin_inset Newline newline
 \end_inset
 
@@ -131,19 +131,19 @@ El transito de personas es un factor de suma importancia en el análisis
 \end_layout
 
 \begin_layout Standard
-Analizar estructuras de transito de peatones usando los cambios propuestos
+Analizar estructuras de transito de peatónes usando los cambios propuestos
  para el modelo de la fuerza social.
  Implementar una interfaz gráfica para poder visualizar los resultados de
  cambiar el modelo y cada uno de los parámetros
 \end_layout
 
 \begin_layout Section
-Modelo de agentes
+Modelo
 \end_layout
 
 \begin_layout Standard
-El actual modelo se encuentra definido uncamente por peatones.
- Estos se encuentran definidos por: 
+El actual modelo se encuentra definido por peatónes.
+ Estos defininen según: 
 \end_layout
 
 \begin_layout Itemize
@@ -152,9 +152,9 @@ Area circular
 
 \begin_deeper
 \begin_layout Standard
-Representa el área física que ocupa el peatón.
+Representa el área física y espacio personal ocupado.
  El radio del círculo es generado aleatoriamente con el fin de representar
- peatones diferentes.
+ peatónes diferentes.
  El rango de valores se distribuye uniformemente en el intervalo 
 \begin_inset Formula $[0.25,0.29]$
 \end_inset
@@ -173,26 +173,22 @@ Objetivo a largo plazo
 
 \begin_deeper
 \begin_layout Standard
-Se represa por por un segmento de recta, al tocarse, se considera que el
- objetivo fue cumplido.
+Representado por un área estática.
+ Al tocarse, se considera al objetivo como cumplido.
  Se permite la definición de múltiples objetivos, en cuyo caso, se deben
  cumplir todos de manera secuencial según el orden en que fueron especificados.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Posición objetivo a corto plazo 
+Objetivo a corto plazo 
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Llamado Future, representa un punto a corta distancia del peatón, que debe
- ser alcanzado.
- El seguir este punto garantiza que se va a cumplir el objetivo a largo
- plazo, aunque podría recorrerse un camino no óptimo en cuanto a distancia
- recorrida.
- Este punto es un punto móvil y se puede aplicar fuerzas sobre el.
- La masa de este punto fue definida fija con un valor de 
+Llamado Future, representa un punto a una cierta distancia del peatón.
+ Este es un objetivo dinámico.
+ Se encuentra representado por una masa definida fija con un valor de 
 \begin_inset Formula $1$
 \end_inset
 
@@ -201,6 +197,7 @@ Llamado Future, representa un punto a corta distancia del peatón, que debe
 \end_inset
 
 .
+ No es colisionable.
 \end_layout
 
 \end_deeper
@@ -210,7 +207,7 @@ Velocidad objetivo
 
 \begin_deeper
 \begin_layout Standard
-Con el fin de representar peatones que puedan estar apurados o tranquilos,
+Con el fin de representar peatónes que puedan estar apurados o tranquilos,
  se definió la velocidad máxima deseada de un peatón de manera aleatoria.
  El rango de valores se encuentra definido en el intervalo 
 \begin_inset Formula $[1,1.6]$
@@ -232,11 +229,18 @@ Distancia de reacción
 \begin_layout Standard
 Representa la distancia a la cual va a tratar de posicionar de sí mismo
  un peatón su propio future.
- Una mayor distancia representa un peatón que reacciona más rápido a una
+ Una mayor distancia representa un peatón que reacciona antes frente a una
  posible colisión.
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 En la siguiente imagen se puede observar de manera gráfica la descripción
  de un peatón:
@@ -261,7 +265,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Vista superior de un peaton
+Vista superior de un peatón
 \end_layout
 
 \end_inset
@@ -269,25 +273,22 @@ Vista superior de un peaton
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-// FALTA ESPECIFICAR: 
+Se reserva el uso de las letras para repersentar a un peatón y versión con
+ tilde para representar su future en el resto del documento.
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-// i representa un peaton e i’ representa el future del peaton 
-\end_layout
-
-\begin_layout Standard
-// que se usa Euler para el calculo del dx de cada cuerpo 
+// FALTA ESPECIFICAR:
 \end_layout
 
 \begin_layout Standard
@@ -303,7 +304,7 @@ Cada peatón en la simulación posee un objetivo a largo plazo que sea desea
  que alcance.
  Para asegurar que esto se cumpla, se trata siempre de mantener su future
  (objetivo a corto plazo) alineado con el camino más óptimo hacia su objetivo.
- Sin embargo, pueden darse casos en donde exista uno o más peatones en el
+ Sin embargo, pueden darse casos en donde exista uno o más peatónes en el
  camino, obligando a tener que buscar rutas alternativas.
  Es en estas circunstancias en donde el objetivo a corto plazo va a cambiar
  su dirección según corresponda.
@@ -311,8 +312,7 @@ Cada peatón en la simulación posee un objetivo a largo plazo que sea desea
 \end_layout
 
 \begin_layout Standard
-El movimiento de los peatones se realiza de manera sincrónica y se calcula
- en cuatro etapas: 
+El movimiento de los peatónes se calcula en cuatro etapas: 
 \end_layout
 
 \begin_layout Enumerate
@@ -351,21 +351,17 @@ Cálculo de la fuerza sobre sobre cada future.
 \begin_deeper
 \begin_layout Standard
 En esta etapa, lo que se va a hacer es calcular la fuerza que sufre cada
- uno de los futures existentes debido a la existencia de otros peatones.
+ uno de los futures existentes debido a la existencia de otros peatónes.
  Esta se realiza sólo cuando la distancia entre el peatón y su future se
  encuentra por encima de cierto valor.
  Esto es así ya que a altos niveles de densidad de personas.
- Uno ya no intenta moverse ya que simplemente es arrastrado por la masa
- de gente.
- 
-\series bold
-(verificar si es correcta esta última frase)
+ Uno ya no puede moverse y simplemente es arrastrado por la masa de gente.
 \end_layout
 
 \begin_layout Standard
 En el caso contrario, cuando que un peatón se encuentra habilitado para
- moverse, se realiza un filtro de todos aquellos peatones que se encuentran
- a sus espaldas, ya que estos no son casos que afectam la trayectoria de
+ moverse, se realiza un filtro de todos aquellos peatónes que se encuentran
+ a sus espaldas, ya que estos no son casos que afectan la trayectoria de
  la persona.
  La condición que debe cumplirse para considerar un peatón 
 \begin_inset Formula $j$
@@ -381,7 +377,7 @@ En el caso contrario, cuando que un peatón se encuentra habilitado para
 \begin_layout Standard
 \begin_inset Formula 
 \[
-v=normal(i,center.target.i)
+li\text{=}line(i,\, i')
 \]
 
 \end_inset
@@ -389,7 +385,7 @@ v=normal(i,center.target.i)
 
 \begin_inset Formula 
 \[
-v_{x1x0}=v_{x1}-v_{x0}
+lj\text{=}line(i,\, j)
 \]
 
 \end_inset
@@ -397,7 +393,7 @@ v_{x1x0}=v_{x1}-v_{x0}
 
 \begin_inset Formula 
 \[
-v_{x1x0}.x*(i.y-v_{x0}.y)-v_{x1x0}.y*(i.x-v_{x0}.x)>0
+angle(li,\, lj)>90
 \]
 
 \end_inset
@@ -406,7 +402,7 @@ v_{x1x0}.x*(i.y-v_{x0}.y)-v_{x1x0}.y*(i.x-v_{x0}.x)>0
 \end_layout
 
 \begin_layout Standard
-Una vez filtrado los peatones, simplemente se calcula por cada future restante,
+Una vez filtrados los peatónes, simplemente se calcula por cada future restante,
  la fuerza de repulsión entre estos.
  Este se realiza utilizando la fórmula: 
 \end_layout
@@ -441,7 +437,7 @@ en donde
 \end_inset
 
  respectivamente.
- Esto produce que los peatones tienda siempre a alejarse de grandes multitudes
+ Esto produce que los peatónes tienda siempre a alejarse de grandes multitudes
  más de lo que aleja de una sola persona.
  Si la suma de todas las fuerzas ejercidas sobre todos los demás futures
  
@@ -457,13 +453,8 @@ en donde
 \begin_inset Formula $i’$
 \end_inset
 
- simplemente es posicionado sobre la recta que une al peatón 
-\begin_inset Formula $i$
-\end_inset
-
- con su objetivo a largo plazo a distancia que indique la distancia de reacción
- del peatón.
- 
+ simplemente se alinea con el objetivo estático a distancia que indique
+ la distancia de reacción del peatón.
 \end_layout
 
 \begin_layout Standard
