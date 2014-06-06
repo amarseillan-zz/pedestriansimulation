@@ -25,6 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -377,7 +378,7 @@ En el caso contrario, cuando que un peatón se encuentra habilitado para
 \begin_layout Standard
 \begin_inset Formula 
 \[
-li\text{=}line(i,\, i')
+A=(Ax,\, Ay)=i
 \]
 
 \end_inset
@@ -385,7 +386,7 @@ li\text{=}line(i,\, i')
 
 \begin_inset Formula 
 \[
-lj\text{=}line(i,\, j)
+B=(Bx,\, By)=A+rotation(\overrightarrow{ii'},\,\pi/2)
 \]
 
 \end_inset
@@ -393,7 +394,18 @@ lj\text{=}line(i,\, j)
 
 \begin_inset Formula 
 \[
-angle(li,\, lj)>90
+C=(Cx,\, Cy)=j
+\]
+
+\end_inset
+
+Luego, se debe cumplir que:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(Bx-Ax)*(Cy-Ay)-(By-Ay)*(Cx-Ax)>0
 \]
 
 \end_inset
@@ -410,7 +422,7 @@ Una vez filtrados los peatónes, simplemente se calcula por cada future restante
 \begin_layout Standard
 \begin_inset Formula 
 \[
-F_{i',j'}=\alpha e^{-dist(i',j')/\beta}
+F_{ext}(i)=\sum_{j}F_{i',j'}=\sum_{j}\alpha e^{-dist(i',j')/\beta}
 \]
 
 \end_inset
@@ -439,22 +451,62 @@ en donde
  respectivamente.
  Esto produce que los peatónes tienda siempre a alejarse de grandes multitudes
  más de lo que aleja de una sola persona.
- Si la suma de todas las fuerzas ejercidas sobre todos los demás futures
- 
-\begin_inset Formula $j’$
+ Luego de calculadado 
+\begin_inset Formula $F_{ext}$
 \end_inset
 
- al future 
-\begin_inset Formula $i’$
-\end_inset
-
- es menor que cierto umbral, entonces se desprecia esta fuerza y el future
- 
+, si su valor es menor que cierto umbral, entonces se desprecia esta fuerza
+ y el future 
 \begin_inset Formula $i’$
 \end_inset
 
  simplemente se alinea con el objetivo estático a distancia que indique
  la distancia de reacción del peatón.
+ Caso contrario, cuando la contribución de las fuerzas externas debe considerars
+e, se suma la contribución del peatón 
+\begin_inset Formula $i$
+\end_inset
+
+ sobre su future para ajustarlo según su objetivo estático.
+ Esta fuerza se calcula a usando la formula del resorte.
+ Los extremos de este resorte se encuentran en el punto a distancia 
+\begin_inset Quotes eld
+\end_inset
+
+distancia de reaccion
+\begin_inset Quotes erd
+\end_inset
+
+ sobre el segmento de recta que une al peatón 
+\begin_inset Formula $i$
+\end_inset
+
+ con su objetivo estático y la posición del future 
+\begin_inset Formula $i'$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A modo ilustrativo, se muestra en la figura 2 como la trayectoria del peatón
+ 
+\begin_inset Formula $i$
+\end_inset
+
+ es afectada por la del peatón 
+\begin_inset Formula $j$
+\end_inset
+
+ a través de 
+\begin_inset Formula $F(i',\, j')$
+\end_inset
+
+ y es alineada al objetivo con 
+\begin_inset Formula $F(i,\, i')$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -504,7 +556,7 @@ Actualización de la posición de cada future.
 \begin_layout Standard
 En esta etapa, simplemente se actualiza la posición de cada future según
  el cálculo de la fuerza aplicada en la etapa previa.
- Este cálculo se realiza utilizando las fórmulas Eulerianas.
+ Este cálculo se realiza utilizando las fórmulas de Euler.
 \end_layout
 
 \end_deeper
