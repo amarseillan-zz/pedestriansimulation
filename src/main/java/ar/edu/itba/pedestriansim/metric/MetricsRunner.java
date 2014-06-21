@@ -24,12 +24,13 @@ public class MetricsRunner {
 			int stop = Integer.valueOf(args[1]);
 			String metricsPath = new File("metrics/") + "" + File.separatorChar + file;
 			FileWriter writer = new FileWriter(String.format(metricfileFormatter, metricsPath));
-			for (int i = 0; i<stop; i++) {
-				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(null, new File("runs/"), String.format(staticfileFormatter, file, i), String.format(dynamicfileFormatter, file, i));
-				CalculateMetricsFromFile metricRunner = new CalculateMetricsFromFile(serializer.staticFileInfo(), serializer.steps(), writer, false);
-				while (metricRunner.update(serializer.delta()));
-				metricRunner.onSimulationEnd();
-			}
+			// XXX: marse no me odies, ni tiempo de ver como funcionaba el tema de las metricas =(
+//			for (int i = 0; i<stop; i++) {
+//				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(null, new File("runs/"), String.format(staticfileFormatter, file, i), String.format(dynamicfileFormatter, file, i));
+//				CalculateMetricsFromFile metricRunner = new CalculateMetricsFromFile(serializer.staticFileInfo(), serializer.steps(), writer, false);
+//				while (metricRunner.update(serializer.delta()));
+//				metricRunner.onSimulationEnd();
+//			}
 			System.out.println(System.currentTimeMillis() - start);
 		}
 	}

@@ -1,63 +1,73 @@
 package ar.edu.itba.pedestriansim.back.entity;
 
-import java.util.List;
+import static com.google.common.base.Functions.compose;
 
-import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
-import ar.edu.itba.pedestriansim.back.component.Component;
-import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
-import ar.edu.itba.pedestriansim.back.factory.PedestrianAreaFactory;
-import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
-
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 public class PedestrianSim {
 
-	private static final EventDispatcher dispatcher = EventDispatcher.instance();
-
 	private PedestrianArea _pedestrianArea;
-	private List<Component> _components;
-	private Predicate<PedestrianArea> _cutCondition;
-	private boolean _finished;
+	private Function<PedestrianArea, PedestrianArea> _start = Functions.identity();
+	private Function<PedestrianArea, PedestrianArea> _step = Functions.identity();
+	private Function<PedestrianArea, PedestrianArea> _end = Functions.identity();
+	private Predicate<? super PedestrianArea> _cutCondition = Predicates.alwaysTrue();
+	private boolean _started = false, _finished = false;
 
-	public PedestrianSim(PedestrianAppConfig config, SimulationComponentsFactory components, Predicate<PedestrianArea> cutCondition) {
-		_pedestrianArea = new PedestrianAreaFactory(config).produce();
-		_components = components.produce(config, _pedestrianArea);
-		_cutCondition = cutCondition;
+	public PedestrianSim(PedestrianArea pedestrianArea) {
+		_pedestrianArea = Preconditions.checkNotNull(pedestrianArea);
 	}
 
-	public void start() {
-		_pedestrianArea.init();
-		for (Component component : _components) {
-			component.onStart();
-		}
+	public PedestrianSim cutCondition(Predicate<? super PedestrianArea> predicate) {
+		_cutCondition = predicate;
+		return this;
 	}
 
-	public void update(float elapsedTimeInSeconds) {
-		if (isFinished()) {
-			throw new IllegalStateException("Already finished!");
-		}
-		dispatcher.update(elapsedTimeInSeconds);
-		for (Updateable component : _components) {
-			component.update(elapsedTimeInSeconds);
-		}
-		_pedestrianArea.addElapsedTime(elapsedTimeInSeconds);
-		_finished = _cutCondition.apply(_pedestrianArea);
-		if (isFinished()) {
-			end();
-		}
+	public PedestrianSim onStart(Function<PedestrianArea, PedestrianArea> callback) {
+		_start = compose(callback, _start);
+		return this;
 	}
-	
+
+	public PedestrianSim onEnd(Function<PedestrianArea, PedestrianArea> callback) {
+		_end = compose(callback, _end);
+		return this;
+	}
+
+	public PedestrianSim onStep(Function<PedestrianArea, PedestrianArea> callback) {
+		_step = compose(callback, _step);
+		return this;
+	}
+
 	public boolean isFinished() {
 		return _finished;
 	}
 
-	public void end() {
-		for (Component component : _components) {
-			component.onEnd();
+	public boolean isStarted() {
+		return _started;
+	}
+
+	public void run() {
+		do {
+			step();
+		} while (!isFinished());
+	}
+
+	public void step() {
+		if (!isStarted()) {
+			_started = true;
+			_pedestrianArea = _start.apply(_pedestrianArea);
+		}
+		_pedestrianArea = _step.apply(_pedestrianArea);
+		_finished = _cutCondition.apply(_pedestrianArea);
+		if (isFinished()) {
+			_pedestrianArea = _end.apply(_pedestrianArea);
 		}
 	}
 
-	public PedestrianArea getPedestrianArea() {
+	public PedestrianArea pedestrianArea() {
 		return _pedestrianArea;
 	}
 

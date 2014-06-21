@@ -11,7 +11,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.TargetSelection;
-import ar.edu.itba.pedestriansim.back.physics.RigidBody;
+import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 
 public class PedestrianRenderer extends ShapeRenderer {
 

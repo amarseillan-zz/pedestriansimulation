@@ -12,7 +12,7 @@ import org.newdawn.slick.geom.Shape;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
-import ar.edu.itba.pedestriansim.back.physics.Collitions;
+import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
 import ar.edu.itba.pedestriansim.metric.component.AverageTravelTime;
 import ar.edu.itba.pedestriansim.metric.component.AverageVelocity;
 import ar.edu.itba.pedestriansim.metric.component.AverageWalkDistance;
@@ -77,7 +77,7 @@ public class CalculateMetricsFromFile {
 		if (step == null) {
 			return false;	// XXX: simulation finished!
 		}
-		List<PedestrianDynamicLineInfo> pedestrians = step.pedestrialsInfo();
+		List<PedestrianDynamicLineInfo> pedestrians = step.pedestriansInfo();
 		for (int i = 0; i<pedestrians.size(); i++) {
 			PedestrianDynamicLineInfo p1 = pedestrians.get(i);
 			for (int j = i+1; j<pedestrians.size(); j++) {

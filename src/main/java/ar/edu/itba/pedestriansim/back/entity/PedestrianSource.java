@@ -5,111 +5,85 @@ import org.newdawn.slick.geom.Vector2f;
 import ar.edu.itba.common.rand.GaussianRandomGenerator;
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
-import ar.edu.itba.pedestriansim.back.event.Event;
-import ar.edu.itba.pedestriansim.back.event.EventDispatcher;
-import ar.edu.itba.pedestriansim.back.event.EventListener;
-import ar.edu.itba.pedestriansim.back.factory.PedestrianFactory;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
+import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 
-public class PedestrianSource implements EventListener {
+public class PedestrianSource {
 
-	private static final EventDispatcher dispatcher = EventDispatcher.instance();
-	
-	private PedestrianFactory _pedestrianFactory;
 	private RandomGenerator _produceDelayGenerator = new GaussianRandomGenerator(3, 2);
 	private RandomGenerator _pedestrianAmountGenerator = new UniformRandomGenerator(5, 9);
-	private final RandomGenerator _initialLocationGenerator;
+	private Vector2f _center;
 	private float _radius;
-	private Vector2f _location;
-	private PedestrianArea _pedestrianArea;
-	private PedestrianMision _targetList;
+	private PedestrianMision _mission;
 	private int _team;
 	private int _totalProduced, _produceLimit;
 	private boolean _enabled;
 
-	public PedestrianSource(PedestrianFactory pedestrianFactory, Vector2f location, float radius, PedestrianMision targetList, PedestrianArea pedestrianArea, int team) {
-		_pedestrianFactory = pedestrianFactory;
+	public PedestrianSource(Vector2f center, float radius, PedestrianMision mission, int team) {
+		_center = center;
 		_radius = radius;
-		_location = location;
-		_pedestrianArea = pedestrianArea;
-		_targetList = targetList;
+		_mission = mission;
 		_team = team;
-		_initialLocationGenerator = new UniformRandomGenerator(-getRadius(), getRadius());
 		_totalProduced = 0;
 		_produceLimit = -1;
-		_enabled = true;
+		setEnabled(true);
 	}
 
-	public void setProduceLimit(int produceLimit) {
+	public PedestrianSource setProduceLimit(int produceLimit) {
 		_produceLimit = produceLimit;
+		return this;
 	}
 
-	public void setProduceDelayGenerator(RandomGenerator produceDelayGenerator) {
+	public PedestrianSource setProduceDelayGenerator(RandomGenerator produceDelayGenerator) {
 		_produceDelayGenerator = produceDelayGenerator;
+		return this;
 	}
 
-	public void setPedestrianAmountGenerator(RandomGenerator pedestrianAmountGenerator) {
+	public PedestrianSource setPedestrianAmountGenerator(RandomGenerator pedestrianAmountGenerator) {
 		_pedestrianAmountGenerator = pedestrianAmountGenerator;
+		return this;
 	}
 
-	public void disable() {
-		_enabled = false;
+	public void setEnabled(boolean enabled) {
+		_enabled = enabled;
 	}
 
-	public void start() {
-		schedule();
+	public boolean isEnabled() {
+		return _enabled;
 	}
 
-	public Vector2f getLocation() {
-		return _location;
+	public Vector2f center() {
+		return _center;
 	}
 
-	private void schedule() {
-		if (_enabled && (_produceLimit < 0 || _totalProduced < _produceLimit)) {
-			float delay = _produceDelayGenerator.generate();
-			dispatcher.dispatch(new ProducePedestrianEvent(this), delay);
-		}
-	}
-
-	@Override
-	public void onEvent(Event event) {
-		if (event instanceof ProducePedestrianEvent) {
-			produce();
-			schedule();
-		}
-	}
-
-	public void produce() {
-		int amount = (int) _pedestrianAmountGenerator.generate();
-		if (_produceLimit > 0) {
-			amount = Math.min(amount, _produceLimit - _totalProduced);
-		}
-		for (int i = 0; i < amount; i++) {
-			// FIXME: aqui se podria simplemente crear el Body de un peaton y ver si etsa libre,
-			// SI el lugar esta libre, ahi recien crear el peaton
-			_totalProduced++;
-			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), _team, _targetList.clone());
-			do {
-				float x = _location.x + _initialLocationGenerator.generate();
-				float y = _location.y + _initialLocationGenerator.generate();
-				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
-				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
-			} while (_pedestrianArea.hasCollitions(pedestrian));
-			pedestrian.setReactionDistance(1.5f);
-			_pedestrianArea.getMap().add(pedestrian);
-			_pedestrianArea.addPedestrian(pedestrian);
-		}
-	}
-	
-	public float getRadius() {
+	public float radius() {
 		return _radius;
 	}
 
-	private static final class ProducePedestrianEvent extends Event {
+	public int produceLimit() {
+		return _produceLimit;
+	}
 
-		public ProducePedestrianEvent(PedestrianSource sender) {
-			super(sender, sender);
-		}
+	public int totalProduced() {
+		return _totalProduced;
+	}
 
+	public void incTotalProduced(int delta) {
+		_totalProduced += delta;
+	}
+
+	public int team() {
+		return _team;
+	}
+
+	public RandomGenerator delay() {
+		return _produceDelayGenerator;
+	}
+
+	public RandomGenerator amount() {
+		return _pedestrianAmountGenerator;
+	}
+
+	public PedestrianMision mission() {
+		return _mission;
 	}
 }
