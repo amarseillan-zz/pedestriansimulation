@@ -1,45 +1,48 @@
 package ar.edu.itba.pedestriansim.metric;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
+import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 
 public class RunsGenerator {
 
-	private static final Integer STATIC = 0;
-	private static final Integer DYNAMIC = 1;
-	private static final Integer THRESHOLD = 2;
-	private static final Integer ALPHA = 3;
-	private static final Integer BETA = 4;
-	private static final String staticFormatter = "runs/%s-%s-%s-%s.static";
-	private static final String dynamicFormatter = "runs/%s-%s-%s-%s.dynamic";
-
 	public static void main(String[] args) throws IOException {
-		String[] thresholds = { "0.0005", "2", "4", "6", "8"};
-		String[] alphas = { "100", "125", "150", "175", "200" };
-		String[] betas = { "0.5", "1", "1.5", "2" };
-
-		String[] newArgs = new String[5];
-		FileWriter writer = new FileWriter("run.files");
-		for (int i = 0; i < thresholds.length; i++) {
-			for (int j = 0; j < alphas.length; j++) {
-				for (int k = 0; k < betas.length; k++) {
-					newArgs[THRESHOLD] = thresholds[i];
-					newArgs[ALPHA] = alphas[j];
-					newArgs[BETA] = betas[k];
-					String file = String.format("%s-%s-%s\n", thresholds[i], alphas[j], betas[k]);
-					System.out.println(file);
-					writer.append(file);
-					for (int l = 0; l < 5; l++) {
-						newArgs[STATIC] = String.format(staticFormatter, newArgs[THRESHOLD], newArgs[ALPHA], newArgs[BETA], l + "");
-						newArgs[DYNAMIC] = String.format(dynamicFormatter, newArgs[THRESHOLD], newArgs[ALPHA], newArgs[BETA], l + "");
-						System.out.println();
-						PedestrianSimApp.main(newArgs);
-					}
+		final boolean prettyPrint = false;
+		float[] thresholds = { 0.0005f, 2f, 4f, 6f, 8f };
+		float[] alphas = { 100f, 125f, 150f, 175f, 200f };
+		float[] betas = { 0.5f, 1f, 1.5f, 2f };
+		final File runsDirectory = new File("runs");
+		runsDirectory.mkdir();
+		// FIXME: no usar mas de un thread, la app tira NullPointer sino (porque?? =/)
+		ExecutorService executor = Executors.newFixedThreadPool(1);
+		for (final float threshold : thresholds) {
+			for (final float alpha : alphas) {
+				for (final float beta : betas) {
+					executor.execute(new Runnable() {
+						@Override
+						public void run() {
+							String fileId = buildFileId(threshold, alpha, beta);
+							System.out.println("Started: " + fileId);
+							PedestrianAppConfig config = new CrossingConfig().get();
+							config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
+							config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
+							config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
+							new PedestrianSimApp(config).run();
+							new MetricsRunner(config, prettyPrint).run();
+							System.out.println("Finished: " + fileId);
+						}
+						
+						private String buildFileId(float threshold, float alpha, float beta) {
+							return "b:" + beta + "-a:" + alpha + "-t:" + threshold;
+						}
+					});
 				}
 			}
 		}
-		writer.flush();
 	}
 }

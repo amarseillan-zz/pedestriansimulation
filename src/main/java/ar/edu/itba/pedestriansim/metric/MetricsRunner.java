@@ -2,36 +2,59 @@ package ar.edu.itba.pedestriansim.metric;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 
-public class MetricsRunner {
+import com.google.common.base.Preconditions;
+import com.google.common.base.Supplier;
+import com.google.common.io.Closer;
+
+public class MetricsRunner implements Runnable {
 
 	private static final String staticfileFormatter = "%s-%d.static";
 	private static final String dynamicfileFormatter = "%s-%d.dynamic";
 	private static final String metricfileFormatter = "%s.metric";
 
-	public static void main(String[] args) throws Exception {
-		if (args.length < 2) {
-			throw new IllegalStateException("Too few arguments!");
-		}
-		Scanner scanner = new Scanner(new File("run.files"));
-		while (scanner.hasNextLine()) {
+	private static final File _metricsDirectory;
+	static {
+		_metricsDirectory = new File("metrics/");
+		_metricsDirectory.mkdir();
+	}
+	
+	private final PedestrianAppConfig _config;
+	private final boolean _prettyPrint;
+
+	public MetricsRunner(PedestrianAppConfig config, boolean prettyPrint) {
+		_config = Preconditions.checkNotNull(config);
+		_prettyPrint = prettyPrint;
+	}
+
+	@Override
+	public void run() {
+		try {
+			final Closer closer = Closer.create();
 			long start = System.currentTimeMillis();
-			String file = null;
-			file = scanner.nextLine();
-			int stop = Integer.valueOf(args[1]);
-			String metricsPath = new File("metrics/") + "" + File.separatorChar + file;
-			FileWriter writer = new FileWriter(String.format(metricfileFormatter, metricsPath));
-			// XXX: marse no me odies, ni tiempo de ver como funcionaba el tema de las metricas =(
-//			for (int i = 0; i<stop; i++) {
-//				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(null, new File("runs/"), String.format(staticfileFormatter, file, i), String.format(dynamicfileFormatter, file, i));
-//				CalculateMetricsFromFile metricRunner = new CalculateMetricsFromFile(serializer.staticFileInfo(), serializer.steps(), writer, false);
-//				while (metricRunner.update(serializer.delta()));
-//				metricRunner.onSimulationEnd();
-//			}
+			FileWriter writer = closer.register(writer("test-metric"));
+			PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
+			Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(_config.staticfile())));
+			Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(_config.dynamicfile())));
+			float timeStep = _config.pedestrianArea().timeStep().floatValue();
+			new CalculateMetricsFromFile(staticInfo, steps, writer, _prettyPrint)
+				.runMetrics(timeStep);
+			closer.close();
 			System.out.println(System.currentTimeMillis() - start);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
 		}
+	}
+
+	private FileWriter writer(String name) throws IOException {
+		String metricsPath = _metricsDirectory.getPath() + File.separatorChar + name;
+		return new FileWriter(String.format(metricfileFormatter, metricsPath));
 	}
 }
