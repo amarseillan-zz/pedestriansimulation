@@ -1,5 +1,7 @@
 package ar.edu.itba.pedestriansim.back.logic;
 
+import static java.lang.Math.abs;
+
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -28,33 +30,38 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		Map<Pedestrian, Vector2f> forceOnFuture = Maps.newHashMap();
 		RepulsionForce repulsionForce = _forces.getRepulsionForceModel();
 		for (Pedestrian subject : input.pedestrians()) {
+			Vector2f repulsion = new Vector2f();
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
 					Vector2f future1 = subject.getFuture().getBody().getCenter();
 					Vector2f future2 = other.getFuture().getBody().getCenter();
-					Vector2f repulsion = repulsionForce.apply(future1, future2);
-					forceOnFuture.put(subject, repulsion);
-					forceOnFuture.put(other, repulsion.copy().scale(-1));
-					// for (Shape shape : input.obstacles()) {
-					// if (!(shape instanceof Line)) {
-					// LOGGER.error("obstacles that are not lines are not yet supported");
-					// throw new RuntimeException();
-					// }
-					// Vector2f closest = new Vector2f();
-					// ((Line) shape).getClosestPoint(futureLocation, closest);
-					// Vector2f repulsionForce =
-					// _pedestrianForces.getRepulsionForceModel().apply(futureLocation,
-					// closest);
-					// externalForcesOnFuture.add(repulsionForce);
-					// }
+					repulsion.add(repulsionForce.apply(future1, future2));
 				}
 			}
+			repulsion.add(obstacleCollitionForces());
+			forceOnFuture.put(subject, repulsion);
 		}
 		for (Pedestrian subject : input.pedestrians()) {
 			updatePedestrianFuture(input, subject, forceOnFuture);
 		}
 	}
 
+	private Vector2f obstacleCollitionForces() {
+		// for (Shape shape : input.obstacles()) {
+		// if (!(shape instanceof Line)) {
+		// LOGGER.error("obstacles that are not lines are not yet supported");
+		// throw new RuntimeException();
+		// }
+		// Vector2f closest = new Vector2f();
+		// ((Line) shape).getClosestPoint(futureLocation, closest);
+		// Vector2f repulsionForce =
+		// _pedestrianForces.getRepulsionForceModel().apply(futureLocation,
+		// closest);
+		// externalForcesOnFuture.add(repulsionForce);
+		// }
+		return Vectors.nullVector();
+	}
+	
 	private void updatePedestrianFuture(PedestrianArea input, Pedestrian pedestrian, Map<Pedestrian, Vector2f> allForcesOnFuture) {
 		Vector2f forceOnFuture = allForcesOnFuture.get(pedestrian);
 		float threshold = _forces.getExternalForceThreshold();
@@ -74,10 +81,9 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 	private boolean isOnBack(Pedestrian p1, Pedestrian p2) {
 		Vector2f p1Center = p1.getBody().getCenter();
-		Vector2f f1Center = p1.getFuture().getBody().getCenter();
-		Vector2f horizontalDir = new Vector2f(f1Center).sub(p1Center).add(90);
-		Vector2f p2Center = p2.getBody().getCenter();
-		return Vectors.isLeft(p1Center, horizontalDir.add(p1Center), p2Center);
+		Vector2f p1f1 = p1.getFuture().getBody().getCenter().copy().sub(p1Center);
+		Vector2f p1p2 = p2.getBody().getCenter().copy().sub(p1Center);
+		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
 	}
 
 	private final Vector2f cache = new Vector2f();
