@@ -24,8 +24,6 @@ public class PedestrianAreaFileSerializer {
 						return null;
 					}
 					line = new StaticFileLine(Integer.valueOf(columns[0]), Integer.valueOf(columns[1]), Float.valueOf(columns[2]), Float.valueOf(columns[3]));
-				} else {
-					scanner.close();
 				}
 				return line;
 			}
@@ -52,8 +50,6 @@ public class PedestrianAreaFileSerializer {
 						PedestrianDynamicLineInfo lineInfo = new PedestrianDynamicLineInfo(id, center, velocity, futureCenter);
 						line.pedestriansInfo().add(lineInfo);
 					}
-				} else {
-					scanner.close();
 				}
 				return line;
 			}
