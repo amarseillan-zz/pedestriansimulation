@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
@@ -16,8 +15,6 @@ import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 import com.google.common.collect.Maps;
 
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
-
-	private static final Logger LOGGER = Logger.getLogger(FutureForceUpdaterComponent.class);
 
 	private final PedestrianForces _forces;
 
@@ -42,7 +39,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 			forceOnFuture.put(subject, repulsion);
 		}
 		for (Pedestrian subject : input.pedestrians()) {
-			updatePedestrianFuture(input, subject, forceOnFuture);
+			updatePedestrianFuture(subject, forceOnFuture);
 		}
 	}
 
@@ -62,10 +59,10 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		return Vectors.nullVector();
 	}
 	
-	private void updatePedestrianFuture(PedestrianArea input, Pedestrian pedestrian, Map<Pedestrian, Vector2f> allForcesOnFuture) {
+	private void updatePedestrianFuture(Pedestrian pedestrian, Map<Pedestrian, Vector2f> allForcesOnFuture) {
 		Vector2f forceOnFuture = allForcesOnFuture.get(pedestrian);
 		float threshold = _forces.getExternalForceThreshold();
-		if (forceOnFuture == null || forceOnFuture.lengthSquared() < (threshold * threshold)) {
+		if (forceOnFuture.lengthSquared() < (threshold * threshold)) {
 			setFutureInDesiredPath(pedestrian);
 		} else {
 			forceOnFuture.add(_forces.getForceOnFuture().apply(pedestrian));
