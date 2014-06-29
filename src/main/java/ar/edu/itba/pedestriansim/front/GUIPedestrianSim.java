@@ -1,7 +1,6 @@
 package ar.edu.itba.pedestriansim.front;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -32,6 +31,7 @@ public class GUIPedestrianSim extends BasicGame {
 		appContainer.start();
 	}
 
+	private PedestrianAppConfig _config;
 	private Camera _camera;
 	private PedestrianSim _simulation;
 	private PedestrianAreaRenderer _renderer;
@@ -39,11 +39,13 @@ public class GUIPedestrianSim extends BasicGame {
 
 	public GUIPedestrianSim() {
 		super("Pedestrian simulation");
+		_config = new CrossingConfig().get();
+		// XXX: Run back-end first!
+		new PedestrianSimApp(_config).run();
 	}
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		final PedestrianAppConfig _config = new CrossingConfig().get();
 		final Closer closer = Closer.create();
 		Scanner staticReader = closer.register(newScanner(_config.staticfile()));
 		Scanner dynamicReader = closer.register(newScanner(_config.dynamicfile()));
@@ -54,13 +56,8 @@ public class GUIPedestrianSim extends BasicGame {
 				public boolean apply(PedestrianArea input) {
 					return _simulationIsFinished;
 				}
-			}).onStart(new PedestrianAreaStep() {
-				@Override
-				public void update(PedestrianArea input) {
-					// XXX: Run back-end first!
-					new PedestrianSimApp(_config).run();
-				}
-			}).onStep(new UpdatePositionsFromFile(serializer.staticFileInfo(staticReader), serializer.steps(dynamicReader)))
+			})
+			.onStep(new UpdatePositionsFromFile(serializer.staticFileInfo(staticReader), serializer.steps(dynamicReader)))
 			.onEnd(new PedestrianAreaStep() {
 				@Override
 				public void update(PedestrianArea input) {
@@ -73,8 +70,8 @@ public class GUIPedestrianSim extends BasicGame {
 			})
 		;
 		_camera = new Camera();
-			_camera.setZoom(20f);
-//			_camera.scrollX(1200);
+		_camera.setZoom(20f);
+//		_camera.scrollX(1200);
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
