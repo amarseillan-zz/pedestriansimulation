@@ -14,11 +14,12 @@ public class RunsGenerator {
 	public static void main(String[] args) throws IOException {
 		final boolean prettyPrint = false;
 		float[] thresholds = { 0.0005f, 2f, 4f, 6f, 8f };
-		float[] alphas = { 100f, 125f, 150f, 175f, 200f };
-		float[] betas = { 0.5f, 1f, 1.5f, 2f };
+		float[] alphas = { 500, 600, 700, 800, 900 };
+		float[] betas = { 0.3f, 0.5f, 0.7f, 1f, 1.5f };
 		final File runsDirectory = new File("runs");
 		runsDirectory.mkdir();
-		// FIXME: no usar mas de un thread, la app tira NullPointer sino (porque?? =/)
+		// FIXME: no usar mas de un thread, la app tira NullPointer sino
+		// (porque?? =/)
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 		for (final float threshold : thresholds) {
 			for (final float alpha : alphas) {
@@ -36,7 +37,7 @@ public class RunsGenerator {
 							new MetricsRunner(config, prettyPrint).run();
 							System.out.println("Finished: " + fileId);
 						}
-						
+
 						private String buildFileId(float threshold, float alpha, float beta) {
 							return "b:" + beta + "-a:" + alpha + "-t:" + threshold;
 						}
