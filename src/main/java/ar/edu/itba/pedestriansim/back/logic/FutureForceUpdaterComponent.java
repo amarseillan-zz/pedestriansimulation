@@ -4,18 +4,24 @@ import static java.lang.Math.abs;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.force.RepulsionForce;
+import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 import com.google.common.collect.Maps;
 
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
+	private static final Logger logger = Logger.getLogger(FutureForceUpdaterComponent.class);
+	
 	private final PedestrianForces _forces;
 
 	public FutureForceUpdaterComponent(PedestrianForces pedestrianForces) {
@@ -35,7 +41,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 					repulsion.add(repulsionForce.apply(future1, future2));
 				}
 			}
-			repulsion.add(obstacleCollitionForces());
+			repulsion.add(obstacleCollitionForces(subject, input));
 			forceOnFuture.put(subject, repulsion);
 		}
 		for (Pedestrian subject : input.pedestrians()) {
@@ -43,22 +49,19 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		}
 	}
 
-	private Vector2f obstacleCollitionForces() {
-		// for (Shape shape : input.obstacles()) {
-		// if (!(shape instanceof Line)) {
-		// LOGGER.error("obstacles that are not lines are not yet supported");
-		// throw new RuntimeException();
-		// }
-		// Vector2f closest = new Vector2f();
-		// ((Line) shape).getClosestPoint(futureLocation, closest);
-		// Vector2f repulsionForce =
-		// _pedestrianForces.getRepulsionForceModel().apply(futureLocation,
-		// closest);
-		// externalForcesOnFuture.add(repulsionForce);
-		// }
-		return Vectors.nullVector();
+	private Vector2f obstacleCollitionForces(Pedestrian pedestrian, PedestrianArea input) {
+		Vector2f repulsionForce = new Vector2f();
+		for (Shape shape : input.obstacles()) {
+			if (!(shape instanceof Line)) {
+				logger.error("obstacles that are not lines are not yet supported");
+				throw new RuntimeException();
+			}
+			RigidBody future = pedestrian.getFuture().getBody();
+			repulsionForce.add(_forces.getCollisitionModel().getForce(future.getCollitionShape(), (Line) shape));
+		}
+		return repulsionForce;
 	}
-	
+
 	private void updatePedestrianFuture(Pedestrian pedestrian, Map<Pedestrian, Vector2f> allForcesOnFuture) {
 		Vector2f forceOnFuture = allForcesOnFuture.get(pedestrian);
 		float threshold = _forces.getExternalForceThreshold();

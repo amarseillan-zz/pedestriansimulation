@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.newdawn.slick.geom.Shape;
 
+import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -72,16 +74,12 @@ public class PedestrianArea {
 	}
 
 	public boolean hasCollitions(Pedestrian pedestrian) {
+		// FIXME: usar alguna estructura espacial para optimizar la busqueda
+		for (Pedestrian possible : _pedestrians) {
+			if (possible != pedestrian && Collitions.touching(possible.getShape(), pedestrian.getShape())) {
+				return true;
+			}
+		}
 		return false;
 	}
-	// public boolean hasCollitions(Pedestrian pedestrian) {
-	// for (Pedestrian possible : getCollitions(pedestrian)) {
-	// if (Collitions.touching(possible.getShape(), pedestrian.getShape())) {
-	// return true;
-	// }
-	// }
-	// // XXX: marse, acordate que me dijsite que no iban a chocar contra las
-	// paredes...
-	// return false;
-	// }
 }
