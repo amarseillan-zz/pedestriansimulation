@@ -41,7 +41,7 @@ public class MetricsRunner implements Runnable {
 			long start = System.currentTimeMillis();
 			for (PedestrianAppConfig config : _runs) {
 				final Closer closer = Closer.create();
-				FileWriter writer = closer.register(writer(config.staticfile() + ".metric"));
+				FileWriter writer = closer.register(writer(config.staticfile().getName() + ".metric"));
 				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
 				Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(config.staticfile())));
 				Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(config.dynamicfile())));
