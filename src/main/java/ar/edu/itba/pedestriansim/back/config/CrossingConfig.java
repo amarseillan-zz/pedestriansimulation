@@ -30,9 +30,9 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 		PedestrianMision mission = new PedestrianMision();
 		area.addSource(
 			new PedestrianSource(new Vector2f(_L + _W / 2, 2), 0.5f, mission, 1)
-				.setProduceDelayGenerator(new GaussianRandomGenerator(1, 2f))
+				.setProduceDelayGenerator(new GaussianRandomGenerator(2, 2f))
 				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
-				.setProduceLimit(3)
+				.setProduceLimit(20)
 		);
 		mission.putFirst(new PedestrianTargetArea(new Line(_L, 2 * _L + _W,  _L + _W, 2 * _L + _W)));
 	}
@@ -42,9 +42,9 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 		PedestrianMision mission = new PedestrianMision();
 		area.addSource(
 			new PedestrianSource(new Vector2f(2 * _L + _W, _L + _W / 2), 0.5f, mission, 2)
-				.setProduceDelayGenerator(new GaussianRandomGenerator(0, 0.01f))
+				.setProduceDelayGenerator(new GaussianRandomGenerator(2, 2f))
 				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
-				.setProduceLimit(1)
+				.setProduceLimit(20)
 		);
 		mission.putFirst(new PedestrianTargetArea(new Line(0, _L, 0, _L + _W)));
 	}
