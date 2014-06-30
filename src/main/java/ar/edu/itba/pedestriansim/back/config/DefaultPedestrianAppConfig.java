@@ -23,7 +23,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 			.setDynamicfile(new File("dynamic.txt"))
 			;
 		Range<Float> mass = Range.closed(60f, 80f);
-		Range<Float> velocity = Range.closed(1f, 1f);
+		Range<Float> velocity = Range.closed(1.4f, 1.6f);
 		Range<Float> r = Range.closed(0.25f, 0.29f);
 		config.setPedestrianFactory(new PedestrianFactory(mass, velocity, r));
 		return config;
