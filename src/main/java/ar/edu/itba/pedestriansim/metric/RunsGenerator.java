@@ -2,12 +2,15 @@ package ar.edu.itba.pedestriansim.metric;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
+
+import com.google.common.collect.Lists;
 
 public class RunsGenerator {
 
@@ -27,19 +30,23 @@ public class RunsGenerator {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							String fileId = buildFileId(threshold, alpha, beta);
-							System.out.println("Started: " + fileId);
-							PedestrianAppConfig config = new CrossingConfig().get();
-							config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
-							config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
-							config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
-							new PedestrianSimApp(config).run();
-							new MetricsRunner(config, prettyPrint).run();
-							System.out.println("Finished: " + fileId);
+							List<PedestrianAppConfig> runs = Lists.newArrayList();
+							for (int runNumber = 0; runNumber < 5; runNumber++) {
+								String fileId = buildFileId(threshold, alpha, beta, runNumber);
+								System.out.println("Started: " + fileId);
+								PedestrianAppConfig config = new CrossingConfig().get();
+								config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
+								config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
+								config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
+								new PedestrianSimApp(config).run();
+								runs.add(config);
+								System.out.println("Finished: " + fileId);
+							}
+							new MetricsRunner(runs, prettyPrint).run();
 						}
 
-						private String buildFileId(float threshold, float alpha, float beta) {
-							return "b:" + beta + "-a:" + alpha + "-t:" + threshold;
+						private String buildFileId(float threshold, float alpha, float beta, int runNumber) {
+							return "b:" + beta + "-a:" + alpha + "-t:" + threshold + "-c:" + runNumber;
 						}
 					});
 				}

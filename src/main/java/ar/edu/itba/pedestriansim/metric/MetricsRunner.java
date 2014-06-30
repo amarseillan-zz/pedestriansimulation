@@ -3,6 +3,7 @@ package ar.edu.itba.pedestriansim.metric;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
@@ -26,27 +27,29 @@ public class MetricsRunner implements Runnable {
 		_metricsDirectory.mkdir();
 	}
 	
-	private final PedestrianAppConfig _config;
+	private final List<PedestrianAppConfig> _runs;
 	private final boolean _prettyPrint;
 
-	public MetricsRunner(PedestrianAppConfig config, boolean prettyPrint) {
-		_config = Preconditions.checkNotNull(config);
+	public MetricsRunner(List<PedestrianAppConfig> runs, boolean prettyPrint) {
+		_runs = Preconditions.checkNotNull(runs);
 		_prettyPrint = prettyPrint;
 	}
 
 	@Override
 	public void run() {
 		try {
-			final Closer closer = Closer.create();
 			long start = System.currentTimeMillis();
-			FileWriter writer = closer.register(writer("test-metric"));
-			PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
-			Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(_config.staticfile())));
-			Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(_config.dynamicfile())));
-			float timeStep = _config.pedestrianArea().timeStep().floatValue();
-			new CalculateMetricsFromFile(staticInfo, steps, writer, _prettyPrint)
-				.runMetrics(timeStep);
-			closer.close();
+			for (PedestrianAppConfig config : _runs) {
+				final Closer closer = Closer.create();
+				FileWriter writer = closer.register(writer(config.staticfile() + ".metric"));
+				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
+				Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(config.staticfile())));
+				Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(config.dynamicfile())));
+				float timeStep = config.pedestrianArea().timeStep().floatValue();
+				new CalculateMetricsFromFile(staticInfo, steps, writer, _prettyPrint)
+					.runMetrics(timeStep);
+				closer.close();
+			}
 			System.out.println(System.currentTimeMillis() - start);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
