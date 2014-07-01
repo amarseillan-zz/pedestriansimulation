@@ -73,13 +73,14 @@ public class ProducePedestrians extends PedestrianAreaStep {
 			// SI el lugar esta libre, ahi recien crear el peaton
 			source.incTotalProduced(1);
 			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), source.team(), source.mission());
+			int tries = 0;
 			do {
 				RandomGenerator random = new UniformRandomGenerator(-source.radius(), source.radius());
 				float x = source.center().x + random.generate();
 				float y = source.center().y + random.generate();
 				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
 				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
-			} while (input.hasCollitions(pedestrian));
+			} while (input.hasCollitions(pedestrian) && tries++ < 10);
 			pedestrian.setReactionDistance(Pedestrian.DEFAULT_REACTION_DISTANCE);
 			input.addPedestrian(pedestrian);
 		}
