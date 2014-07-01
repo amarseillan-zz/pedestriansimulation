@@ -3,63 +3,68 @@ package ar.edu.itba.pedestriansim.metric;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
-import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 public class MetricsAvg {
 
-	private File _file;
-	private int _numberOfRuns;
+	private final FileWriter _output;
 
-	public MetricsAvg(File file, int numberOfRuns) {
-		_file = Preconditions.checkNotNull(file);
-		_numberOfRuns = numberOfRuns;
+	public MetricsAvg(File output) {
+		try {
+			output.createNewFile();
+			_output = new FileWriter(output);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
-	public void calculate() throws IOException {
-		Float[][] allValues = new Float[_numberOfRuns][];
-		for (int i = 0; i < _numberOfRuns; i++) {
-			allValues[i] = new Float[5];
-		}
-		FileWriter writer = new FileWriter("avgMetrics.out", true);
-		Scanner scanner = new Scanner(_file);
-		String name = scanner.nextLine();
-		int j = 0;
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine().trim();
-			String[] values = line.split(" ");
-			for (int i = 0; i < values.length; i++) {
-				allValues[j][i] = Float.valueOf(values[i]);
+
+	public void calculate(String name, File file) {
+		try {
+			List<float[]> allValues = Lists.newArrayList();
+			Scanner scanner = new Scanner(file);
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine().trim();
+				String[] values = line.split(" ");
+				float[] parsed = new float[values.length];
+				for (int i = 0; i < values.length; i++) {
+					parsed[i] = Float.valueOf(values[i]);
+				}
+				allValues.add(parsed);
 			}
-			j++;
+			scanner.close();
+			Float[][] result = getAverages(allValues);
+			_output.append(name + ":\t");
+			for (int i = 0; i < result.length; i++) {
+				String s = String.format("(%.3f, %.3f)\t", result[i][0], result[i][1]);
+				_output.append(s);
+			}
+			_output.append("\n");
+			_output.flush();
+		} catch (IOException e) {
+			throw new IllegalStateException();
 		}
-		scanner.close();
-		Float[][] result = getAverages(allValues);
-		writer.append(name + ":\t");
-		for (int i = 0; i < result.length; i++) {
-			String s = String.format("(%.3f, %.3f)\t", result[i][0], result[i][1]);
-			writer.append(s);
-		}
-		writer.append("\n");
-		writer.close();
 	}
 
-	private static Float[][] getAverages(Float[][] values) {
-		Float[][] result = new Float[values.length][];
-		for (int i = 0; i < values.length; i++) {
+	private static Float[][] getAverages(List<float[]> rows) {
+		Float[][] result = new Float[rows.size()][];
+		int index = 0;
+		for (float[] row : rows) {
 			float total = 0f;
-			for (int j = 0; j < values[i].length; j++) {
-				total += values[i][j];
+			for (int j = 0; j < row.length; j++) {
+				total += row[j];
 			}
-			float mean = total / values[i].length;
+			float mean = total / row.length;
 			total = 0;
-			for (int j = 0; j < values[i].length; j++) {
-				float aux = (values[i][j] - mean);
+			for (int j = 0; j < row.length; j++) {
+				float aux = (row[j] - mean);
 				total += (aux * aux);
 			}
-			float s = (float) Math.sqrt(total / values[i].length);
-			result[i] = new Float[] { mean, s };
+			float s = (float) Math.sqrt(total / row.length);
+			result[index++] = new Float[] { mean, s };	
 		}
 		return result;
 	}

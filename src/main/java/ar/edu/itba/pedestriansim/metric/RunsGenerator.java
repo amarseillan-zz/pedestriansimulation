@@ -14,43 +14,67 @@ import com.google.common.collect.Lists;
 
 public class RunsGenerator {
 
+	private static final File _metricsDirectory;
+	private static final int RUNS_COUNT = 5;
+	static {
+		_metricsDirectory = new File("metrics/");
+		_metricsDirectory.mkdir();
+	}
+
 	public static void main(String[] args) throws IOException {
-		final boolean prettyPrint = false;
-		float[] thresholds = { 0.0005f, 2f, 4f, 6f, 8f };
-		float[] alphas = { 500, 600, 700, 800, 900 };
-		float[] betas = { 0.3f, 0.5f, 0.7f, 1f, 1.5f };
-		final File runsDirectory = new File("runs");
+		new RunsGenerator().generate();
+	}
+
+	private final boolean prettyPrint = false;
+	private final float[] thresholds = { 0.0005f, 2f, 4f, 6f, 8f };
+	private final float[] alphas = { 500, 600, 700, 800, 900 };
+	private final float[] betas = { 0.3f, 0.5f, 0.7f, 1f, 1.5f };
+
+	private final File runsDirectory = new File("runs");
+
+	public RunsGenerator() {
 		runsDirectory.mkdir();
-		// FIXME: no usar mas de un thread, la app tira NullPointer sino
-		// (porque?? =/)
-		ExecutorService executor = Executors.newFixedThreadPool(1);
+	}
+	
+	public void generate() {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		final MetricsAvg avg = new MetricsAvg(new File("avg.txt"));
 		for (final float threshold : thresholds) {
 			for (final float alpha : alphas) {
 				for (final float beta : betas) {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
-							List<PedestrianAppConfig> runs = Lists.newArrayList();
-							for (int runNumber = 0; runNumber < 5; runNumber++) {
-								String fileId = buildFileId(threshold, alpha, beta, runNumber);
-								System.out.println("Started: " + fileId);
-								PedestrianAppConfig config = new CrossingConfig().get();
-								config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
-								config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
-								config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
-								new PedestrianSimApp(config).run();
-								runs.add(config);
-								System.out.println("Finished: " + fileId);
-							}
-							new MetricsRunner(runs, prettyPrint).run();
+							String id = buildFileId(threshold, alpha, beta);
+							List<PedestrianAppConfig> runs = runSimulations(id, alpha, beta, threshold);
+							File output = new File(_metricsDirectory + "/" + id + ".txt");
+							new MetricsRunner(output, runs, prettyPrint).run();
+							avg.calculate(id, output);
 						}
 
-						private String buildFileId(float threshold, float alpha, float beta, int runNumber) {
-							return "b:" + beta + "-a:" + alpha + "-t:" + threshold + "-c:" + runNumber;
+						private String buildFileId(float threshold, float alpha, float beta) {
+							return "b:" + beta + "-a:" + alpha + "-t:" + threshold;
 						}
 					});
 				}
 			}
 		}
+		
+	}
+
+	private List<PedestrianAppConfig> runSimulations(String id, float alpha, float beta, float threshold) {
+		List<PedestrianAppConfig> runs = Lists.newArrayList();
+		for (int runNumber = 0; runNumber < RUNS_COUNT; runNumber++) {
+			String fileId = id + "-c:" + runNumber;
+			System.out.println("Started: " + fileId);
+			PedestrianAppConfig config = new CrossingConfig().get();
+			config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
+			config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
+			config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
+			new PedestrianSimApp(config).run();
+			runs.add(config);
+			System.out.println("Finished: " + fileId);
+		}
+		return runs;
 	}
 }
