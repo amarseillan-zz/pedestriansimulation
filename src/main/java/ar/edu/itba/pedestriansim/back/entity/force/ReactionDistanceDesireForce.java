@@ -17,8 +17,7 @@ public class ReactionDistanceDesireForce implements PedestrianForce {
 		Vector2f target = subject.getFuture().getBody().getCenter();
 		float distance = subject.getBody().getCenter().distance(target);
 		float p = distance / subject.getReactionDistance();
-		Vector2f f = forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity()); 
-		return f.scale(p);
+		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity() * p);
 	}
 
 }
