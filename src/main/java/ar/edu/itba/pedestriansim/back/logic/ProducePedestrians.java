@@ -71,7 +71,6 @@ public class ProducePedestrians extends PedestrianAreaStep {
 		}
 		RandomGenerator random = new UniformRandomGenerator(-source.radius(), source.radius());
 		for (int i = 0; i < amount; i++) {
-			source.incTotalProduced(1);
 			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), source.team(), source.mission());
 			pedestrian.setReactionDistance(Pedestrian.DEFAULT_REACTION_DISTANCE);
 			int tries = 0;
@@ -85,6 +84,7 @@ public class ProducePedestrians extends PedestrianAreaStep {
 				if (!hasCollition) {
 					// if a pedestrian could not be placed, it will be scheduled for later on
 					input.addPedestrian(pedestrian);
+					source.incTotalProduced(1);
 				}
 			} while (hasCollition && tries++ < MAX_TRIES);
 		}
