@@ -17,7 +17,7 @@ public class PedestrianAreaStateFileWriter extends PedestrianAreaStep {
 
 	private final static String LINE_BREAK = "\n";
 	private final static String SPACE = " ";
-	private final static String COMMA = ",";
+	private final static String COMMA = "/";
 
 	private final float _stepInterval;
 	private float _timeSinceLastWrite;

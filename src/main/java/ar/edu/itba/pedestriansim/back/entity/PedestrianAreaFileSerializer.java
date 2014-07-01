@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 public class PedestrianAreaFileSerializer {
 
 	private final static String SPACE = " ";
-	private final static String COMMA = ",";
+	private final static String COMMA = "/";
 
 	public Supplier<StaticFileLine> staticFileInfo(final Scanner scanner) {
 		return new Supplier<StaticFileLine>() {

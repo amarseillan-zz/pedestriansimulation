@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 public class RunsGenerator {
 
 	private static final File _metricsDirectory;
-	private static final int RUNS_COUNT = 5;
+	private static final int RUNS_COUNT = 1;
 	static {
 		_metricsDirectory = new File("metrics/");
 		_metricsDirectory.mkdir();
@@ -26,9 +26,9 @@ public class RunsGenerator {
 	}
 
 	private final boolean prettyPrint = false;
-	private final float[] thresholds = { 0.0005f, 2f, 4f, 6f, 8f };
-	private final float[] alphas = { 500, 600, 700, 800, 900 };
-	private final float[] betas = { 0.3f, 0.5f, 0.7f, 1f, 1.5f };
+	private final float[] thresholds = { 0.01f, 0.01f, 1f, 10f };
+	private final float[] alphas = { 10, 100, 1000, 10000 };
+	private final float[] betas = { 0.1f, 1f, 10f, 100f };
 
 	private final File runsDirectory = new File("runs");
 
@@ -69,7 +69,7 @@ public class RunsGenerator {
 			System.out.println("Started: " + fileId);
 			PedestrianAppConfig config = new CrossingConfig().get();
 			config.setStaticfile(new File(runsDirectory + "/" + fileId + "-static.txt"));
-			config.setDynamicfile(new File(runsDirectory + "/" + fileId + "dynamic.txt"));
+			config.setDynamicfile(new File(runsDirectory + "/" + fileId + "-dynamic.txt"));
 			config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
 			new PedestrianSimApp(config).run();
 			runs.add(config);
