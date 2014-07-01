@@ -24,7 +24,6 @@ public class PedestrianPositionUpdaterComponent extends PedestrianAreaStep {
 		for (Pedestrian pedestrian : input.pedestrians()) {
 			updateRigidBody(pedestrian.getBody(), input.timeStep().floatValue());
 			pedestrian.getTargetSelection().updateTarget();
-//			System.out.println(pedestrian.getBody().getCenter());
 			pedestrian.getBody().setAppliedForce(Vectors.nullVector());
 		}
 	}

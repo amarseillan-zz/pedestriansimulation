@@ -7,7 +7,7 @@ import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 public class SpringFutureAdjustementForce implements PedestrianForce {
 
-	private final float _K = 50;
+	private final float _K = 100;
 	private Vector2f forceOnFuture = new Vector2f();
 
 	@Override
