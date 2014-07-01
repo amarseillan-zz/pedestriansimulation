@@ -39,9 +39,12 @@ public class MetricsRunner implements Runnable {
 	public void run() {
 		try {
 			long start = System.currentTimeMillis();
+			String name = _metricsDirectory.getPath() + File.separatorChar + _runs.get(0).staticfile().getName();
+			File output = new File(name + ".metric");
+			FileWriter writer = new FileWriter(output);
+			writer.append(name + ".results\n");
 			for (PedestrianAppConfig config : _runs) {
-				final Closer closer = Closer.create();
-				FileWriter writer = closer.register(writer(config.staticfile().getName() + ".metric"));
+				Closer closer = Closer.create();
 				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
 				Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(config.staticfile())));
 				Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(config.dynamicfile())));
@@ -50,14 +53,12 @@ public class MetricsRunner implements Runnable {
 					.runMetrics(timeStep);
 				closer.close();
 			}
+			writer.close();
+			new MetricsAvg(output, _runs.size()).calculate();
 			System.out.println(System.currentTimeMillis() - start);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
-	private FileWriter writer(String name) throws IOException {
-		String metricsPath = _metricsDirectory.getPath() + File.separatorChar + name;
-		return new FileWriter(String.format(metricfileFormatter, metricsPath));
-	}
 }
