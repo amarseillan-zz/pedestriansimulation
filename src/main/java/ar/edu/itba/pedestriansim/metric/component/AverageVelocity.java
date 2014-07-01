@@ -8,9 +8,9 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.Pedest
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 
 public class AverageVelocity implements SimpleMetric{
-	
+
 	Average avgSpeed;
-	
+
 	public AverageVelocity() {
 		avgSpeed = new Average();
 	}
