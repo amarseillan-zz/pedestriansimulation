@@ -24,19 +24,19 @@ public class MetricsAvg {
 
 	public void calculate(String name, File file) {
 		try {
-			List<float[]> allValues = Lists.newArrayList();
+			List<List<Float>> allValues = Lists.newArrayList();
 			Scanner scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine().trim();
 				String[] values = line.split(" ");
-				float[] parsed = new float[values.length];
+				List<Float> parsed = Lists.newArrayList();
 				for (int i = 0; i < values.length; i++) {
-					parsed[i] = Float.valueOf(values[i]);
+					parsed.add(Float.valueOf(values[i]));
 				}
 				allValues.add(parsed);
 			}
 			scanner.close();
-			Float[][] result = getAverages(allValues);
+			Float[][] result = getAverages(traspose(allValues));
 			_output.append(name + ":\t");
 			for (int i = 0; i < result.length; i++) {
 				String s = String.format("(%.3f, %.3f)\t", result[i][0], result[i][1]);
@@ -48,11 +48,22 @@ public class MetricsAvg {
 			throw new IllegalStateException();
 		}
 	}
+	
+	private float[][] traspose(List<List<Float>> _matrix) {
+		float[][] trasposed = new float[_matrix.get(0).size()][_matrix.size()];
+		for (int rowIndex = 0; rowIndex < _matrix.size(); rowIndex++) {
+			for (int columnIndex = 0; columnIndex < _matrix.get(0).size(); columnIndex++) {
+				
+				trasposed[columnIndex][rowIndex] = _matrix.get(rowIndex).get(columnIndex);
+			}
+		}
+		return trasposed;
+	}
 
-	private static Float[][] getAverages(List<float[]> rows) {
-		Float[][] result = new Float[rows.size()][];
+	private static Float[][] getAverages(float[][] matrix) {
+		Float[][] result = new Float[matrix.length][];
 		int index = 0;
-		for (float[] row : rows) {
+		for (float[] row : matrix) {
 			float total = 0f;
 			for (int j = 0; j < row.length; j++) {
 				total += row[j];
