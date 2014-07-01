@@ -21,6 +21,8 @@ import com.google.common.collect.Lists;
 
 public class ProducePedestrians extends PedestrianAreaStep {
 
+	private static final int MAX_TRIES = 10;
+
 	private final PriorityQueue<ArrivalEvent> _arriveQueue = new PriorityQueue<>();
 	private PedestrianFactory _pedestrianFactory;
 
@@ -67,22 +69,24 @@ public class ProducePedestrians extends PedestrianAreaStep {
 		if (source.produceLimit() > 0) {
 			amount = Math.min(amount, source.produceLimit() - source.totalProduced());
 		}
+		RandomGenerator random = new UniformRandomGenerator(-source.radius(), source.radius());
 		for (int i = 0; i < amount; i++) {
-			// FIXME: aqui se podria simplemente crear el Body de un peaton y
-			// ver si etsa libre,
-			// SI el lugar esta libre, ahi recien crear el peaton
 			source.incTotalProduced(1);
 			Pedestrian pedestrian = _pedestrianFactory.build(new Vector2f(), source.team(), source.mission());
+			pedestrian.setReactionDistance(Pedestrian.DEFAULT_REACTION_DISTANCE);
 			int tries = 0;
+			boolean hasCollition;
 			do {
-				RandomGenerator random = new UniformRandomGenerator(-source.radius(), source.radius());
 				float x = source.center().x + random.generate();
 				float y = source.center().y + random.generate();
 				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
 				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
-			} while (input.hasCollitions(pedestrian) && tries++ < 10);
-			pedestrian.setReactionDistance(Pedestrian.DEFAULT_REACTION_DISTANCE);
-			input.addPedestrian(pedestrian);
+				hasCollition = input.hasCollitions(pedestrian);
+				if (!hasCollition) {
+					// if a pedestrian could not be placed, it will be scheduled for later on
+					input.addPedestrian(pedestrian);
+				}
+			} while (hasCollition && tries++ < MAX_TRIES);
 		}
 	}
 
