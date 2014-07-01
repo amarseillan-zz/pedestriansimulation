@@ -41,5 +41,6 @@ public class RunsGenerator {
 			}
 		}
 		writer.flush();
+		writer.close();
 	}
 }

@@ -20,6 +20,7 @@ public class MetricsAvg {
 		scanner = new Scanner(new File("run.files"));
 		} catch (FileNotFoundException e) {
 			System.out.println("Run your scripts first yo!");
+			writer.close();
 			return;
 		}
 		while (scanner.hasNextLine()) {
@@ -34,6 +35,7 @@ public class MetricsAvg {
 				}
 				j++;
 			}
+			otherScanner.close();
 			Float[][] result = getAverages(allValues);
 			if (file.length() == 7) {
 				file += "  ";
@@ -45,6 +47,8 @@ public class MetricsAvg {
 			writer.append("\n");
 		}
 		writer.flush();
+		scanner.close();
+		writer.close();
 	}
 	
 	

@@ -32,5 +32,6 @@ public class MetricsRunner {
 			}
 			System.out.println(System.currentTimeMillis() - start);
 		}
+		scanner.close();
 	}
 }
