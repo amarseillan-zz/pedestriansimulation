@@ -34,6 +34,6 @@ public class FuturePositionUpdaterComponent extends PedestrianAreaStep {
 		futureBody.apply(deltaVelocity, deltaPosition);
 		// XXX: Apply decay on future's velocity to avoid harmonic system
 		// movement!
-		futureBody.getVelocity().scale(0.9f);
+		futureBody.getVelocity().scale(1-(elapsedTimeInSeconds*10));
 	}
 }

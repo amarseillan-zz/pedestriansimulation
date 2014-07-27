@@ -16,7 +16,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 		PedestrianAppConfig config = new PedestrianAppConfig()
 			.setTimeStep(new BigDecimal(1 / 100f).setScale(5, RoundingMode.UP))
 			.setAlpha(800)
-			.setBeta(0.5f)
+			.setBeta(0.7f)
 			.setExternalForceRadiusThreshold(0)
 			.setExternalForceThreshold(0)
 			.setStaticfile(new File("static.txt"))
