@@ -14,7 +14,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		PedestrianAppConfig config = new PedestrianAppConfig()
-			.setTimeStep(new BigDecimal(1 / 100f).setScale(5, RoundingMode.UP))
+			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))
 			.setAlpha(800)
 			.setBeta(0.7f)
 			.setExternalForceRadiusThreshold(0)

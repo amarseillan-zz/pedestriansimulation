@@ -56,10 +56,10 @@ public class PedestrianSimApp implements Runnable {
 			.cutCondition(new Predicate<PedestrianArea>() {
 				@Override
 				public boolean apply(PedestrianArea input) {
-					return input.elapsedTime().floatValue() > 20;
+					return input.elapsedTime().floatValue() > 50;
 				}
 			})
-			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0))
+			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0.03f))
 			.onStep(new FutureForceUpdaterComponent(forces))
 			.onStep(new FuturePositionUpdaterComponent())
 			.onStep(new PedestrianForceUpdaterComponent(forces))
