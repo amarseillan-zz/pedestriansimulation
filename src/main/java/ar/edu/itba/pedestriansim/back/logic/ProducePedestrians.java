@@ -83,10 +83,12 @@ public class ProducePedestrians extends PedestrianAreaStep {
 				hasCollition = input.hasCollitions(pedestrian);
 				if (!hasCollition) {
 					// if a pedestrian could not be placed, it will be scheduled for later on
+					FutureForceUpdaterComponent.setFutureInDesiredPath(pedestrian);
 					input.addPedestrian(pedestrian);
 					source.incTotalProduced(1);
 				}
 			} while (hasCollition && tries++ < MAX_TRIES);
+
 		}
 	}
 

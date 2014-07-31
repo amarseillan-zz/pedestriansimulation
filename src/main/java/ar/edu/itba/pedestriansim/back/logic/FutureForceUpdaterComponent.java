@@ -86,9 +86,9 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
 	}
 
-	private final Vector2f cache = new Vector2f();
+	private static final Vector2f cache = new Vector2f();
 
-	private void setFutureInDesiredPath(Pedestrian me) {
+	public static void setFutureInDesiredPath(Pedestrian me) {
 		Vector2f targetCenter = me.getTargetSelection().getTarget().getClosesPoint(me.getBody().getCenter());
 		float distance = me.getReactionDistance();
 		if (me.getBody().getCenter().distanceSquared(targetCenter) < distance * distance) {
