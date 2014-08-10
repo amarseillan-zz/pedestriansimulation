@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 	private static final Logger logger = Logger.getLogger(FutureForceUpdaterComponent.class);
-	
+
 	private final PedestrianForces _forces;
 
 	public FutureForceUpdaterComponent(PedestrianForces pedestrianForces) {

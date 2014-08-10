@@ -32,8 +32,5 @@ public class FuturePositionUpdaterComponent extends PedestrianAreaStep {
 		Vector2f deltaVelocity = _eulerMethod.deltaVelocity(futureBody, forceOnFuture, elapsedTimeInSeconds, velocityCache);
 		Vector2f deltaPosition = _eulerMethod.deltaPosition(futureBody, forceOnFuture, elapsedTimeInSeconds, positionCache);
 		futureBody.apply(deltaVelocity, deltaPosition);
-		// XXX: Apply decay on future's velocity to avoid harmonic system
-		// movement!
-		futureBody.getVelocity().scale(1-(elapsedTimeInSeconds*10));
 	}
 }

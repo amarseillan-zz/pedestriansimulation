@@ -15,7 +15,7 @@ public class PedestrianForcesFactory {
 		forces.setExternalForceRadiusThreshold(config.getExternalForceRadiusThreshold());
 		forces.setExternalForceThreshold(config.getExternalForceThreshold());
 		forces.setDesireForce(new ReactionDistanceDesireForce());
-		forces.setForceOnFuture(new SpringFutureAdjustementForce());
+		forces.setForceOnFuture(new SpringFutureAdjustementForce(100, 10));
 		forces.setCollisitionModel(new SpringForceModel());
 		return forces;
 	}
