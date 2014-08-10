@@ -1,11 +1,12 @@
 package ar.edu.itba.pedestriansim.front;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+
+import com.google.common.collect.Lists;
 
 public class KeyHandler implements KeyListener {
 
@@ -13,7 +14,7 @@ public class KeyHandler implements KeyListener {
 	private Camera _camera;
 	private GameContainer _gc;
 
-	private final List<KeyMapping> handlers = new LinkedList<>();
+	private final List<KeyMapping> handlers = Lists.newLinkedList();
 	
 	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer, GameContainer gc) {
 		_camera = camera;

@@ -23,7 +23,7 @@ public class ProducePedestrians extends PedestrianAreaStep {
 
 	private static final int MAX_TRIES = 10;
 
-	private final PriorityQueue<ArrivalEvent> _arriveQueue = new PriorityQueue<>();
+	private final PriorityQueue<ArrivalEvent> _arriveQueue = new PriorityQueue<ArrivalEvent>();
 	private PedestrianFactory _pedestrianFactory;
 
 	public ProducePedestrians(PedestrianFactory pedestrianFactory) {
