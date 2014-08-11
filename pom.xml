@@ -8,7 +8,6 @@
 
 	<properties>
 		<finalName>${project.artifactId}-${project.version}.jar</finalName>
-		<!-- <main.class>ar.edu.itba.pedestriansim.front.GUIPedestrianSim</main.class> -->
 		<main.class>ar.edu.itba.App</main.class>
 		<natives>${basedir}/target/natives/</natives>
 		<release.natives>natives/</release.natives>

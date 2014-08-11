@@ -18,8 +18,8 @@ import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStateFileWriter;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStep;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianPositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.logic.RemovePedestriansOnTarget;
 import ar.edu.itba.pedestriansim.back.logic.ProducePedestrians;
+import ar.edu.itba.pedestriansim.back.logic.RemovePedestriansOnTarget;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -52,11 +52,12 @@ public class PedestrianSimApp implements Runnable {
 		FileWriter staticWriter = fileCloser.register(newFileWriter(_config.staticfile()));
 		FileWriter dynamicWriter = fileCloser.register(newFileWriter(_config.dynamicfile()));
 		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
+		final float SIM_TIME = 50;
 		return sim
 			.cutCondition(new Predicate<PedestrianArea>() {
 				@Override
 				public boolean apply(PedestrianArea input) {
-					return input.elapsedTime().floatValue() > 50;
+					return input.elapsedTime().floatValue() > SIM_TIME;
 				}
 			})
 			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0.03f))
@@ -67,9 +68,15 @@ public class PedestrianSimApp implements Runnable {
 			.onStep(new RemovePedestriansOnTarget())
 			.onStep(new ProducePedestrians(_config.pedestrianFactory()))
 			.onStep(new PedestrianAreaStep() {
+				private int _lastP = 0;
 				@Override
 				public void update(PedestrianArea input) {
 					input.addElapsedTime(input.timeStep());
+					int p = (int) (input.elapsedTime().floatValue() * 100 / SIM_TIME);
+					if (p != _lastP && p % 10 == 0) {
+						System.out.println("Simulated: " + p + "%");
+						_lastP = p;
+					}
 				}
 			})
 			.onEnd(new Function<PedestrianArea, PedestrianArea>() {
