@@ -12,6 +12,11 @@ public class PedestrianForces {
 	private RepulsionForce repulsionForceModel;
 
 	/**
+	 * Fuerza de repulsion entre una pared y una pocision
+	 */
+	private RepulsionForce wallRepulsionForceModel;
+
+	/**
 	 * Limite inferior para la aplicacion de la suma de los valores obtenidos
 	 * con @repulsionForceModel
 	 */
@@ -80,5 +85,13 @@ public class PedestrianForces {
 
 	public PedestrianForce getForceOnFuture() {
 		return forceOnFuture;
+	}
+	
+	public void setWallRepulsionForceModel(RepulsionForce wallRepulsionForceModel) {
+		this.wallRepulsionForceModel = wallRepulsionForceModel;
+	}
+	
+	public RepulsionForce getWallRepulsionForceModel() {
+		return wallRepulsionForceModel;
 	}
 }

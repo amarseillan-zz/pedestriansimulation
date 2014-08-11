@@ -18,6 +18,8 @@ public class PedestrianAppConfig {
 
 	private float _alpha;
 	private float _beta;
+	private float _wallAlpha;
+	private float _wallBeta;
 	private float externalForceRadiusThreshold;
 	private float externalForceThreshold;
 
@@ -102,4 +104,21 @@ public class PedestrianAppConfig {
 		return this;
 	}
 
+	public PedestrianAppConfig setWallAlpha(float wallAlpha) {
+		_wallAlpha = wallAlpha;
+		return this;
+	}
+
+	public float wallAlpha() {
+		return _wallAlpha;
+	}
+
+	public PedestrianAppConfig setWallBeta(float wallBeta) {
+		_wallBeta = wallBeta;
+		return this;
+	}
+
+	public float wallBeta() {
+		return _wallBeta;
+	}
 }

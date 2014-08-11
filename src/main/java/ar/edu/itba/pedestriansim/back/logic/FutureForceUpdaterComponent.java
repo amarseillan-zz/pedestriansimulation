@@ -49,17 +49,26 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		}
 	}
 
+	private static final Vector2f _wallClosestPointCache = new Vector2f();
+
 	private Vector2f obstacleCollitionForces(Pedestrian pedestrian, PedestrianArea input) {
-		Vector2f repulsionForce = new Vector2f();
+		final Vector2f totalRepulsionForce = new Vector2f();
+		RepulsionForce repulsionForce = _forces.getWallRepulsionForceModel();
 		for (Shape shape : input.obstacles()) {
 			if (!(shape instanceof Line)) {
 				logger.error("obstacles that are not lines are not yet supported");
 				throw new RuntimeException();
 			}
+			Line line = (Line) shape;
 			RigidBody future = pedestrian.getFuture().getBody();
-			repulsionForce.add(_forces.getCollisitionModel().getForce(future.getCollitionShape(), (Line) shape));
+			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
+			totalRepulsionForce
+				.add(_forces.getCollisitionModel().getForce(future.getCollitionShape(), line))
+				.add(repulsionForce.apply(future.getCenter(), _wallClosestPointCache))
+			;
+			
 		}
-		return repulsionForce;
+		return totalRepulsionForce;
 	}
 
 	private void updatePedestrianFuture(Pedestrian pedestrian, Map<Pedestrian, Vector2f> allForcesOnFuture) {
@@ -86,17 +95,17 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
 	}
 
-	private static final Vector2f cache = new Vector2f();
+	private static final Vector2f _targetCache = new Vector2f();
 
 	public static void setFutureInDesiredPath(Pedestrian me) {
 		Vector2f targetCenter = me.getTargetSelection().getTarget().getClosesPoint(me.getBody().getCenter());
 		float distance = me.getReactionDistance();
 		if (me.getBody().getCenter().distanceSquared(targetCenter) < distance * distance) {
-			cache.set(targetCenter);
+			_targetCache.set(targetCenter);
 		} else {
-			Vectors.pointBetween(me.getBody().getCenter(), targetCenter, distance, cache);
+			Vectors.pointBetween(me.getBody().getCenter(), targetCenter, distance, _targetCache);
 		}
-		me.getFuture().getBody().setLocation(cache);
+		me.getFuture().getBody().setLocation(_targetCache);
 		me.getFuture().getBody().setAppliedForce(Vectors.nullVector());
 		me.getFuture().getBody().setVelocity(Vectors.nullVector());
 	}
