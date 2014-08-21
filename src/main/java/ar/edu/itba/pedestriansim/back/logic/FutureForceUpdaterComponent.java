@@ -66,7 +66,6 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 				.add(_forces.getCollisitionModel().getForce(future.getCollitionShape(), line))
 				.add(repulsionForce.apply(future.getCenter(), _wallClosestPointCache))
 			;
-			
 		}
 		return totalRepulsionForce;
 	}
