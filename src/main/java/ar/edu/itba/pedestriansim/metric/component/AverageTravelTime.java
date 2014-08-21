@@ -20,13 +20,13 @@ public class AverageTravelTime implements SimpleMetric{
 	private Set<Serializable> accumulated;
 	private Set<Serializable> current;
 	private List<Float> result;
-	
+
 	public AverageTravelTime() {
 		this.averageTimePerPedestrian = new HashMap<Serializable, Float>();
 		this.accumulated = new HashSet<Serializable>();
 		this.result = new ArrayList<Float>();
 	}
-	
+
 	@Override
 	public void onIterationStart() {
 		this.current = new HashSet<Serializable>();
@@ -48,7 +48,7 @@ public class AverageTravelTime implements SimpleMetric{
 		for (Float average: this.result) {
 			total.add(average);
 		}
-		
+
 		if (pretty) {
 			writer.append("Average time to objective: \n");
 			writer.append(total.getAverage() + "s\n");
@@ -62,11 +62,11 @@ public class AverageTravelTime implements SimpleMetric{
 		Serializable id = pedestrianStaticInfo.id();
 		this.current.add(id);
 		this.accumulated.add(id);
-		
+
 		if (!averageTimePerPedestrian.containsKey(id)) {
 			averageTimePerPedestrian.put(id, 0f);
 		}
-		
+
 		Float averageTime = averageTimePerPedestrian.get(id);
 		averageTime += delta;
 		averageTimePerPedestrian.put(id, averageTime);

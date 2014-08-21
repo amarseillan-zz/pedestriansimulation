@@ -20,13 +20,13 @@ public class AverageWalkDistance implements SimpleMetric{
 	private Set<Serializable> current;
 	private Set<Serializable> accumulated;
 	private List<Float> result;
-	
+
 	public AverageWalkDistance() {
 		this.averageWalkPerPedestrian = new HashMap<Serializable, Float>();
 		this.accumulated = new HashSet<Serializable>();
 		this.result = new ArrayList<Float>();
 	}
-	
+
 	@Override
 	public void onIterationStart() {
 		this.current = new HashSet<Serializable>();
@@ -48,7 +48,7 @@ public class AverageWalkDistance implements SimpleMetric{
 		for (Float average: this.result) {
 			total.add(average);
 		}
-		
+
 		if (pretty) {
 			writer.append("Average distance to objective: \n");
 			writer.append(total.getAverage() + "m\n");
@@ -62,11 +62,11 @@ public class AverageWalkDistance implements SimpleMetric{
 		Serializable id = pedestrianStaticInfo.id();
 		this.current.add(id);
 		this.accumulated.add(id);
-		
+
 		if (!averageWalkPerPedestrian.containsKey(id)) {
 			averageWalkPerPedestrian.put(id, 0f);
 		}
-		
+
 		Float averageTime = averageWalkPerPedestrian.get(id);
 		averageTime += delta * pedestrian.velocity().length();
 		averageWalkPerPedestrian.put(id, averageTime);

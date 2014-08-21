@@ -2,7 +2,8 @@ package ar.edu.itba.pedestriansim.front;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
+import java.io.IOException;
+import java.util.Scanner;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -10,150 +11,99 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
-import ar.edu.itba.pedestriansim.back.component.Component;
-import ar.edu.itba.pedestriansim.back.component.UpdatePedestrialPositionFromFileComponent;
+import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
-import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
-import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
-import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
+import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStep;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
+import com.google.common.io.Closer;
 
-@org.springframework.stereotype.Component
 public class GUIPedestrianSim extends BasicGame {
 
-	public static void main(String[] args) {
-		if (args.length < 2) {
-			args = new String[2];
-			args[0] = "static.txt";
-			args[1] = "dynamic.txt";
-		}
-		PedestrianSimApp.main(new String[] {args[0], args[1]});	// Run backend first!
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		context.refresh();
-		try {
-			GUIPedestrianSim sim = context.getBean(GUIPedestrianSim.class);
-			sim._config.setStaticfile(args[0]);
-			sim._config.setDynamicfile(args[1]);
-			AppGameContainer appContainer = new AppGameContainer(sim);
-			appContainer.setUpdateOnlyWhenVisible(false);
-			appContainer.setDisplayMode(1200, 700, false);
-			appContainer.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-		context.close();
+	public static void main(String[] args) throws SlickException {
+		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim());
+		appContainer.setUpdateOnlyWhenVisible(false);
+		appContainer.setDisplayMode(1200, 700, false);
+		appContainer.start();
 	}
 
-	private static final float TIME_STEP = 1 / 100f;
-
-	@Autowired
 	private PedestrianAppConfig _config;
-
 	private Camera _camera;
 	private PedestrianSim _simulation;
 	private PedestrianAreaRenderer _renderer;
-	private boolean _simulationIsFinished;
+	private boolean _simulationIsFinished = false;
 
 	public GUIPedestrianSim() {
 		super("Pedestrian simulation");
+		_config = new CrossingConfig().get();
+		// XXX: Run back-end first!
+		new PedestrianSimApp(_config).run();
 	}
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
-		_simulationIsFinished = false;
+		final Closer closer = Closer.create();
+		Scanner staticReader = closer.register(newScanner(_config.staticfile()));
+		Scanner dynamicReader = closer.register(newScanner(_config.dynamicfile()));
+		PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
+		_simulation = new PedestrianSim(_config.pedestrianArea())
+			.cutCondition(new Predicate<PedestrianArea>() {
+				@Override
+				public boolean apply(PedestrianArea input) {
+					return _simulationIsFinished;
+				}
+			})
+			.onStep(new UpdatePositionsFromFile(serializer.staticFileInfo(staticReader), serializer.steps(dynamicReader)))
+			.onEnd(new PedestrianAreaStep() {
+				@Override
+				public void update(PedestrianArea input) {
+					try {
+						closer.close();
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
+				}
+			})
+		;
 		_camera = new Camera();
-		_simulation = new PedestrianSim(_config, new GUISimulationComponentsFactoryImpl(), new Predicate<PedestrianArea>() {
-			@Override
-			public boolean apply(PedestrianArea input) {
-				return _simulationIsFinished;
-			}
-		});
-		disableSources();
-		setupView();
+		_camera.setZoom(20f);
+//		_camera.scrollX(1200);
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
 	}
-	
-	private void disableSources() {
-		for (PedestrianSource source : _simulation.getPedestrianArea().getSources()) {
-			source.disable();
+
+	private Scanner newScanner(File file) {
+		try {
+			return new Scanner(file);
+		} catch (FileNotFoundException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		_renderer.render(gc, g, _simulation.getPedestrianArea());
+		_renderer.render(gc, g, _simulation.pedestrianArea());
 	}
 
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		_camera.update(gc);
-		if (_simulation.isFinished()) {
+		if (gc.getInput().isKeyDown(Input.KEY_X) || gc.getInput().isKeyDown(Input.KEY_ESCAPE) || _simulation.isFinished()) {
 			System.out.println("Simulation finished... Exiting application!");
 			gc.exit();
 			return;
 		}
 		if (delta > 0) { // 0 = means paused!
-			_simulation.update(TIME_STEP);
+			_simulation.step();
 		}
 		if (gc.getInput().isKeyDown(Input.KEY_R)) {
 			gc.reinit();
 		}
-		if (gc.getInput().isKeyDown(Input.KEY_X)) {
-			_simulation.end();
-			gc.exit();
-		}
-	}
-	
-
-	private void setupView() {
-		Optional<Integer> zoom = _config.getOptional("zoom", Integer.class);
-		if (zoom.isPresent()) {
-			_camera.setZoom(zoom.get());
-		}
-		Optional<String[]> location = _config.getLocation();
-		if (location.isPresent()) {
-			_camera.scrollX(Float.parseFloat(location.get()[0]));
-			_camera.scrollY(Float.parseFloat(location.get()[1]));
-		}
-	}
-
-	private class GUISimulationComponentsFactoryImpl implements SimulationComponentsFactory {
-
-		@Override
-		public List<Component> produce(PedestrianAppConfig config, PedestrianArea pedestrianArea) {
-			List<Component> components = Lists.newLinkedList();
-			try {
-				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer(pedestrianArea, new File(config.get("log.directory")), config.getStaticfile(), config.getDynamicfile());
-				components.add(new UpdatePedestrialPositionFromFileComponent(pedestrianArea, serializer.staticFileInfo(), composeSteps(serializer.steps())));
-			} catch (FileNotFoundException e) {
-				throw new IllegalStateException(e);
-			}
-			return components;
-		}
-		
-		private Supplier<DymaimcFileStep> composeSteps(final Supplier<DymaimcFileStep> steps) {
-			return new Supplier<DymaimcFileStep>() {
-				@Override
-				public DymaimcFileStep get() {
-					DymaimcFileStep step = steps.get();
-					_simulationIsFinished = (step == null);
-					return step;
-				}
-			};
-		}
-
 	}
 }

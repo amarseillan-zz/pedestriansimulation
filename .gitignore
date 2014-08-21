@@ -9,8 +9,7 @@ target/
 *.ear
 dynamic.txt
 static.txt
-metrics/*
-metrics.out
+metrics*
 
 avgMetrics.out
 runs/*

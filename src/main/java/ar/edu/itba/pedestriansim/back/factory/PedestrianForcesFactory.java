@@ -1,135 +1,24 @@
 package ar.edu.itba.pedestriansim.back.factory;
 
-import org.newdawn.slick.geom.Vector2f;
-
-import ar.edu.itba.pedestriansim.back.PedestrianAppConfig;
-import ar.edu.itba.pedestriansim.back.PedestrianAppConfig.OptionalConfig;
-import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
-import ar.edu.itba.pedestriansim.back.entity.Pedestrians;
-import ar.edu.itba.pedestriansim.back.force.PedestrianForce;
-import ar.edu.itba.pedestriansim.back.force.ReactionDistanceDesireForce;
-import ar.edu.itba.pedestriansim.back.force.SpringFutureAdjustementForce;
-import ar.edu.itba.pedestriansim.back.physics.SpringForceModel;
-import ar.edu.itba.pedestriansim.back.replusionforce.ExponentialRepulsionForce;
-import ar.edu.itba.pedestriansim.back.replusionforce.RepulsionForce;
-
-import com.google.common.base.Function;
+import ar.edu.itba.pedestriansim.back.entity.force.ExponentialRepulsionForce;
+import ar.edu.itba.pedestriansim.back.entity.force.PedestrianFutureAdjustmentForce;
+import ar.edu.itba.pedestriansim.back.entity.force.ReactionDistanceDesireForce;
+import ar.edu.itba.pedestriansim.back.entity.force.SpringForceModel;
 
 public class PedestrianForcesFactory {
 
-	private static enum RepulsionForceType {
-		MODEL_1
-	};
-
-	private static enum PedestrianInteractionType {
-		BODY_LOCATION, FUTURE_LOCATION
-	};
-
-	private static enum DesireForceType {
-		REACTION_DISTANCE
-	};
-
-	private static enum ForceOnFutureType {
-		CONSTANT
-	};
-
-	private PedestrianAppConfig _config;
-
-	public PedestrianForcesFactory(PedestrianAppConfig config) {
-		_config = config;
-	}
-
-	public PedestrianForces produce() {
+	public PedestrianForces build(PedestrianAppConfig config) {
 		PedestrianForces forces = new PedestrianForces();
-		if (_config.getOptional() != null) {
-			OptionalConfig optional = _config.getOptional();
-			forces.setCollisitionModel(new SpringForceModel());
-			forces.setExternalForceThreshold(optional
-					.getExternalForceThreshold());
-			forces.setExternalForceRadiusThreshold(_config.get(
-					"externalForceRadiusThreshold", Float.class));
-			forces.setInteractionLocation(buildInteractionLocation());
-			forces.setRepulsionForceModel(buildRepulsionForce());
-			forces.setDesireForce(buildDesireForce());
-			forces.setForceOnFuture(buildForceOnFuture());
-			return forces;
-		} else {
-			forces.setCollisitionModel(new SpringForceModel());
-			forces.setExternalForceThreshold(_config.get(
-					"externalForceThreshold", Float.class));
-			forces.setExternalForceRadiusThreshold(_config.get(
-					"externalForceRadiusThreshold", Float.class));
-			forces.setInteractionLocation(buildInteractionLocation());
-			forces.setRepulsionForceModel(buildRepulsionForce());
-			forces.setDesireForce(buildDesireForce());
-			forces.setForceOnFuture(buildForceOnFuture());
-			return forces;
-		}
+		forces.setRepulsionForceModel(new ExponentialRepulsionForce(config.alpha(), config.beta()));
+		forces.setWallRepulsionForceModel(new ExponentialRepulsionForce(config.wallAlpha(), config.wallBeta()));
+		forces.setExternalForceRadiusThreshold(config.getExternalForceRadiusThreshold());
+		forces.setExternalForceThreshold(config.getExternalForceThreshold());
+		forces.setDesireForce(new ReactionDistanceDesireForce());
+		forces.setForceOnFuture(new PedestrianFutureAdjustmentForce(150, 10, 0));
+		forces.setCollisitionModel(new SpringForceModel());
+		return forces;
 	}
 
-	private Function<Pedestrian, Vector2f> buildInteractionLocation() {
-		Function<Pedestrian, Vector2f> interactionLocation;
-		PedestrianInteractionType interactionType = _config
-				.getEnum(PedestrianInteractionType.class);
-		switch (interactionType) {
-		case BODY_LOCATION:
-			interactionLocation = Pedestrians.getLocation();
-			break;
-		case FUTURE_LOCATION:
-			interactionLocation = Pedestrians.getFutureLocation();
-			break;
-		default:
-			throw new IllegalStateException(
-					"Unknown type for PedestrianInteractionType: "
-							+ interactionType);
-		}
-		return interactionLocation;
-	}
-
-	private RepulsionForce buildRepulsionForce() {
-		RepulsionForce repulsionForce;
-		RepulsionForceType repulsionForceType = _config
-				.getEnum(RepulsionForceType.class);
-		if (_config.getOptional() != null) {
-			repulsionForce = new ExponentialRepulsionForce(
-					_config.getOptional().getAlpha(), _config.getOptional().getBeta());
-		} else {
-			repulsionForce = new ExponentialRepulsionForce(
-					_config.getEnumParam(repulsionForceType, "alpha",
-							Float.class), _config.getEnumParam(
-							repulsionForceType, "beta", Float.class));
-		}
-		return repulsionForce;
-	}
-
-	private PedestrianForce buildDesireForce() {
-		PedestrianForce desireForce;
-		DesireForceType desireForceType = _config
-				.getEnum(DesireForceType.class);
-		switch (desireForceType) {
-		case REACTION_DISTANCE:
-			desireForce = new ReactionDistanceDesireForce();
-			break;
-		default:
-			throw new IllegalStateException(
-					"Unknown type for DesireForceType: " + desireForceType);
-		}
-		return desireForce;
-	}
-
-	private PedestrianForce buildForceOnFuture() {
-		PedestrianForce forceOnFuture;
-		ForceOnFutureType desireForceType = _config
-				.getEnum(ForceOnFutureType.class);
-		switch (desireForceType) {
-		case CONSTANT:
-			forceOnFuture = new SpringFutureAdjustementForce();
-			break;
-		default:
-			throw new IllegalStateException(
-					"Unknown type for DesireForceType: " + desireForceType);
-		}
-		return forceOnFuture;
-	}
 }

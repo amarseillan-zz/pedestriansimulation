@@ -5,15 +5,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
-import ar.edu.itba.pedestriansim.back.physics.RigidBody;
-import ar.edu.itba.pedestriansim.back.physics.Vectors;
+import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
+import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
+import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 import com.google.common.base.Preconditions;
 
 public class Pedestrian {
 
-	private static final float DEFAULT_REACTION_DISTANCE = 1.5f;
+	public static final float DEFAULT_REACTION_DISTANCE = 1.5f;
 	
 	private Integer _id;
 	private int _team;
@@ -101,6 +101,7 @@ public class Pedestrian {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.append("id", getId())
+			.append("team", getTeam())
 			.append("location", getBody().getCenter())
 			.append("velocity", getBody().getVelocity())
 			.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter()))

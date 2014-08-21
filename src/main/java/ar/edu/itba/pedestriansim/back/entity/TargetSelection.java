@@ -2,9 +2,9 @@ package ar.edu.itba.pedestriansim.back.entity;
 
 import org.newdawn.slick.geom.Shape;
 
-import ar.edu.itba.pedestriansim.back.mision.GoToSelfLocation;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianMision;
-import ar.edu.itba.pedestriansim.back.mision.PedestrianTarget;
+import ar.edu.itba.pedestriansim.back.entity.mision.GoToSelfLocation;
+import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
+import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTarget;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;

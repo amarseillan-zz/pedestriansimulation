@@ -4,12 +4,10 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
-import ar.edu.itba.pedestriansim.back.spatial.Grid;
 
 public class PedestrianAreaRenderer extends ShapeRenderer {
 
@@ -22,27 +20,26 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 		_pedestrianRenderer = new PedestrianRenderer(camera, this);
 	}
 
-	@SuppressWarnings("rawtypes") 
 	public void render(GameContainer gc, Graphics g, PedestrianArea pedestrianArea) {
 		g.setColor(Color.pink);
 		if (renderDebugInfo) {
-			for (Grid[] grids : pedestrianArea.getMap().getGrid()) {
-				for (Grid grid : grids) {
-					Rectangle area = grid.getArea(); 
-					draw(g, area, Color.green);
-					drawString(g, grid.size() + "", area.getX(), area.getY());
-				}
-			}
+//			for (Grid[] grids : pedestrianArea.getMap().getGrid()) {
+//				for (Grid grid : grids) {
+//					Rectangle area = grid.getArea(); 
+//					draw(g, area, Color.green);
+//					drawString(g, grid.size() + "", area.getX(), area.getY());
+//				}
+//			}
 		}
-		for (PedestrianSource source : pedestrianArea.getSources()) {
-			_sourceShape.setRadius(source.getRadius());
-			_sourceShape.setCenterX(source.getLocation().x);
-			_sourceShape.setCenterY(source.getLocation().y);
+		for (PedestrianSource source : pedestrianArea.sources()) {
+			_sourceShape.setRadius(source.radius());
+			_sourceShape.setCenterX(source.center().x);
+			_sourceShape.setCenterY(source.center().y);
 			fill(g, _sourceShape);
 		}
-		_pedestrianRenderer.render(gc, g, pedestrianArea.getPedestrians());
+		_pedestrianRenderer.render(gc, g, pedestrianArea.pedestrians());
 		g.setColor(Color.white);
-		for (Shape obstacle : pedestrianArea.getObstacles()) {
+		for (Shape obstacle : pedestrianArea.obstacles()) {
 			draw(g, obstacle);
 		}
 	}

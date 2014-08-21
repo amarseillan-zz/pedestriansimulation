@@ -34,7 +34,7 @@ public class CollitionCount implements CollitionMetric {
 		thisCollitions.put(p1, p2);
 		thisCollitions.put(p2, p1);
 	}
-	
+
 	@Override
 	public void onIterationEnd() {
 		//nothing to do
@@ -50,7 +50,7 @@ public class CollitionCount implements CollitionMetric {
 		}
 	}
 
-	
+
 	public long getCount() {
 		return this.count;
 	}

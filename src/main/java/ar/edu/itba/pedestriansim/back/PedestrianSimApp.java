@@ -1,104 +1,104 @@
 package ar.edu.itba.pedestriansim.back;
 
 import java.io.File;
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ar.edu.itba.pedestriansim.back.PedestrianAppConfig.OptionalConfig;
-import ar.edu.itba.pedestriansim.back.component.Component;
-import ar.edu.itba.pedestriansim.back.component.FutureForceUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.FuturePositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.GridPedestrianPositionUpdater;
-import ar.edu.itba.pedestriansim.back.component.PedestrianAreaStateFileWriter;
-import ar.edu.itba.pedestriansim.back.component.PedestrianForceUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.PedestrianPositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.component.PedestrianRemoverComponent;
+import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
 import ar.edu.itba.pedestriansim.back.factory.PedestrianForcesFactory;
-import ar.edu.itba.pedestriansim.back.factory.SimulationComponentsFactory;
+import ar.edu.itba.pedestriansim.back.logic.FutureForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.logic.FuturePositionUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStateFileWriter;
+import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStep;
+import ar.edu.itba.pedestriansim.back.logic.PedestrianForceUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.logic.PedestrianPositionUpdaterComponent;
+import ar.edu.itba.pedestriansim.back.logic.ProducePedestrians;
+import ar.edu.itba.pedestriansim.back.logic.RemovePedestriansOnTarget;
 
+import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
+import com.google.common.io.Closer;
 
-@org.springframework.stereotype.Component
-public class PedestrianSimApp {
+public class PedestrianSimApp implements Runnable {
 
 	public static void main(String[] args) {
-		if (args.length < 2 ){
-			throw new IllegalArgumentException("Too few arguments, you should at least state dynamicfile and staticfile");
-		}
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-				"applicationContext.xml");
-		context.refresh();
-		PedestrianSimApp simulation = context.getBean(PedestrianSimApp.class);
-		OptionalConfig config = null;
-		if (args.length == 5) {
-			
-			float externalForceThreshold = Float.valueOf(args[2]);
-			float alpha = Float.valueOf(args[3]);
-			float beta = Float.valueOf(args[4]);
-			config = new OptionalConfig(externalForceThreshold, alpha, beta);
-		} 
-		simulation.run(config, args[0], args[1]);
-		context.close();
+		new PedestrianSimApp(new CrossingConfig().get()).run();
 	}
 
-	private static final Logger logger = Logger
-			.getLogger(PedestrianSimApp.class);
+	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
 
-	@Autowired
-	private PedestrianAppConfig _config;
+	private final PedestrianAppConfig _config;
 
-	public void run(OptionalConfig config, String staticfile, String dynamicfile) {
-		logger.info("Loading simulation...");
-		Predicate<PedestrianArea> cutCondition = new Predicate<PedestrianArea>() {
-			@Override
-			public boolean apply(PedestrianArea input) {
-				return input.elapsedTime().floatValue() > 20;
-			}
-		};
-		_config.setOptional(config);
-		_config.setStaticfile(staticfile);
-		_config.setDynamicfile(dynamicfile);
-		PedestrianSim simulation = new PedestrianSim(_config,
-				new SimulationComponentsFactoryImpl(), cutCondition);
-		logger.info("Starting simulation...");
-		simulation.start();
-		do {
-			simulation.update(simulation.getPedestrianArea().delta());
-		} while (!simulation.isFinished());
-		logger.info("Simulation finished OK!");
+	public PedestrianSimApp(PedestrianAppConfig config) {
+		_config = Preconditions.checkNotNull(config);
 	}
 
-	public static class SimulationComponentsFactoryImpl implements
-			SimulationComponentsFactory {
+	@Override
+	public void run() {
+		logger.info("[Simulation] started");
+		configure(new PedestrianSim(_config.pedestrianArea())).run();
+		logger.info("[Simulation] Finished");
+	}
 
-		public List<Component> produce(PedestrianAppConfig config,
-				PedestrianArea pedestrianArea) {
-			PedestrianForces pedestrianForces = new PedestrianForcesFactory(
-					config).produce();
-			List<Component> components = Lists.newLinkedList();
-			components.add(new FutureForceUpdaterComponent(pedestrianArea,
-					pedestrianForces));
-			components.add(new FuturePositionUpdaterComponent(pedestrianArea));
-			components.add(new PedestrianForceUpdaterComponent(pedestrianArea,
-					pedestrianForces));
-			components.add(new PedestrianPositionUpdaterComponent(
-					pedestrianArea));
-			components.add(new PedestrianRemoverComponent(pedestrianArea));
-			components.add(new GridPedestrianPositionUpdater(pedestrianArea));
-			File outputDirectory = new File(config.get("log.directory"));
-			float logInterval = config.get("log.interval", Float.class);
-			components.add(new PedestrianAreaStateFileWriter(pedestrianArea,
-					outputDirectory, logInterval, config.getStaticfile(), config.getDynamicfile()));
-			return components;
+	private PedestrianSim configure(PedestrianSim sim) {
+		final Closer fileCloser = Closer.create();
+		FileWriter staticWriter = fileCloser.register(newFileWriter(_config.staticfile()));
+		FileWriter dynamicWriter = fileCloser.register(newFileWriter(_config.dynamicfile()));
+		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
+		final float SIM_TIME = 50;
+		return sim
+			.cutCondition(new Predicate<PedestrianArea>() {
+				@Override
+				public boolean apply(PedestrianArea input) {
+					return input.elapsedTime().floatValue() > SIM_TIME;
+				}
+			})
+			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0.03f))
+			.onStep(new FutureForceUpdaterComponent(forces))
+			.onStep(new FuturePositionUpdaterComponent())
+			.onStep(new PedestrianForceUpdaterComponent(forces))
+			.onStep(new PedestrianPositionUpdaterComponent())
+			.onStep(new RemovePedestriansOnTarget())
+			.onStep(new ProducePedestrians(_config.pedestrianFactory()))
+			.onStep(new PedestrianAreaStep() {
+				private int _lastP = 0;
+				@Override
+				public void update(PedestrianArea input) {
+					input.addElapsedTime(input.timeStep());
+					int p = (int) (input.elapsedTime().floatValue() * 100 / SIM_TIME);
+					if (p != _lastP && p % 10 == 0) {
+						System.out.println("Simulated: " + p + "%");
+						_lastP = p;
+					}
+				}
+			})
+			.onEnd(new Function<PedestrianArea, PedestrianArea>() {
+				@Override
+				public PedestrianArea apply(PedestrianArea input) {
+					try {
+						fileCloser.close();
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
+					return input;
+				}
+			})
+		;
+	}
+
+	private FileWriter newFileWriter(File file) {
+		try {
+			return new FileWriter(file);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
 		}
-
 	}
 
 }

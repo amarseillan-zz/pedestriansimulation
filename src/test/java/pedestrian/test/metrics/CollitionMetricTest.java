@@ -1,8 +1,9 @@
 package pedestrian.test.metrics;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 import ar.edu.itba.pedestriansim.metric.component.CollitionCount;
 
@@ -21,8 +22,7 @@ public class CollitionMetricTest {
 		collitionCount.onIterationStart();
 		collitionCount.onCollition(0, 1, 2);
 		collitionCount.onIterationEnd();
-		
-		Assert.isTrue(collitionCount.getCount() == 1);
+		Assert.assertTrue(collitionCount.getCount() == 1);
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class CollitionMetricTest {
 		collitionCount.onCollition(0, 1, 2);
 		collitionCount.onIterationEnd();
 		
-		Assert.isTrue(collitionCount.getCount() == 1);
+		Assert.assertTrue(collitionCount.getCount() == 1);
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class CollitionMetricTest {
 		collitionCount.onCollition(0, 1, 2);
 		collitionCount.onIterationEnd();
 		
-		Assert.isTrue(collitionCount.getCount() == 2);
+		Assert.assertTrue(collitionCount.getCount() == 2);
 	}
 	
 	@Test
@@ -76,7 +76,7 @@ public class CollitionMetricTest {
 		collitionCount.onCollition(0, 3, 2);
 		collitionCount.onIterationEnd();
 		
-		Assert.isTrue(collitionCount.getCount() == 3);
+		Assert.assertTrue(collitionCount.getCount() == 3);
 	}
 	
 }
