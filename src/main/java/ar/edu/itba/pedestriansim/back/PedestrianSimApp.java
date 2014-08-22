@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import ar.edu.itba.command.CommandParser;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
@@ -27,6 +28,11 @@ import com.google.common.base.Predicate;
 import com.google.common.io.Closer;
 
 public class PedestrianSimApp implements Runnable {
+
+	public static final CommandParser parser;
+	static {
+		parser = new CommandParser();
+	}
 
 	public static void main(String[] args) {
 		new PedestrianSimApp(new CrossingConfig().get()).run();
@@ -74,7 +80,7 @@ public class PedestrianSimApp implements Runnable {
 					input.addElapsedTime(input.timeStep());
 					int p = (int) (input.elapsedTime().floatValue() * 100 / SIM_TIME);
 					if (p != _lastP && p % 10 == 0) {
-						System.out.println("Simulated: " + p + "%");
+						System.out.println(p + "%");
 						_lastP = p;
 					}
 				}

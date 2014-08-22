@@ -12,6 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import ar.edu.itba.command.CommandParser;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
@@ -24,6 +25,11 @@ import com.google.common.base.Predicate;
 import com.google.common.io.Closer;
 
 public class GUIPedestrianSim extends BasicGame {
+
+	public static final CommandParser parser;
+	static {
+		parser = new CommandParser();
+	}
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim());
