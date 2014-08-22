@@ -12,9 +12,19 @@ import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 
 public class CrossingConfig implements ApplicationConfigBuilder {
 
+	private ApplicationConfigBuilder _defaultBuilder;
+	
+	public CrossingConfig() {
+		this(new DefaultPedestrianAppConfig());
+	}
+
+	public CrossingConfig(ApplicationConfigBuilder defaultBuilder) {
+		_defaultBuilder = defaultBuilder;
+	}
+
 	@Override
 	public PedestrianAppConfig get() {
-		PedestrianAppConfig config = new DefaultPedestrianAppConfig().get();
+		PedestrianAppConfig config = _defaultBuilder.get();
 		addWalls(config.pedestrianArea());
 		addSource1(config.pedestrianArea());
 		addSource2(config.pedestrianArea());

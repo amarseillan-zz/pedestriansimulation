@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
@@ -32,11 +31,15 @@ public class ParsedCommand {
 	}
 
 	public String param(String key) {
-		return Preconditions.checkNotNull(_values.get(key));
+		return Preconditions.checkNotNull(paramOpt(key));
 	}
 
-	public Optional<String> tryParam(String key) {
-		return Optional.fromNullable(_values.get(key));
+	public String paramOpt(String key) {
+		return _values.get(key);
+	}
+
+	public boolean hasParam(String key) {
+		return paramOpt(key) != null;
 	}
 
 	private Function<Entry<CommandParam, String>, String> getErrorMessage() {

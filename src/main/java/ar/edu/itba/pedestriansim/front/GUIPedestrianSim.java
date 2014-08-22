@@ -1,8 +1,10 @@
 package ar.edu.itba.pedestriansim.front;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Scanner;
 
 import org.newdawn.slick.AppGameContainer;
@@ -12,9 +14,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import ar.edu.itba.command.CommandParam;
 import ar.edu.itba.command.CommandParser;
+import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
+import ar.edu.itba.pedestriansim.back.config.ApplicationConfigBuilder;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.PedestrianConfigurationFromFile;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
@@ -28,11 +34,26 @@ public class GUIPedestrianSim extends BasicGame {
 
 	public static final CommandParser parser;
 	static {
-		parser = new CommandParser();
+		parser = new CommandParser()
+			.param(new CommandParam("-config").message("Archivo (.properties) de donde se va a leer la configuracion de la aplicacion."))
+		;
 	}
 
-	public static void main(String[] args) throws SlickException {
-		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim());
+	public static void main(String[] args) throws SlickException, IOException {
+		ParsedCommand cmd = parser.parse(args);
+		if (cmd.hasErrors()) {
+			System.out.println(cmd.getErrorString());
+			return;
+		}
+		ApplicationConfigBuilder configBuilder;
+		if (cmd.hasParam("-config")) {
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(cmd.param("-config")));
+			configBuilder = new CrossingConfig(new PedestrianConfigurationFromFile(properties));
+		} else {
+			configBuilder = new CrossingConfig();
+		}
+		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(configBuilder));
 		appContainer.setUpdateOnlyWhenVisible(false);
 		appContainer.setDisplayMode(1200, 700, false);
 		appContainer.start();
@@ -44,9 +65,9 @@ public class GUIPedestrianSim extends BasicGame {
 	private PedestrianAreaRenderer _renderer;
 	private boolean _simulationIsFinished = false;
 
-	public GUIPedestrianSim() {
+	public GUIPedestrianSim(ApplicationConfigBuilder configBuilder) {
 		super("Pedestrian simulation");
-		_config = new CrossingConfig().get();
+		_config = configBuilder.get();
 		// XXX: Run back-end first!
 		new PedestrianSimApp(_config).run();
 	}
