@@ -1,5 +1,7 @@
 package ar.edu.itba.pedestriansim.back.config;
 
+import static java.util.Arrays.asList;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,6 +36,7 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 			.setStaticfile(new File(get("staticfile")))
 			.setDynamicfile(new File(get("dynamicfile")))
 			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r))
+			.makeNewRun(getBoolean("makeNewRun"))
 		;
 	}
 
@@ -48,6 +51,17 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 
 	private String get(String key) {
 		return _properties.getProperty(key).trim();
+	}
+	
+	private boolean getBoolean(String key) {
+		String value = get(key);
+		if (asList("true", "1").contains(value)) {
+			return true;
+		}
+		if (asList("false", "0").contains(value)) {
+			return false;
+		}
+		throw new IllegalArgumentException("Invalid boolean: " + value);
 	}
 
 }

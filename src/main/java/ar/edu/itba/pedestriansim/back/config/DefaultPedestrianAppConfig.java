@@ -14,6 +14,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		PedestrianAppConfig config = new PedestrianAppConfig()
+			.makeNewRun(true)
 			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))
 			.setAlpha(800)
 			.setBeta(0.7f)
@@ -23,6 +24,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 			.setExternalForceThreshold(0)
 			.setStaticfile(new File("static.txt"))
 			.setDynamicfile(new File("dynamic.txt"))
+			.setSimulationTime(70)
 			;
 		Range<Float> mass = Range.closed(60f, 80f);
 		Range<Float> velocity = Range.closed(1.4f, 1.6f);

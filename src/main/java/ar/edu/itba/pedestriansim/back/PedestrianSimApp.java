@@ -58,12 +58,11 @@ public class PedestrianSimApp implements Runnable {
 		FileWriter staticWriter = fileCloser.register(newFileWriter(_config.staticfile()));
 		FileWriter dynamicWriter = fileCloser.register(newFileWriter(_config.dynamicfile()));
 		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
-		final float SIM_TIME = 50;
 		return sim
 			.cutCondition(new Predicate<PedestrianArea>() {
 				@Override
 				public boolean apply(PedestrianArea input) {
-					return input.elapsedTime().floatValue() > SIM_TIME;
+					return input.elapsedTime().floatValue() > _config.simulationTime();
 				}
 			})
 			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0.03f))
@@ -78,9 +77,9 @@ public class PedestrianSimApp implements Runnable {
 				@Override
 				public void update(PedestrianArea input) {
 					input.addElapsedTime(input.timeStep());
-					int p = (int) (input.elapsedTime().floatValue() * 100 / SIM_TIME);
+					int p = (int) (input.elapsedTime().floatValue() * 100 / _config.simulationTime());
 					if (p != _lastP && p % 10 == 0) {
-						System.out.println(p + "%");
+//						System.out.println(p + "%");
 						_lastP = p;
 					}
 				}

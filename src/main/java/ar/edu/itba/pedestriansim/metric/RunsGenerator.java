@@ -25,7 +25,7 @@ public class RunsGenerator {
 		;
 	}
 
-	private static final int RUNS_COUNT = 1;
+	private static final int RUNS_COUNT = 3;
 
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
