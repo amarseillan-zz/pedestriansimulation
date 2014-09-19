@@ -22,6 +22,9 @@ public class PedestrianAppConfig {
 	private float _wallBeta;
 	private float externalForceRadiusThreshold;
 	private float externalForceThreshold;
+	private float _simulationTime;
+
+	private boolean _makeNewRun;
 
 	public PedestrianArea pedestrianArea() {
 		return _pedestrianArea;
@@ -121,4 +124,23 @@ public class PedestrianAppConfig {
 	public float wallBeta() {
 		return _wallBeta;
 	}
+
+	public PedestrianAppConfig setSimulationTime(float simulationTime) {
+		_simulationTime = simulationTime;
+		return this;
+	}
+
+	public float simulationTime() {
+		return _simulationTime;
+	}
+
+	public PedestrianAppConfig makeNewRun(boolean makeNewRun) {
+		_makeNewRun = makeNewRun;
+		return this;
+	}
+
+	public boolean isMakeNewRun() {
+		return _makeNewRun;
+	}
+
 }

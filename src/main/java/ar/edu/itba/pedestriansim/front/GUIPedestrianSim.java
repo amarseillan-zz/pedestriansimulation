@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -32,6 +33,7 @@ import com.google.common.io.Closer;
 
 public class GUIPedestrianSim extends BasicGame {
 
+	public static final Logger logger = Logger.getLogger(GUIPedestrianSim.class);
 	public static final CommandParser parser;
 	static {
 		parser = new CommandParser()
@@ -68,8 +70,12 @@ public class GUIPedestrianSim extends BasicGame {
 	public GUIPedestrianSim(ApplicationConfigBuilder configBuilder) {
 		super("Pedestrian simulation");
 		_config = configBuilder.get();
-		// XXX: Run back-end first!
-		new PedestrianSimApp(_config).run();
+		if (_config.isMakeNewRun()) {
+			logger.info("Creating a new run");
+			new PedestrianSimApp(_config).run();
+		} else {
+			logger.info("Assuming already defined run on given configuration");
+		}
 	}
 
 	@Override

@@ -34,19 +34,19 @@ public class CalculateMetricsFromFile {
 	private List<Metric> allMetrics;
 	private FileWriter outputFileWriter;
 	private Boolean prettyPrint;
-	
-	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter, Boolean prettyPrint) {
+
+	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter,
+			Boolean prettyPrint) {
 		_stepsSupplier = stepsSupplier;
 		this.prettyPrint = prettyPrint;
 		boolean staticSupplierFinished;
 		do {
-			StaticFileLine fileLine = staticStepSupplier.get();	
+			StaticFileLine fileLine = staticStepSupplier.get();
 			staticSupplierFinished = fileLine == null;
 			if (!staticSupplierFinished) {
 				allPedestrianStaticInfoById.put(fileLine.id(), fileLine);
 			}
-		} while(!staticSupplierFinished);
-		
+		} while (!staticSupplierFinished);
 		this.outputFileWriter = outputFileWriter;
 		collitionMetrics = new ArrayList<CollitionMetric>(5);
 		simpleMetrics = new ArrayList<SimpleMetric>(5);
@@ -69,47 +69,49 @@ public class CalculateMetricsFromFile {
 	}
 
 	public void runMetrics(float delta) {
-		while(update(delta));
+		while (update(delta))
+			;
 		onSimulationEnd();
 	}
 
 	public boolean update(float delta) {
-		for (Metric metric: allMetrics) {
+		for (Metric metric : allMetrics) {
 			metric.onIterationStart();
 		}
 		DymaimcFileStep step = _stepsSupplier.get();
 		if (step == null) {
-			return false;	// XXX: simulation finished!
+			return false; // XXX: simulation finished!
 		}
 		List<PedestrianDynamicLineInfo> pedestrians = step.pedestriansInfo();
-		for (int i = 0; i<pedestrians.size(); i++) {
+		for (int i = 0; i < pedestrians.size(); i++) {
 			PedestrianDynamicLineInfo p1 = pedestrians.get(i);
-			for (int j = i+1; j<pedestrians.size(); j++) {
+			for (int j = i + 1; j < pedestrians.size(); j++) {
 				PedestrianDynamicLineInfo p2 = pedestrians.get(j);
-				// TODO: esto es una simple verificacion de distancia, podria ser mucho mas eficiente!
+				// TODO: esto es una simple verificacion de distancia, podria
+				// ser mucho mas eficiente!
 				float radius1 = allPedestrianStaticInfoById.get(p1.id()).radius();
 				Shape cs1 = new Circle(p1.center().getX(), p1.center().getY(), radius1);
 				float radius2 = allPedestrianStaticInfoById.get(p2.id()).radius();
 				Shape cs2 = new Circle(p2.center().getX(), p2.center().getY(), radius2);
 				if (Collitions.touching(cs1, cs2)) {
-					for (CollitionMetric metric: collitionMetrics) {
+					for (CollitionMetric metric : collitionMetrics) {
 						metric.onCollition(delta, p1.id(), p2.id());
 					}
 				}
 			}
-			for (SimpleMetric metric: simpleMetrics) {
+			for (SimpleMetric metric : simpleMetrics) {
 				metric.update(delta, p1, allPedestrianStaticInfoById.get(p1.id()));
 			}
 		}
-		for (Metric metric: allMetrics) {
+		for (Metric metric : allMetrics) {
 			metric.onIterationEnd();
 		}
 		return true;
 	}
-	
+
 	public void onSimulationEnd() {
 		try {
-			for (Metric metric: allMetrics) {
+			for (Metric metric : allMetrics) {
 				metric.appendResults(outputFileWriter, prettyPrint);
 			}
 			outputFileWriter.append("\n");

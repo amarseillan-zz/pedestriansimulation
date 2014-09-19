@@ -1,8 +1,0 @@
-Cosas para hacer para la próxima:
-	Hacer el target que sea una linea en vez de un punto, si tocan esa linea desaparecen/cambian target.
-Si llegamos a hacer esto, empezar a implementar la zanahoria.
-	Definir un nombre
-	Que la longitud pueda ser variable (después vemos si la dejamos fija o no pero que esté la opción)
-	Definir la interacción entre zanahorias.
-	Definir interacción entre zanahoria y pared o particula y pared(pensar más que nada esto)
-	Ponerle un ruido pequeño a esta zanahoria.
