@@ -44,7 +44,7 @@ public class RigidBody {
 		return _collitionShape.getRadius();
 	}
 
-	public void setLocation(Vector2f location) {
+	public void setCenter(Vector2f location) {
 		_center.set(location);
 	}
 

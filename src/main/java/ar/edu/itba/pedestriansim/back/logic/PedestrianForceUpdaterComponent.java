@@ -11,14 +11,14 @@ import ar.edu.itba.pedestriansim.back.entity.force.SpringForceModel;
 public class PedestrianForceUpdaterComponent extends PedestrianAreaStep {
 
 	private static final Vector2f nullForce = new Vector2f();
-	
+
 	private final Vector2f forces = new Vector2f();
 	private final PedestrianForces _pedestrianForces;
 
 	public PedestrianForceUpdaterComponent(PedestrianForces pedestrianForces) {
 		_pedestrianForces = pedestrianForces;
 	}
-	
+
 	@Override
 	public void update(PedestrianArea input) {
 		for (Pedestrian subject : input.pedestrians()) {

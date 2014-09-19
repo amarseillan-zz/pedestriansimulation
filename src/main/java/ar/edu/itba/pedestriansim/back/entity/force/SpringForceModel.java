@@ -13,9 +13,9 @@ public class SpringForceModel {
 
 	private static final float WALL_MAGIC = 10;
 	private final Vector2f cache = new Vector2f();
-	
+
 	private final float _K = 10000;
-	private final Vector2f closestPointCache = new  Vector2f();
+	private final Vector2f closestPointCache = new Vector2f();
 	private final Vector2f nullForce = new Vector2f();
 
 	public Vector2f getForce(CircularShape cshape1, CircularShape cshape2) {
@@ -39,7 +39,7 @@ public class SpringForceModel {
 			Line closest = null;
 			float closestDistance = 0;
 			Line border = new Line(0, 0);
-			for (int i =  0; i < 4; i++) {
+			for (int i = 0; i < 4; i++) {
 				border.set(rectangle.getPoint(i), rectangle.getPoint((i + 1) % 4));
 				float currDistance = border.distance(shape1.getCenter());
 				if (closest == null || currDistance < closestDistance) {

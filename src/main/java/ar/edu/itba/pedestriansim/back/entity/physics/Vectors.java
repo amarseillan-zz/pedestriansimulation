@@ -15,10 +15,10 @@ public class Vectors {
 
 	private static final Vector2f nullVector = new Vector2f();
 
-	public static Vector2f nullVector() {
-//		if (nullVector.length() != 0) {
-//			throw new IllegalStateException(nullVector.toString());
-//		}
+	public static Vector2f zero() {
+		// if (nullVector.length() != 0) {
+		// throw new IllegalStateException(nullVector.toString());
+		// }
 		return nullVector;
 	}
 

@@ -11,8 +11,8 @@ public class DrivingForce {
 
 	public Vector2f getForce(RigidBody body, Vector2f target, float desiredVelocity) {
 		cache.set(target);
-		Vector2f forceDir = cache.sub(body.getCenter()).normalise();
-		Vector2f velocity = forceDir.scale(desiredVelocity);
+		Vector2f e = cache.sub(body.getCenter()).normalise();
+		Vector2f velocity = e.scale(desiredVelocity);
 		velocity.sub(body.getVelocity());
 		velocity.scale(body.getMass() / TAU);
 		return velocity;

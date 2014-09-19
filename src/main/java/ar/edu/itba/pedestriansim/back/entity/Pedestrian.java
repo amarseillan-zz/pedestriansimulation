@@ -86,7 +86,7 @@ public class Pedestrian {
 		float distance = _reactionDistance;
 		Vector2f cache = new Vector2f();
 		Vectors.pointBetween(getBody().getCenter(), targetCenter, distance, cache);
-		getFuture().getBody().setLocation(cache);
+		getFuture().getBody().setCenter(cache);
 	}
 
 	public float getReactionDistance() {

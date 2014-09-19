@@ -104,8 +104,8 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		} else {
 			Vectors.pointBetween(me.getBody().getCenter(), targetCenter, distance, _targetCache);
 		}
-		me.getFuture().getBody().setLocation(_targetCache);
-		me.getFuture().getBody().setAppliedForce(Vectors.nullVector());
-		me.getFuture().getBody().setVelocity(Vectors.nullVector());
+		me.getFuture().getBody().setCenter(_targetCache);
+		me.getFuture().getBody().setAppliedForce(Vectors.zero());
+		me.getFuture().getBody().setVelocity(Vectors.zero());
 	}
 }

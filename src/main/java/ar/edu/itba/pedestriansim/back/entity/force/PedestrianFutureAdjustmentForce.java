@@ -38,7 +38,7 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 
 	private Vector2f springSeparationPosition(Pedestrian input) {
 		if (_kSeparation == 0) {
-			return Vectors.nullVector();
+			return Vectors.zero();
 		}
 		Vector2f pedestrianCenter = input.getBody().getCenter();
 		Vector2f pedestrianFutureCenter = input.getFuture().getBody().getCenter();

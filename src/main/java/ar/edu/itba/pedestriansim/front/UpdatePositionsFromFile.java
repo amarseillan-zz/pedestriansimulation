@@ -41,7 +41,7 @@ public class UpdatePositionsFromFile extends PedestrianAreaStep {
 			StaticFileLine staticInfo = staticInfoById.get(dynamicInfo.id());
 			Pedestrian p = new Pedestrian(staticInfo.id(), staticInfo.team(), new RigidBody(staticInfo.mass(), dynamicInfo.center(), staticInfo.radius()));
 			input.addPedestrian(p);
-			p.getFuture().getBody().setLocation(dynamicInfo.futureCenter());
+			p.getFuture().getBody().setCenter(dynamicInfo.futureCenter());
 		}
 	}
 
