@@ -21,6 +21,7 @@ import ar.edu.itba.pedestriansim.back.logic.PedestrianForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianPositionUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.logic.ProducePedestrians;
 import ar.edu.itba.pedestriansim.back.logic.RemovePedestriansOnTarget;
+import ar.edu.itba.pedestriansim.back.logic.SocialForceUpdaterComponent;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -54,22 +55,25 @@ public class PedestrianSimApp implements Runnable {
 	}
 
 	private PedestrianSim configure(PedestrianSim sim) {
+		final boolean isFutureForceModel = true;
 		final Closer fileCloser = Closer.create();
-		FileWriter staticWriter = fileCloser.register(newFileWriter(_config.staticfile()));
-		FileWriter dynamicWriter = fileCloser.register(newFileWriter(_config.dynamicfile()));
-		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
 		final float SIM_TIME = 50;
-		return sim
-			.cutCondition(new Predicate<PedestrianArea>() {
-				@Override
-				public boolean apply(PedestrianArea input) {
-					return input.elapsedTime().floatValue() > SIM_TIME;
-				}
-			})
-			.onStep(new PedestrianAreaStateFileWriter(staticWriter, dynamicWriter, 0.03f))
-			.onStep(new FutureForceUpdaterComponent(forces))
-			.onStep(new FuturePositionUpdaterComponent())
-			.onStep(new PedestrianForceUpdaterComponent(forces))
+		sim.cutCondition(new Predicate<PedestrianArea>() {
+			@Override
+			public boolean apply(PedestrianArea input) {
+				return input.elapsedTime().floatValue() > SIM_TIME;
+			}
+		});
+		sim.onStep(new PedestrianAreaStateFileWriter(
+			fileCloser.register(newFileWriter(_config.staticfile())), 
+			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.03f)
+		);
+		if (isFutureForceModel) {
+			configureFutureModelComponents(sim);
+		} else {
+			configureSocialForceModelComponents(sim);
+		}
+		sim
 			.onStep(new PedestrianPositionUpdaterComponent())
 			.onStep(new RemovePedestriansOnTarget())
 			.onStep(new ProducePedestrians(_config.pedestrianFactory()))
@@ -86,17 +90,17 @@ public class PedestrianSimApp implements Runnable {
 				}
 			})
 			.onEnd(new Function<PedestrianArea, PedestrianArea>() {
-				@Override
-				public PedestrianArea apply(PedestrianArea input) {
-					try {
-						fileCloser.close();
-					} catch (IOException e) {
-						throw new IllegalStateException(e);
-					}
-					return input;
+			@Override
+			public PedestrianArea apply(PedestrianArea input) {
+				try {
+					fileCloser.close();
+				} catch (IOException e) {
+					throw new IllegalStateException(e);
 				}
-			})
-		;
+				return input;
+			}
+		});
+		return sim;
 	}
 
 	private FileWriter newFileWriter(File file) {
@@ -107,4 +111,15 @@ public class PedestrianSimApp implements Runnable {
 		}
 	}
 
+	private void configureFutureModelComponents(PedestrianSim sim) {
+		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
+		sim
+			.onStep(new FutureForceUpdaterComponent(forces))
+			.onStep(new FuturePositionUpdaterComponent())
+			.onStep(new PedestrianForceUpdaterComponent(forces));
+	}
+	
+	private void configureSocialForceModelComponents(PedestrianSim sim) {
+		sim.onStep(new SocialForceUpdaterComponent());
+	}
 }
