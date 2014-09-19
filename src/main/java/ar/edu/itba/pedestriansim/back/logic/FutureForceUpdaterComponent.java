@@ -1,7 +1,5 @@
 package ar.edu.itba.pedestriansim.back.logic;
 
-import static java.lang.Math.abs;
-
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -88,10 +86,11 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 	}
 
 	private boolean isOnBack(Pedestrian p1, Pedestrian p2) {
-		Vector2f p1Center = p1.getBody().getCenter();
-		Vector2f p1f1 = p1.getFuture().getBody().getCenter().copy().sub(p1Center);
-		Vector2f p1p2 = p2.getBody().getCenter().copy().sub(p1Center);
-		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
+//		Vector2f p1Center = p1.getBody().getCenter();
+//		Vector2f p1f1 = p1.getFuture().getBody().getCenter().copy().sub(p1Center);
+//		Vector2f p1p2 = p2.getBody().getCenter().copy().sub(p1Center);
+//		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
+		return false;
 	}
 
 	private static final Vector2f _targetCache = new Vector2f();
