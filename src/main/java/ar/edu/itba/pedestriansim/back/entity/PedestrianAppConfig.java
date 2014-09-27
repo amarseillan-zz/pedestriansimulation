@@ -16,10 +16,6 @@ public class PedestrianAppConfig {
 
 	private Vector2f _areaDimention;
 
-	private float _alpha;
-	private float _beta;
-	private float _wallAlpha;
-	private float _wallBeta;
 	private float externalForceRadiusThreshold;
 	private float externalForceThreshold;
 	private float _simulationTime;
@@ -57,24 +53,6 @@ public class PedestrianAppConfig {
 		return _areaDimention;
 	}
 
-	public PedestrianAppConfig setAlpha(float alpha) {
-		_alpha = alpha;
-		return this;
-	}
-
-	public float alpha() {
-		return _alpha;
-	}
-
-	public PedestrianAppConfig setBeta(float beta) {
-		_beta = beta;
-		return this;
-	}
-
-	public float beta() {
-		return _beta;
-	}
-
 	public PedestrianAppConfig setPedestrianFactory(PedestrianFactory pedestrianFactory) {
 		this.pedestrianFactory = pedestrianFactory;
 		return this;
@@ -105,24 +83,6 @@ public class PedestrianAppConfig {
 	public PedestrianAppConfig setTimeStep(BigDecimal timeStep) {
 		pedestrianArea().setTimeStep(timeStep);
 		return this;
-	}
-
-	public PedestrianAppConfig setWallAlpha(float wallAlpha) {
-		_wallAlpha = wallAlpha;
-		return this;
-	}
-
-	public float wallAlpha() {
-		return _wallAlpha;
-	}
-
-	public PedestrianAppConfig setWallBeta(float wallBeta) {
-		_wallBeta = wallBeta;
-		return this;
-	}
-
-	public float wallBeta() {
-		return _wallBeta;
 	}
 
 	public PedestrianAppConfig setSimulationTime(float simulationTime) {

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Properties;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.factory.PedestrianFactory;
 
@@ -25,19 +27,16 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 		Range<Float> mass = getRange("mass");
 		Range<Float> velocity = getRange("velocity");
 		Range<Float> r = getRange("r");
+		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(getFloat("alpha"), getRange("beta"));
+		Pair<Float, Float> wallAlphaBeta = Pair.of(getFloat("wallAlpha"), getFloat("wallBeta"));
 		return new PedestrianAppConfig()
 			.setTimeStep(new BigDecimal(get("timeStep")).setScale(5, RoundingMode.UP))
-			.setAlpha(getFloat("alpha"))
-			.setBeta(getFloat("beta"))
-			.setWallAlpha(getFloat("wallAlpha"))
-			.setWallBeta(getFloat("wallBeta"))
 			.setExternalForceRadiusThreshold(getFloat("externalForceRadiusThreshold"))
 			.setExternalForceThreshold(getFloat("externalForceThreshold"))
 			.setStaticfile(new File(get("staticfile")))
 			.setDynamicfile(new File(get("dynamicfile")))
-			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r))
-			.makeNewRun(getBoolean("makeNewRun"))
-		;
+			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta))
+			.makeNewRun(getBoolean("makeNewRun"));
 	}
 
 	private Range<Float> getRange(String key) {

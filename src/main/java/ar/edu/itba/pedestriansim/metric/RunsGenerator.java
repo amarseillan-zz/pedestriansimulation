@@ -2,6 +2,7 @@ package ar.edu.itba.pedestriansim.metric;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +15,9 @@ import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Range;
 
+@SuppressWarnings("serial")
 public class RunsGenerator {
 
 	public static final CommandParser parser;
@@ -45,7 +48,11 @@ public class RunsGenerator {
 	private final boolean prettyPrint = false;
 	private final float[] thresholds = { 0.01f, 0.01f, 1f, 10f };
 	private final float[] alphas = { 600, 700, 800, 900 };
-	private final float[] betas = { 0.5f, 0.6f, 0.7f, 0.8f };
+	private List<Range<Float>> betas = new LinkedList<Range<Float>>() {{
+		add(Range.closed(0.55f, 0.75f));
+		add(Range.closed(0.65f, 0.85f));
+		add(Range.closed(0.75f, 0.95f));
+	}};
 
 	private final File _metricsDirectory;
 	private final File runsDirectory;
@@ -64,7 +71,7 @@ public class RunsGenerator {
 		final MetricsAvg avg = new MetricsAvg(new File(_metricsDirectory + File.separator + "avg.txt"));
 		for (final float threshold : thresholds) {
 			for (final float alpha : alphas) {
-				for (final float beta : betas) {
+				for (final Range<Float> beta : betas) {
 					executor.execute(new Runnable() {
 						@Override
 						public void run() {
@@ -75,17 +82,18 @@ public class RunsGenerator {
 							avg.calculate(id, output);
 						}
 
-						private String buildFileId(float threshold, float alpha, float beta) {
+						private String buildFileId(float threshold, float alpha, Range<Float> beta) {
 							return "b=" + beta + "-a=" + alpha + "-t=" + threshold;
 						}
 					});
 				}
 			}
 		}
+
 		
 	}
 
-	private List<PedestrianAppConfig> runSimulations(String id, float alpha, float beta, float threshold) {
+	private List<PedestrianAppConfig> runSimulations(String id, float alpha, Range<Float> beta, float threshold) {
 		List<PedestrianAppConfig> runs = Lists.newArrayList();
 		for (int runNumber = 0; runNumber < RUNS_COUNT; runNumber++) {
 			String fileId = id + "-c=" + runNumber;
@@ -93,7 +101,8 @@ public class RunsGenerator {
 			PedestrianAppConfig config = new CrossingConfig().get();
 			config.setStaticfile(new File(runsDirectory + File.separator + fileId + "-static.txt"));
 			config.setDynamicfile(new File(runsDirectory + File.separator + fileId + "-dynamic.txt"));
-			config.setAlpha(alpha).setBeta(beta).setExternalForceThreshold(threshold);
+			config.pedestrianFactory().setPedestrianAlphaBeta(alpha, beta);
+			config.setExternalForceThreshold(threshold);
 			if (_newRun) {
 				new PedestrianSimApp(config).run();
 			}

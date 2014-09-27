@@ -1,5 +1,6 @@
 package ar.edu.itba.pedestriansim.back.factory;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.common.rand.RandomGenerator;
@@ -17,15 +18,38 @@ public class PedestrianFactory {
 	private final RandomGenerator _velocityGenerator;
 	private final RandomGenerator _radiusGenerator;
 
-	public PedestrianFactory(Range<Float> mass, Range<Float> velocity, Range<Float> r) {
+	private float _pedestrianAlpha;
+	private RandomGenerator _pedestrianBetaGenerator;
+
+	private float _wallAlpha;
+	private float _wallBeta;
+
+	public PedestrianFactory(Range<Float> mass, Range<Float> velocity, Range<Float> r, Pair<Float, Range<Float>> pedestrianAlphaBeta,
+			Pair<Float, Float> wallAlphaBeta) {
 		_massGenerator = new UniformRandomGenerator(mass);
 		_velocityGenerator = new UniformRandomGenerator(velocity);
 		_radiusGenerator = new UniformRandomGenerator(r);
+		setPedestrianAlphaBeta(pedestrianAlphaBeta.getLeft(), pedestrianAlphaBeta.getRight());
+		setWallAlphaBeta(wallAlphaBeta.getLeft(), wallAlphaBeta.getRight());
+	}
+
+	public PedestrianFactory setPedestrianAlphaBeta(float alpha, Range<Float> beta) {
+		_pedestrianAlpha = alpha;
+		_pedestrianBetaGenerator = new UniformRandomGenerator(beta);
+		return this;
+	}
+
+	public PedestrianFactory setWallAlphaBeta(float alpha, Float beta) {
+		_wallAlpha = alpha;
+		_wallBeta = beta;
+		return this;
 	}
 
 	public Pedestrian build(Vector2f location, int team, PedestrianMision mission) {
 		RigidBody body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
 		Pedestrian pedestrian = new Pedestrian(lastId++, team, body);
+		pedestrian.pedestrianRepulsionForceValues().setAlpha(_pedestrianAlpha).setBeta(_pedestrianBetaGenerator.generate());
+		pedestrian.wallRepulsionForceValues().setAlpha(_wallAlpha).setBeta(_wallBeta);
 		pedestrian.setMission(mission.clone());
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
 		return pedestrian;

@@ -14,7 +14,7 @@ import com.google.common.base.Preconditions;
 public class Pedestrian {
 
 	public static final float DEFAULT_REACTION_DISTANCE = 1.5f;
-	
+
 	private Integer _id;
 	private int _team;
 	private TargetSelection targetSelection;
@@ -23,6 +23,8 @@ public class Pedestrian {
 	private RigidBody _body;
 	private float _maxVelocity;
 	private float _reactionDistance;
+	private final RepulsionForceValues _pedestrianRepulsionForceValues;
+	private final RepulsionForceValues _wallRepulsionForceValues;
 
 	public Pedestrian(Integer id, int team, RigidBody body) {
 		_id = Preconditions.checkNotNull(id);
@@ -30,6 +32,8 @@ public class Pedestrian {
 		_body = Preconditions.checkNotNull(body);
 		_future = new PedestrianFuture(1, this);
 		targetSelection = new TargetSelection(this);
+		_pedestrianRepulsionForceValues = new RepulsionForceValues();
+		_wallRepulsionForceValues = new RepulsionForceValues();
 	}
 
 	public void setMission(PedestrianMision mission) {
@@ -43,7 +47,7 @@ public class Pedestrian {
 	public int getTeam() {
 		return _team;
 	}
-	
+
 	public PedestrianMision getMission() {
 		return _mission;
 	}
@@ -64,11 +68,11 @@ public class Pedestrian {
 	public Shape getShape() {
 		return _body.getCollitionShape().getShape();
 	}
-	
+
 	public float getMaxVelocity() {
 		return _maxVelocity;
 	}
-	
+
 	public void setMaxVelocity(float maxVelocity) {
 		_maxVelocity = maxVelocity;
 	}
@@ -79,7 +83,7 @@ public class Pedestrian {
 		_body.getCenter().x += dx;
 		_body.getCenter().y += dy;
 	}
-	
+
 	public final void setReactionDistance(float reactionDistance) {
 		_reactionDistance = reactionDistance;
 		Vector2f targetCenter = getTargetSelection().getTarget().getClosesPoint(getBody().getCenter());
@@ -92,19 +96,23 @@ public class Pedestrian {
 	public float getReactionDistance() {
 		return _reactionDistance;
 	}
-	
+
 	public TargetSelection getTargetSelection() {
 		return targetSelection;
 	}
 
+	public RepulsionForceValues pedestrianRepulsionForceValues() {
+		return _pedestrianRepulsionForceValues;
+	}
+	
+	public RepulsionForceValues wallRepulsionForceValues() {
+		return _wallRepulsionForceValues;
+	}
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-			.append("id", getId())
-			.append("team", getTeam())
-			.append("location", getBody().getCenter())
-			.append("velocity", getBody().getVelocity())
-			.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter()))
-			.build();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId()).append("team", getTeam())
+				.append("location", getBody().getCenter()).append("velocity", getBody().getVelocity())
+				.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter())).build();
 	}
 }

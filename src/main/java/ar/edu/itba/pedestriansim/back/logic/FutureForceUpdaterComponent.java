@@ -36,7 +36,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 				if (subject != other && !isOnBack(subject, other)) {
 					Vector2f future1 = subject.getFuture().getBody().getCenter();
 					Vector2f future2 = other.getFuture().getBody().getCenter();
-					repulsion.add(repulsionForce.apply(future1, future2));
+					repulsion.add(repulsionForce.between(future1, future2, subject.pedestrianRepulsionForceValues()));
 				}
 			}
 			repulsion.add(obstacleCollitionForces(subject, input));
@@ -49,7 +49,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 	private static final Vector2f _wallClosestPointCache = new Vector2f();
 
-	private Vector2f obstacleCollitionForces(Pedestrian pedestrian, PedestrianArea input) {
+	private Vector2f obstacleCollitionForces(Pedestrian subjet, PedestrianArea input) {
 		final Vector2f totalRepulsionForce = new Vector2f();
 		RepulsionForce repulsionForce = _forces.getWallRepulsionForceModel();
 		for (Shape shape : input.obstacles()) {
@@ -58,11 +58,11 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 				throw new RuntimeException();
 			}
 			Line line = (Line) shape;
-			RigidBody future = pedestrian.getFuture().getBody();
+			RigidBody future = subjet.getFuture().getBody();
 			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
 			totalRepulsionForce
 				.add(_forces.getCollisitionModel().getForce(future.getCollitionShape(), line))
-				.add(repulsionForce.apply(future.getCenter(), _wallClosestPointCache))
+				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subjet.wallRepulsionForceValues()))
 			;
 		}
 		return totalRepulsionForce;
