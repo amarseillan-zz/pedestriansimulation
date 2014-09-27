@@ -23,7 +23,8 @@ public class PedestrianAreaFileSerializer {
 					if (columns.length == 0) {
 						return null;
 					}
-					line = new StaticFileLine(Integer.valueOf(columns[0]), Integer.valueOf(columns[1]), Float.valueOf(columns[2]), Float.valueOf(columns[3]));
+					line = new StaticFileLine(Integer.valueOf(columns[0]), Integer.valueOf(columns[1]), Float.valueOf(columns[2]), 
+							Float.valueOf(columns[3]), Float.valueOf(columns[4]), Float.valueOf(columns[3]));
 				}
 				return line;
 			}
@@ -61,12 +62,16 @@ public class PedestrianAreaFileSerializer {
 		private int _team;
 		private float _radius;
 		private float _mass;
+		private float _pedestrianAlpha;
+		private float _pedestrianBeta;
 
-		public StaticFileLine(int id, int team, float mass, float radius) {
+		public StaticFileLine(int id, int team, float mass, float radius, float pedestrianAlpha, float pedestrianBeta) {
 			_id = id;
 			_team = team;
 			_radius = radius;
 			_mass = mass;
+			_pedestrianAlpha = pedestrianAlpha;
+			_pedestrianBeta = pedestrianBeta;
 		}
 
 		public int id() {
@@ -83,6 +88,14 @@ public class PedestrianAreaFileSerializer {
 
 		public float mass() {
 			return _mass;
+		}
+
+		public float pedestrianAlpha() {
+			return _pedestrianAlpha;
+		}
+
+		public float pedestrianBeta() {
+			return _pedestrianBeta;
 		}
 	}
 

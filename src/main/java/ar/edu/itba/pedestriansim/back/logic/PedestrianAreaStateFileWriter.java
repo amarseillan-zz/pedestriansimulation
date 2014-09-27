@@ -10,6 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.RepulsionForceValues;
 
 import com.google.common.collect.Sets;
 
@@ -66,6 +67,11 @@ public class PedestrianAreaStateFileWriter extends PedestrianAreaStep {
 		_staticFileWriter.append(pedestrian.getBody().getMass() + "");
 		_staticFileWriter.append(COMMA);
 		_staticFileWriter.append(pedestrian.getBody().getRadius() + "");
+		RepulsionForceValues values = pedestrian.pedestrianRepulsionForceValues();
+		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(values.alpha() + "");
+		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(values.beta() + "");
 		_staticFileWriter.append(LINE_BREAK);
 	}
 

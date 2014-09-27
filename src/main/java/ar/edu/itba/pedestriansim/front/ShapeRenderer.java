@@ -35,7 +35,7 @@ public class ShapeRenderer {
 		Vector2f transform = _camera.transform(new Vector2f(x, y));
 		g.drawString(str, transform.x, transform.y);
 	}
-	
+
 	public Camera getCamera() {
 		return _camera;
 	}

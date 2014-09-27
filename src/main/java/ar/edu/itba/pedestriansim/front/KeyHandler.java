@@ -40,6 +40,7 @@ public class KeyHandler implements KeyListener {
 		handlers.add(new KeyMapping(Input.KEY_D, new ScrollRight()));
 		
 		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderDebugInfo()));
+		handlers.add(new KeyMapping(Input.KEY_V, new ToggleRenderMoreDebugInfo()));
 		handlers.add(new KeyMapping(Input.KEY_P, new PauseToogle()));
 		
 	}
@@ -150,6 +151,15 @@ public class KeyHandler implements KeyListener {
 		@Override
 		public void pressed() {
 			_renderer.toggleRenderDebugInfo();
+		}
+	}
+	private final class ToggleRenderMoreDebugInfo extends InputKey {
+		public ToggleRenderMoreDebugInfo() {
+			super(true);
+		}
+		@Override
+		public void pressed() {
+			_renderer.toggleRenderMoreDebugInfo();
 		}
 	}
 	private final class PauseToogle extends InputKey {
