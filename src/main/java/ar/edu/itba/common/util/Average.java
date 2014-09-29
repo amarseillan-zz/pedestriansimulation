@@ -16,6 +16,9 @@ public class Average {
 	}
 	
 	public Float getAverage() {
+		if (this.qty == 0) {
+			return 0f;
+		}
 		return this.count / this.qty;
 	}
 }
