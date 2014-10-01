@@ -1,0 +1,14 @@
+simulationTime = 70
+mass = 60-80
+velocity = 1.4-1.6
+r = 0.25-0.29
+alpha = 800
+beta = 0.65-0.85
+wallAlpha = 200
+wallBeta = 0.2
+timeStep = 0.005
+externalForceRadiusThreshold = 0
+externalForceThreshold = 0
+makeNewRun = true
+staticfile = static.txt
+dynamicfile = dynamic.txt
