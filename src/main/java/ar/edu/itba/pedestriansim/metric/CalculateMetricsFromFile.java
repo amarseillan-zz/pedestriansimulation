@@ -2,7 +2,6 @@ package ar.edu.itba.pedestriansim.metric;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +20,9 @@ import ar.edu.itba.pedestriansim.metric.component.CollitionCountPerInstant;
 import ar.edu.itba.pedestriansim.metric.component.CollitionMetric;
 import ar.edu.itba.pedestriansim.metric.component.Metric;
 import ar.edu.itba.pedestriansim.metric.component.SimpleMetric;
-import ar.edu.itba.pedestriansim.metric.component.VelocityByDensity;
 
 import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class CalculateMetricsFromFile {
@@ -49,24 +48,24 @@ public class CalculateMetricsFromFile {
 			}
 		} while (!staticSupplierFinished);
 		this.outputFileWriter = outputFileWriter;
-		collitionMetrics = new ArrayList<CollitionMetric>(5);
-		simpleMetrics = new ArrayList<SimpleMetric>(5);
-		allMetrics = new ArrayList<Metric>(10);
-//		CollitionCount collitionCount = new CollitionCount();
-//		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
-//		AverageVelocity averageVelocity = new AverageVelocity();
-//		AverageTravelTime averageTravelTime = new AverageTravelTime();
-//		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
-//		collitionMetrics.add(collitionCount);
-//		allMetrics.add(collitionCount);
-//		collitionMetrics.add(collitionCountPerInstant);
-//		allMetrics.add(collitionCountPerInstant);
-//		simpleMetrics.add(averageVelocity);
-//		allMetrics.add(averageVelocity);
-//		simpleMetrics.add(averageTravelTime);
-//		allMetrics.add(averageTravelTime);
-//		simpleMetrics.add(averageWalkDistance);
-//		allMetrics.add(averageWalkDistance);
+		collitionMetrics = Lists.newArrayList();
+		simpleMetrics = Lists.newArrayList();
+		allMetrics = Lists.newArrayList();
+		CollitionCount collitionCount = new CollitionCount();
+		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
+		AverageVelocity averageVelocity = new AverageVelocity();
+		AverageTravelTime averageTravelTime = new AverageTravelTime();
+		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
+		collitionMetrics.add(collitionCount);
+		allMetrics.add(collitionCount);
+		collitionMetrics.add(collitionCountPerInstant);
+		allMetrics.add(collitionCountPerInstant);
+		simpleMetrics.add(averageVelocity);
+		allMetrics.add(averageVelocity);
+		simpleMetrics.add(averageTravelTime);
+		allMetrics.add(averageTravelTime);
+		simpleMetrics.add(averageWalkDistance);
+		allMetrics.add(averageWalkDistance);
 		
 		VelocityByDensity vbd = new VelocityByDensity();
 		simpleMetrics.add(vbd);

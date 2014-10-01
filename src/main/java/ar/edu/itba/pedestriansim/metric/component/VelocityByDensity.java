@@ -3,7 +3,6 @@ package ar.edu.itba.pedestriansim.metric.component;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,18 +29,16 @@ public class VelocityByDensity implements SimpleMetric {
 	@Override
 	public void onIterationStart() {
 		count = 0L;
-		this.velocity = new Average();
+		velocity = new Average();
 	}
 
 	@Override
 	public void onIterationEnd() {
-		this.velocitiesByDensities.add(new ImmutablePair<Long, Float>(count,
-				this.velocity.getAverage()));
+		velocitiesByDensities.add(new ImmutablePair<Long, Float>(count, velocity.getAverage()));
 	}
 
 	@Override
-	public void appendResults(FileWriter writer, boolean pretty)
-			throws IOException {
+	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
 		if (pretty) {
 			writer.append("Count\tVelocity\n");
 		}
@@ -51,14 +48,13 @@ public class VelocityByDensity implements SimpleMetric {
 	}
 
 	@Override
-	public void update(float delta, PedestrianDynamicLineInfo pedestrian,
-			StaticFileLine pedestrianStaticInfo) {
-		this.count++;
-		this.velocity.add(pedestrian.velocity().length());
+	public void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo) {
+		count++;
+		velocity.add(pedestrian.velocity().length());
 	}
-	
+
 	public List<Pair<Long, Float>> getVBDs() {
-		return this.velocitiesByDensities;
+		return velocitiesByDensities;
 	}
 
 }

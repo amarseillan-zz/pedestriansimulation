@@ -57,11 +57,10 @@ public class PedestrianSimApp implements Runnable {
 	private PedestrianSim configure(PedestrianSim sim) {
 		final boolean isFutureForceModel = true;
 		final Closer fileCloser = Closer.create();
-		final float SIM_TIME = 50;
 		sim.cutCondition(new Predicate<PedestrianArea>() {
 			@Override
 			public boolean apply(PedestrianArea input) {
-				return input.elapsedTime().floatValue() > SIM_TIME;
+				return input.elapsedTime().floatValue() > _config.simulationTime();
 			}
 		});
 		sim.onStep(new PedestrianAreaStateFileWriter(
@@ -82,7 +81,7 @@ public class PedestrianSimApp implements Runnable {
 				@Override
 				public void update(PedestrianArea input) {
 					input.addElapsedTime(input.timeStep());
-					int p = (int) (input.elapsedTime().floatValue() * 100 / SIM_TIME);
+					int p = (int) (input.elapsedTime().floatValue() * 100 / _config.simulationTime());
 					if (p != _lastP && p % 10 == 0) {
 						System.out.println(p + "%");
 						_lastP = p;

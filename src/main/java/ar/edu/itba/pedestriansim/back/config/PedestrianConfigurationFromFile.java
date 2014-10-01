@@ -30,6 +30,7 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(getFloat("alpha"), getRange("beta"));
 		Pair<Float, Float> wallAlphaBeta = Pair.of(getFloat("wallAlpha"), getFloat("wallBeta"));
 		return new PedestrianAppConfig()
+			.setSimulationTime(getFloat("simulationTime"))
 			.setTimeStep(new BigDecimal(get("timeStep")).setScale(5, RoundingMode.UP))
 			.setExternalForceRadiusThreshold(getFloat("externalForceRadiusThreshold"))
 			.setExternalForceThreshold(getFloat("externalForceThreshold"))
