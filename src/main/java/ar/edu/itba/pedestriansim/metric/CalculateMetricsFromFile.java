@@ -52,25 +52,22 @@ public class CalculateMetricsFromFile {
 		collitionMetrics = new ArrayList<CollitionMetric>(5);
 		simpleMetrics = new ArrayList<SimpleMetric>(5);
 		allMetrics = new ArrayList<Metric>(10);
-//		CollitionCount collitionCount = new CollitionCount();
-//		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
-//		AverageVelocity averageVelocity = new AverageVelocity();
-//		AverageTravelTime averageTravelTime = new AverageTravelTime();
-//		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
-//		collitionMetrics.add(collitionCount);
-//		allMetrics.add(collitionCount);
-//		collitionMetrics.add(collitionCountPerInstant);
-//		allMetrics.add(collitionCountPerInstant);
-//		simpleMetrics.add(averageVelocity);
-//		allMetrics.add(averageVelocity);
-//		simpleMetrics.add(averageTravelTime);
-//		allMetrics.add(averageTravelTime);
-//		simpleMetrics.add(averageWalkDistance);
-//		allMetrics.add(averageWalkDistance);
+		CollitionCount collitionCount = new CollitionCount();
+		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
+		AverageVelocity averageVelocity = new AverageVelocity();
+		AverageTravelTime averageTravelTime = new AverageTravelTime();
+		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
+		collitionMetrics.add(collitionCount);
+		allMetrics.add(collitionCount);
+		collitionMetrics.add(collitionCountPerInstant);
+		allMetrics.add(collitionCountPerInstant);
+		simpleMetrics.add(averageVelocity);
+		allMetrics.add(averageVelocity);
+		simpleMetrics.add(averageTravelTime);
+		allMetrics.add(averageTravelTime);
+		simpleMetrics.add(averageWalkDistance);
+		allMetrics.add(averageWalkDistance);
 		
-		VelocityByDensity vbd = new VelocityByDensity();
-		simpleMetrics.add(vbd);
-		allMetrics.add(vbd);
 	}
 
 	public void runMetrics(float delta) {
