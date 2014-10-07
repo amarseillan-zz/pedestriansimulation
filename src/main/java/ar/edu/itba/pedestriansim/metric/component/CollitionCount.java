@@ -34,17 +34,17 @@ public class CollitionCount implements CollitionMetric {
 	}
 
 	@Override
-	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
-		if (pretty) {
-			writer.append("Number of collitions:\n");
-			writer.append(count + "\n");
-		} else {
-			writer.append(count + " ");
-		}
+	public void appendResults(FileWriter writer) throws IOException {
+		writer.append(String.format("%d", count));
 	}
 
 	public long getCount() {
 		return count;
+	}
+
+	@Override
+	public String name() {
+		return "Cant. Colis.";
 	}
 
 	private static class CollitionPair {
@@ -57,7 +57,7 @@ public class CollitionCount implements CollitionMetric {
 
 		@Override
 		public int hashCode() {
-			
+
 			return Integer.hashCode(_p1Id) + Integer.hashCode(_p2Id);
 		}
 

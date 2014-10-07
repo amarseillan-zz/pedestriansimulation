@@ -28,7 +28,7 @@ public class RunsGenerator {
 		;
 	}
 
-	private static final int RUNS_COUNT = 3;
+	private static final int RUNS_COUNT = 5;
 
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
@@ -45,7 +45,6 @@ public class RunsGenerator {
 		new RunsGenerator(newRun, metricsDir).generate();
 	}
 
-	private final boolean prettyPrint = false;
 	private final float[] thresholds = { 0f };
 	private final float[] alphas = { 800 };
 	private List<Range<Float>> betas = new LinkedList<Range<Float>>() {{
@@ -76,7 +75,7 @@ public class RunsGenerator {
 							String id = buildFileId(threshold, alpha, beta);
 							List<PedestrianAppConfig> runs = runSimulations(id, alpha, beta, threshold);
 							File output = new File(_metricsDirectory + File.separator + id + ".txt");
-							new MetricsRunner(output, runs, prettyPrint).run();
+							new MetricsRunner(output, runs).run();
 							avg.calculate(id, output);
 						}
 

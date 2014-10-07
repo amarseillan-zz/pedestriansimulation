@@ -2,7 +2,6 @@ package ar.edu.itba.pedestriansim.metric.component;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 
 public class CollitionCountPerInstant implements CollitionMetric {
 
@@ -28,17 +27,16 @@ public class CollitionCountPerInstant implements CollitionMetric {
 	}
 
 	@Override
-	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
-		if (pretty) {
-			writer.append("Sum of every collition in every instant:\n");
-			writer.append(count + "\n");
-		} else {
-			writer.append(count + " ");
-		}
+	public void appendResults(FileWriter writer) throws IOException {
+		writer.append(String.format("%d", count));
 	}
 
 	public long getCount() {
 		return count;
 	}
 
+	@Override
+	public String name() {
+		return "Durac. Colis.";
+	}
 }

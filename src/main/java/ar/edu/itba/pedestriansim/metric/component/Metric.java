@@ -9,6 +9,8 @@ public interface Metric {
 
 	void onIterationEnd();
 
-	void appendResults(FileWriter writer, boolean pretty) throws IOException;
+	void appendResults(FileWriter writer) throws IOException;
+
+	String name();
 
 }

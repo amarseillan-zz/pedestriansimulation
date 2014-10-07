@@ -38,10 +38,7 @@ public class VelocityByDensity implements SimpleMetric {
 	}
 
 	@Override
-	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
-		if (pretty) {
-			writer.append("Count\tVelocity\n");
-		}
+	public void appendResults(FileWriter writer) throws IOException {
 		for (Pair<Long, Float> p : velocitiesByDensities) {
 			writer.append(p.getLeft() + "\t" + p.getRight() + "\n");
 		}
@@ -57,4 +54,8 @@ public class VelocityByDensity implements SimpleMetric {
 		return velocitiesByDensities;
 	}
 
+	@Override
+	public String name() {
+		return "Velocidad por densidad";
+	}
 }

@@ -14,7 +14,7 @@ import ar.edu.itba.common.util.Average;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 
-public class AverageWalkDistance implements SimpleMetric{
+public class AverageWalkDistance implements SimpleMetric {
 
 	private Map<Serializable, Float> averageWalkPerPedestrian;
 	private Set<Serializable> current;
@@ -35,7 +35,7 @@ public class AverageWalkDistance implements SimpleMetric{
 	@Override
 	public void onIterationEnd() {
 		this.accumulated.removeAll(this.current);
-		for (Serializable id: this.accumulated) {
+		for (Serializable id : this.accumulated) {
 			this.result.add(this.averageWalkPerPedestrian.get(id));
 			this.averageWalkPerPedestrian.remove(id);
 		}
@@ -43,18 +43,12 @@ public class AverageWalkDistance implements SimpleMetric{
 	}
 
 	@Override
-	public void appendResults(FileWriter writer, boolean pretty) throws IOException {
+	public void appendResults(FileWriter writer) throws IOException {
 		Average total = new Average();
-		for (Float average: this.result) {
+		for (Float average : this.result) {
 			total.add(average);
 		}
-
-		if (pretty) {
-			writer.append("Average distance to objective: \n");
-			writer.append(total.getAverage() + "m\n");
-		} else {
-			writer.append(total.getAverage() + " ");
-		}
+		writer.append(String.format("%.3f", total.getAverage()));
 	}
 
 	@Override
@@ -62,14 +56,17 @@ public class AverageWalkDistance implements SimpleMetric{
 		Serializable id = pedestrianStaticInfo.id();
 		this.current.add(id);
 		this.accumulated.add(id);
-
 		if (!averageWalkPerPedestrian.containsKey(id)) {
 			averageWalkPerPedestrian.put(id, 0f);
 		}
-
 		Float averageTime = averageWalkPerPedestrian.get(id);
 		averageTime += delta * pedestrian.velocity().length();
 		averageWalkPerPedestrian.put(id, averageTime);
+	}
+	
+	@Override
+	public String name() {
+		return "Prom. Dist. Rec.";
 	}
 
 }

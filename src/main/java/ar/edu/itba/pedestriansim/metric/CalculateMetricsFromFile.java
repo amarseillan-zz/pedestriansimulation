@@ -9,6 +9,7 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.Dymaim
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 import ar.edu.itba.pedestriansim.metric.component.AverageTravelTime;
+import ar.edu.itba.pedestriansim.metric.component.AverageTurnedAngle;
 import ar.edu.itba.pedestriansim.metric.component.AverageVelocity;
 import ar.edu.itba.pedestriansim.metric.component.AverageWalkDistance;
 import ar.edu.itba.pedestriansim.metric.component.CollitionCount;
@@ -29,11 +30,9 @@ public class CalculateMetricsFromFile {
 	private List<SimpleMetric> simpleMetrics;
 	private List<Metric> allMetrics;
 	private FileWriter _outputFileWriter;
-	private Boolean prettyPrint;
 
-	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter, Boolean prettyPrint) {
+	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter) {
 		_stepsSupplier = stepsSupplier;
-		this.prettyPrint = prettyPrint;
 		boolean staticSupplierFinished;
 		do {
 			StaticFileLine fileLine = staticStepSupplier.get();
@@ -46,25 +45,33 @@ public class CalculateMetricsFromFile {
 		collitionMetrics = Lists.newArrayList();
 		simpleMetrics = Lists.newArrayList();
 		allMetrics = Lists.newArrayList();
-		CollitionCount collitionCount = new CollitionCount();
-		CollitionCountPerInstant collitionCountPerInstant = new CollitionCountPerInstant();
-		AverageVelocity averageVelocity = new AverageVelocity();
-		AverageTravelTime averageTravelTime = new AverageTravelTime();
-		AverageWalkDistance averageWalkDistance = new AverageWalkDistance();
-		collitionMetrics.add(collitionCount);
-		allMetrics.add(collitionCount);
-		collitionMetrics.add(collitionCountPerInstant);
-		allMetrics.add(collitionCountPerInstant);
-		simpleMetrics.add(averageVelocity);
-		allMetrics.add(averageVelocity);
-		simpleMetrics.add(averageTravelTime);
-		allMetrics.add(averageTravelTime);
-		simpleMetrics.add(averageWalkDistance);
-		allMetrics.add(averageWalkDistance);
-		
-		VelocityByDensity vbd = new VelocityByDensity();
-		simpleMetrics.add(vbd);
-		allMetrics.add(vbd);
+		addCollitionMetric(new CollitionCount());
+		addCollitionMetric(new CollitionCountPerInstant());
+		addSimpleMetric(new AverageVelocity());
+		addSimpleMetric(new AverageTravelTime());
+		addSimpleMetric(new AverageWalkDistance());
+		// addSimpleMetric(new VelocityByDensity());
+		addSimpleMetric(new AverageTurnedAngle());
+	}
+
+	public CalculateMetricsFromFile appendHeaderIf(boolean condition) throws IOException {
+		if (condition) { 
+			for (Metric metric : allMetrics) {
+				_outputFileWriter.append(metric.name() + "\t");
+			}
+			_outputFileWriter.append("\n");
+		}
+		return this;
+	}
+
+	private void addCollitionMetric(CollitionMetric metric) {
+		collitionMetrics.add(metric);
+		allMetrics.add(metric);
+	}
+
+	private void addSimpleMetric(SimpleMetric metric) {
+		simpleMetrics.add(metric);
+		allMetrics.add(metric);
 	}
 
 	public void runMetrics(float delta) {
@@ -108,7 +115,8 @@ public class CalculateMetricsFromFile {
 	public void onSimulationEnd() {
 		try {
 			for (Metric metric : allMetrics) {
-				metric.appendResults(_outputFileWriter, prettyPrint);
+				metric.appendResults(_outputFileWriter);
+				_outputFileWriter.append("\t");
 			}
 			_outputFileWriter.append("\n");
 			_outputFileWriter.flush();

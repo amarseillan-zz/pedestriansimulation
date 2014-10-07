@@ -2,20 +2,20 @@ package ar.edu.itba.common.util;
 
 public class Average {
 
-	Float count;
-	Long qty;
-	
+	private float count;
+	private long qty;
+
 	public Average() {
 		this.count = 0f;
 		this.qty = 0l;
 	}
-	
-	public void add(Float value) {
+
+	public void add(float value) {
 		this.count += value;
 		this.qty++;
 	}
-	
-	public Float getAverage() {
+
+	public float getAverage() {
 		if (this.qty == 0) {
 			return 0f;
 		}

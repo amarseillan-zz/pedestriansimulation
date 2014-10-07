@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 public class MetricsAvg {
 
 	private final FileWriter _output;
+	private boolean _headerAppended = false;
 
 	public MetricsAvg(File output) {
 		try {
@@ -21,14 +22,18 @@ public class MetricsAvg {
 		}
 	}
 
-
 	public void calculate(String name, File file) {
 		try {
 			List<List<Float>> allValues = Lists.newArrayList();
 			Scanner scanner = new Scanner(file);
+			String header = scanner.nextLine();
+			if (!_headerAppended) {
+				_output.append("Archivo\t" + header + "\n");
+				_headerAppended = true;
+			}
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine().trim();
-				String[] values = line.split(" ");
+				String[] values = line.split("\t");
 				List<Float> parsed = Lists.newArrayList();
 				for (int i = 0; i < values.length; i++) {
 					parsed.add(Float.valueOf(values[i]));
@@ -48,12 +53,12 @@ public class MetricsAvg {
 			throw new IllegalStateException();
 		}
 	}
-	
+
 	private float[][] traspose(List<List<Float>> _matrix) {
 		float[][] trasposed = new float[_matrix.get(0).size()][_matrix.size()];
 		for (int rowIndex = 0; rowIndex < _matrix.size(); rowIndex++) {
 			for (int columnIndex = 0; columnIndex < _matrix.get(0).size(); columnIndex++) {
-				
+
 				trasposed[columnIndex][rowIndex] = _matrix.get(rowIndex).get(columnIndex);
 			}
 		}
@@ -75,7 +80,7 @@ public class MetricsAvg {
 				total += (aux * aux);
 			}
 			float s = (float) Math.sqrt(total / row.length);
-			result[index++] = new Float[] { mean, s };	
+			result[index++] = new Float[] { mean, s };
 		}
 		return result;
 	}
