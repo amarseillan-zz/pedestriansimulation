@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Shape;
-
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
-import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
 import ar.edu.itba.pedestriansim.metric.component.AverageTravelTime;
 import ar.edu.itba.pedestriansim.metric.component.AverageVelocity;
 import ar.edu.itba.pedestriansim.metric.component.AverageWalkDistance;
@@ -27,16 +23,15 @@ import com.google.common.collect.Maps;
 
 public class CalculateMetricsFromFile {
 
+	private Map<Integer, StaticFileLine> _staticPedestrianInfoById = Maps.newHashMap();
 	private Supplier<DymaimcFileStep> _stepsSupplier;
-	private Map<Integer, StaticFileLine> allPedestrianStaticInfoById = Maps.newHashMap();
 	private List<CollitionMetric> collitionMetrics;
 	private List<SimpleMetric> simpleMetrics;
 	private List<Metric> allMetrics;
-	private FileWriter outputFileWriter;
+	private FileWriter _outputFileWriter;
 	private Boolean prettyPrint;
 
-	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter,
-			Boolean prettyPrint) {
+	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter, Boolean prettyPrint) {
 		_stepsSupplier = stepsSupplier;
 		this.prettyPrint = prettyPrint;
 		boolean staticSupplierFinished;
@@ -44,10 +39,10 @@ public class CalculateMetricsFromFile {
 			StaticFileLine fileLine = staticStepSupplier.get();
 			staticSupplierFinished = fileLine == null;
 			if (!staticSupplierFinished) {
-				allPedestrianStaticInfoById.put(fileLine.id(), fileLine);
+				_staticPedestrianInfoById.put(fileLine.id(), fileLine);
 			}
 		} while (!staticSupplierFinished);
-		this.outputFileWriter = outputFileWriter;
+		_outputFileWriter = outputFileWriter;
 		collitionMetrics = Lists.newArrayList();
 		simpleMetrics = Lists.newArrayList();
 		allMetrics = Lists.newArrayList();
@@ -86,25 +81,22 @@ public class CalculateMetricsFromFile {
 		if (step == null) {
 			return false; // XXX: simulation finished!
 		}
-		List<PedestrianDynamicLineInfo> pedestrians = step.pedestriansInfo();
-		for (int i = 0; i < pedestrians.size(); i++) {
-			PedestrianDynamicLineInfo p1 = pedestrians.get(i);
-			for (int j = i + 1; j < pedestrians.size(); j++) {
-				PedestrianDynamicLineInfo p2 = pedestrians.get(j);
-				// TODO: esto es una simple verificacion de distancia, podria
-				// ser mucho mas eficiente!
-				float radius1 = allPedestrianStaticInfoById.get(p1.id()).radius();
-				Shape cs1 = new Circle(p1.center().getX(), p1.center().getY(), radius1);
-				float radius2 = allPedestrianStaticInfoById.get(p2.id()).radius();
-				Shape cs2 = new Circle(p2.center().getX(), p2.center().getY(), radius2);
-				if (Collitions.touching(cs1, cs2)) {
+		List<PedestrianDynamicLineInfo> lines = step.pedestriansInfo();
+		for (int i = 0; i < lines.size(); i++) {
+			PedestrianDynamicLineInfo linei = lines.get(i);
+			for (int j = i + 1; j < lines.size(); j++) {
+				PedestrianDynamicLineInfo linej = lines.get(j);
+				StaticFileLine staticLinei = _staticPedestrianInfoById.get(linei.id());
+				StaticFileLine staticLinej = _staticPedestrianInfoById.get(linej.id());
+				float centerDist = linei.center().distance(linej.center());
+				if (centerDist <= staticLinei.radius() + staticLinej.radius()) {
 					for (CollitionMetric metric : collitionMetrics) {
-						metric.onCollition(delta, p1.id(), p2.id());
+						metric.onCollition(delta, linei.id(), linej.id());
 					}
 				}
 			}
 			for (SimpleMetric metric : simpleMetrics) {
-				metric.update(delta, p1, allPedestrianStaticInfoById.get(p1.id()));
+				metric.update(delta, linei, _staticPedestrianInfoById.get(linei.id()));
 			}
 		}
 		for (Metric metric : allMetrics) {
@@ -116,10 +108,10 @@ public class CalculateMetricsFromFile {
 	public void onSimulationEnd() {
 		try {
 			for (Metric metric : allMetrics) {
-				metric.appendResults(outputFileWriter, prettyPrint);
+				metric.appendResults(_outputFileWriter, prettyPrint);
 			}
-			outputFileWriter.append("\n");
-			outputFileWriter.flush();
+			_outputFileWriter.append("\n");
+			_outputFileWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

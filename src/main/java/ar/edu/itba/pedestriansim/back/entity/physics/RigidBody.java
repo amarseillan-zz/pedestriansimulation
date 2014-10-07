@@ -2,22 +2,25 @@ package ar.edu.itba.pedestriansim.back.entity.physics;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Vector2f;
 
 public class RigidBody {
 
 	private Vector2f _center;
-	private float _mass;
 	private Vector2f _velocity;
 	private Vector2f _appliedForce;
-	private CircularShape _collitionShape;
+	private float _mass;
+	private float _radius;
+	private Circle _shape;
 
 	public RigidBody(float mass, Vector2f location, float radius) {
 		_mass = mass;
 		_center = new Vector2f(location);
 		_velocity = new Vector2f();
 		_appliedForce = new Vector2f();
-		_collitionShape = new CircularShape(this, radius);
+		_radius = radius;
+		_shape = new Circle(location.x, location.y, radius);
 	}
 
 	public float getMass() {
@@ -41,15 +44,22 @@ public class RigidBody {
 	}
 
 	public float getRadius() {
-		return _collitionShape.getRadius();
+		return _radius;
 	}
 
-	public void setCenter(Vector2f location) {
-		_center.set(location);
+	public void setCenter(Vector2f center) {
+		_center.set(center);
+		recenterShape();
 	}
 
-	public CircularShape getCollitionShape() {
-		return _collitionShape;
+	public Circle getShape() {
+		return _shape;
+	}
+
+	private void recenterShape() {
+		_shape.setCenterX(getCenter().x);
+		_shape.setCenterY(getCenter().y);
+		_shape.setRadius(getRadius());
 	}
 
 	public void setAppliedForce(Vector2f force) {
@@ -63,12 +73,13 @@ public class RigidBody {
 	public void apply(Vector2f deltaVelocity, Vector2f deltaPosition) {
 		getVelocity().add(deltaVelocity);
 		getCenter().add(deltaPosition);
+		recenterShape();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-			.append("cener", getCenter())
+			.append("center", getCenter())
 			.append("velocity", getVelocity())
 			.append("force", getAppliedForce())
 			.build();

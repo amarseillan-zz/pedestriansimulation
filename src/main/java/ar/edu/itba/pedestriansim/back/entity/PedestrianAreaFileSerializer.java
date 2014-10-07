@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 public class PedestrianAreaFileSerializer {
 
 	private final static String SPACE = " ";
-	private final static String COMMA = "/";
+	private final static String DASH = "/";
 
 	public Supplier<StaticFileLine> staticFileInfo(final Scanner scanner) {
 		return new Supplier<StaticFileLine>() {
@@ -19,12 +19,17 @@ public class PedestrianAreaFileSerializer {
 			public StaticFileLine get() {
 				StaticFileLine line = null;
 				if (scanner.hasNextLine()) {
-					String[] columns = scanner.nextLine().split(COMMA);
+					String[] columns = scanner.nextLine().split(DASH);
 					if (columns.length == 0) {
 						return null;
 					}
-					line = new StaticFileLine(Integer.valueOf(columns[0]), Integer.valueOf(columns[1]), Float.valueOf(columns[2]), 
-							Float.valueOf(columns[3]), Float.valueOf(columns[4]), Float.valueOf(columns[3]));
+					int id = Integer.valueOf(columns[0]);
+					int team = Integer.valueOf(columns[1]);
+					float mass = Float.valueOf(columns[2]);
+					float radius = Float.valueOf(columns[3]);
+					float pedestrianAlpha = Float.valueOf(columns[4]);
+					float pedestrianBeta = Float.valueOf(columns[5]);
+					line = new StaticFileLine(id, team, mass, radius, pedestrianAlpha, pedestrianBeta);
 				}
 				return line;
 			}
@@ -39,16 +44,15 @@ public class PedestrianAreaFileSerializer {
 				if (scanner.hasNextLine()) {
 					line = new DymaimcFileStep(Float.valueOf(scanner.nextLine()));
 					while (scanner.hasNextLine() && !scanner.hasNextFloat()) {
-						String[] columns = scanner.nextLine().split(COMMA);
+						String[] columns = scanner.nextLine().split(DASH);
 						int id = Integer.valueOf(columns[0]);
 						String[] centerString = columns[1].split(SPACE);
 						Vector2f center = new Vector2f(Float.valueOf(centerString[0]), Float.valueOf(centerString[1]));
-						// TODO: unharcode this
 						String[] velocityString = columns[2].split(SPACE);
 						Vector2f velocity = new Vector2f(Float.valueOf(velocityString[0]), Float.valueOf(velocityString[1]));
-						String[] futureCenterString = columns[3].split(SPACE);
-						Vector2f futureCenter = new Vector2f(Float.valueOf(futureCenterString[0]), Float.valueOf(futureCenterString[1]));
-						PedestrianDynamicLineInfo lineInfo = new PedestrianDynamicLineInfo(id, center, velocity, futureCenter);
+						String[] futureString = columns[3].split(SPACE);
+						Vector2f future = new Vector2f(Float.valueOf(futureString[0]), Float.valueOf(futureString[1]));
+						PedestrianDynamicLineInfo lineInfo = new PedestrianDynamicLineInfo(id, center, velocity, future);
 						line.pedestriansInfo().add(lineInfo);
 					}
 				}
@@ -101,7 +105,7 @@ public class PedestrianAreaFileSerializer {
 
 	public static final class DymaimcFileStep {
 		private float _step;
-		private List<PedestrianDynamicLineInfo> _pedestrialsInfo = Lists.newLinkedList();
+		private List<PedestrianDynamicLineInfo> _pedestrialsInfo = Lists.newArrayList();
 
 		public DymaimcFileStep(float step) {
 			_step = step;

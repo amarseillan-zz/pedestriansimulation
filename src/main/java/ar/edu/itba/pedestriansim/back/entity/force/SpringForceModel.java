@@ -6,8 +6,9 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.pedestriansim.back.entity.physics.CircularShape;
 import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
+import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
+import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 public class SpringForceModel {
 
@@ -16,21 +17,20 @@ public class SpringForceModel {
 
 	private final float _K = 10000;
 	private final Vector2f closestPointCache = new Vector2f();
-	private final Vector2f nullForce = new Vector2f();
 
-	public Vector2f getForce(CircularShape cshape1, CircularShape cshape2) {
-		Circle shape1 = cshape1.getShape();
-		Circle shape2 = cshape2.getShape();
+	public Vector2f getForce(RigidBody body1, RigidBody body2) {
+		Circle shape1 = body1.getShape();
+		Circle shape2 = body2.getShape();
 		if (Collitions.touching(shape1, shape2)) {
 			float overlapping = Collitions.overlapping(shape1, shape2);
-			cache.set(cshape1.getCenter());
-			Vector2f director = cache.sub(cshape2.getCenter()).normalise();
+			cache.set(body1.getCenter());
+			Vector2f director = cache.sub(body2.getCenter()).normalise();
 			return director.scale(_K * overlapping);
 		}
-		return nullForce;
+		return Vectors.zero();
 	}
 
-	public Vector2f getForce(CircularShape shape1, Shape shape) {
+	public Vector2f getForce(RigidBody shape1, Shape shape) {
 		if (shape instanceof Line) {
 			return getForce(shape1, (Line) shape);
 		}
@@ -52,12 +52,12 @@ public class SpringForceModel {
 		throw new IllegalStateException("Not implemented");
 	}
 
-	public Vector2f getForce(CircularShape shape1, Line line) {
+	public Vector2f getForce(RigidBody shape1, Line line) {
 		float overlapping = Collitions.overlapping(shape1.getShape(), line);
 		if (overlapping > 0) {
 			line.getClosestPoint(shape1.getCenter(), closestPointCache);
-			return shape1.getCenter().sub(closestPointCache).scale(_K * overlapping * WALL_MAGIC);
+			return shape1.getCenter().copy().sub(closestPointCache).scale(_K * overlapping * WALL_MAGIC);
 		}
-		return nullForce;
+		return Vectors.zero();
 	}
 }

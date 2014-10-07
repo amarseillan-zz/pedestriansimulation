@@ -9,7 +9,6 @@ import org.newdawn.slick.geom.Shape;
 
 import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -45,10 +44,6 @@ public class PedestrianArea {
 		_pedestrians.add(pedestrian);
 	}
 
-	public void removePedestrians(Predicate<Pedestrian> predicate) {
-		Iterables.removeIf(pedestrians(), predicate);
-	}
-
 	public void removePedestrians(Collection<Pedestrian> pedestrians) {
 		_pedestrians.removeAll(pedestrians);
 	}
@@ -76,7 +71,7 @@ public class PedestrianArea {
 	public boolean hasCollitions(Pedestrian pedestrian) {
 		// FIXME: usar alguna estructura espacial para optimizar la busqueda
 		for (Pedestrian possible : _pedestrians) {
-			if (possible != pedestrian && Collitions.touching(possible.getShape(), pedestrian.getShape())) {
+			if (possible != pedestrian && Collitions.touching(possible.getBody().getShape(), pedestrian.getBody().getShape())) {
 				return true;
 			}
 		}

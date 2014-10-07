@@ -33,11 +33,10 @@ public class PedestrianForceUpdaterComponent extends PedestrianAreaStep {
 		Vector2f externalForces = new Vector2f();
 		SpringForceModel collitionModel = _pedestrianForces.getCollisitionModel();
 		for (Pedestrian other : input.getPedestriansAndSkip(subject)) {
-			externalForces.add(collitionModel.getForce(subject.getBody().getCollitionShape(), other.getBody().getCollitionShape()));
+			externalForces.add(collitionModel.getForce(subject.getBody(), other.getBody()));
 		}
-		for (Shape shape : input.obstacles()) {
-			Vector2f force = collitionModel.getForce(subject.getBody().getCollitionShape(), shape);
-			externalForces.add(force);
+		for (Shape obstacle : input.obstacles()) {
+			externalForces.add(collitionModel.getForce(subject.getBody(), obstacle));
 		}
 		return externalForces;
 	}

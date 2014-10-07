@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class CollitionCountPerInstant implements CollitionMetric{
+public class CollitionCountPerInstant implements CollitionMetric {
 
 	long count;
 
@@ -14,17 +14,17 @@ public class CollitionCountPerInstant implements CollitionMetric{
 
 	@Override
 	public void onIterationStart() {
-		//nothing to do
+		// nothing to do
 	}
 
 	@Override
-	public void onCollition(float miliseconds, Serializable p1, Serializable p2) {
-		count ++;
+	public void onCollition(float miliseconds, int p1, int p2) {
+		count++;
 	}
 
 	@Override
 	public void onIterationEnd() {
-		//nothing to do
+		// nothing to do
 	}
 
 	@Override

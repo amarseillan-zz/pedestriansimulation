@@ -1,6 +1,5 @@
 package ar.edu.itba.pedestriansim.back.logic;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ public class PedestrianAreaStateFileWriter extends PedestrianAreaStep {
 
 	private final static String LINE_BREAK = "\n";
 	private final static String SPACE = " ";
-	private final static String COMMA = "/";
+	private final static String DASH = "/";
 
 	private final float _stepInterval;
 	private float _timeSinceLastWrite;
@@ -54,23 +53,18 @@ public class PedestrianAreaStateFileWriter extends PedestrianAreaStep {
 
 	}
 
-	private void saveSimulationTime(BufferedWriter staticFileWriter, float time) throws IOException {
-		staticFileWriter.append(String.valueOf(time));
-		staticFileWriter.append(LINE_BREAK);
-	}
-
 	private void saveStaticStep(Pedestrian pedestrian) throws IOException {
 		_staticFileWriter.append(pedestrian.getId().toString());
-		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(DASH);
 		_staticFileWriter.append(pedestrian.getTeam() + "");
-		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(DASH);
 		_staticFileWriter.append(pedestrian.getBody().getMass() + "");
-		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(DASH);
 		_staticFileWriter.append(pedestrian.getBody().getRadius() + "");
 		RepulsionForceValues values = pedestrian.pedestrianRepulsionForceValues();
-		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(DASH);
 		_staticFileWriter.append(values.alpha() + "");
-		_staticFileWriter.append(COMMA);
+		_staticFileWriter.append(DASH);
 		_staticFileWriter.append(values.beta() + "");
 		_staticFileWriter.append(LINE_BREAK);
 	}
@@ -79,27 +73,24 @@ public class PedestrianAreaStateFileWriter extends PedestrianAreaStep {
 		BigDecimal step = pedestrianArea.elapsedTime();
 		_dynamicFileWriter.write(step + LINE_BREAK);
 		StringBuilder line = new StringBuilder();
-		// int index = 1;
-		// int pedestriansCount = _pedestrianArea.getPedestrians().size();
 		for (Pedestrian pedestrian : pedestrianArea.pedestrians()) {
 			line.append(pedestrian.getId().toString());
-			line.append(COMMA);
+			line.append(DASH);
 			Vector2f center = pedestrian.getBody().getCenter();
 			line.append(String.format("%.2f", center.x));
 			line.append(SPACE);
 			line.append(String.format("%.2f", center.y));
-			line.append(COMMA);
+			line.append(DASH);
 			Vector2f speed = pedestrian.getBody().getVelocity();
 			line.append(String.format("%.2f", speed.x));
 			line.append(SPACE);
 			line.append(String.format("%.2f", speed.y));
-			line.append(COMMA);
+			line.append(DASH);
 			Vector2f futureCenter = pedestrian.getFuture().getBody().getCenter();
 			line.append(String.format("%.2f", futureCenter.x));
 			line.append(SPACE);
 			line.append(String.format("%.2f", futureCenter.y));
 			line.append(LINE_BREAK);
-			// index++;
 		}
 		_dynamicFileWriter.write(line.toString());
 	}

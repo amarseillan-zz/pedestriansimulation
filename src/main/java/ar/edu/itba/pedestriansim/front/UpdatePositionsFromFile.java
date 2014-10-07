@@ -14,6 +14,9 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Maps;
 
 public class UpdatePositionsFromFile extends PedestrianAreaStep {
+	
+	private final int framesToSkip = 2;
+	private int frameIndex = 0;
 
 	private Supplier<DymaimcFileStep> _stepsSupplier;
 	private Map<Integer, StaticFileLine> staticInfoById = Maps.newHashMap();
@@ -36,6 +39,11 @@ public class UpdatePositionsFromFile extends PedestrianAreaStep {
 		if (step == null) {
 			return;	// XXX: simulation finished!
 		}
+		frameIndex++;
+		if (frameIndex <= framesToSkip) {
+			return;
+		}
+		frameIndex = 0;
 		input.pedestrians().clear();
 		for (PedestrianDynamicLineInfo dynamicInfo : step.pedestriansInfo()) {
 			StaticFileLine staticInfo = staticInfoById.get(dynamicInfo.id());

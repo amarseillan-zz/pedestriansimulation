@@ -105,7 +105,6 @@ public class GUIPedestrianSim extends BasicGame {
 		;
 		_camera = new Camera();
 		_camera.setZoom(20f);
-//		_camera.scrollX(1200);
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
 		gc.setTargetFrameRate(60);

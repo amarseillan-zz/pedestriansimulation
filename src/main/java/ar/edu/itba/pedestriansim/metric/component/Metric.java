@@ -6,9 +6,9 @@ import java.io.IOException;
 public interface Metric {
 
 	void onIterationStart();
-	
+
 	void onIterationEnd();
-	
+
 	void appendResults(FileWriter writer, boolean pretty) throws IOException;
-	
+
 }

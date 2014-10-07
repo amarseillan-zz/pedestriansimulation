@@ -2,7 +2,7 @@ package ar.edu.itba.pedestriansim.back.entity;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
@@ -58,15 +58,15 @@ public class Pedestrian {
 
 	public void stop() {
 		_body.getVelocity().set(0, 0);
-		getFuture().getBody().getCenter().set(getBody().getCenter());
+		getFuture().getBody().setCenter(getBody().getCenter());
 	}
 
 	public RigidBody getBody() {
 		return _body;
 	}
 
-	public Shape getShape() {
-		return _body.getCollitionShape().getShape();
+	public Circle getShape() {
+		return _body.getShape();
 	}
 
 	public float getMaxVelocity() {
@@ -77,20 +77,22 @@ public class Pedestrian {
 		_maxVelocity = maxVelocity;
 	}
 
-	public void translate(float dx, float dy) {
-		_future.getBody().getCenter().x += dx;
-		_future.getBody().getCenter().y += dy;
-		_body.getCenter().x += dx;
-		_body.getCenter().y += dy;
+	public void setCenter(Vector2f center) {
+		_future.getBody().setCenter(center);
+		_body.setCenter(center);
 	}
 
 	public final void setReactionDistance(float reactionDistance) {
 		_reactionDistance = reactionDistance;
+	}
+
+	public void recenterFuture() {
 		Vector2f targetCenter = getTargetSelection().getTarget().getClosesPoint(getBody().getCenter());
 		float distance = _reactionDistance;
 		Vector2f cache = new Vector2f();
 		Vectors.pointBetween(getBody().getCenter(), targetCenter, distance, cache);
 		getFuture().getBody().setCenter(cache);
+		
 	}
 
 	public float getReactionDistance() {

@@ -1,0 +1,14 @@
+TODOS:
+	Social fore model (comparacion de los modelos)
+	Ruido al beta 0.65 a 0.85
+	Curva de densidad con distintos valores de resorte frontal
+
+Agregar header
+B = 0.08;
+A = 2000;
+
+Metricas que muestre que el social force model no es mejor que el modelo del future
+	Se podria usar como metrica el angulo que giro en total
+	Probar aumentar el caudar (el SFM deberia ser malo con caudales grandes)
+
+Escribir manual

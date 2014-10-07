@@ -76,19 +76,15 @@ public class ProducePedestrians extends PedestrianAreaStep {
 			int tries = 0;
 			boolean hasCollition;
 			do {
-				float x = source.center().x + random.generate();
-				float y = source.center().y + random.generate();
-				Vector2f pedestrianLocation = pedestrian.getBody().getCenter();
-				pedestrian.translate(x - pedestrianLocation.x, y - pedestrianLocation.y);
+				pedestrian.setCenter(new Vector2f(source.center().x + random.generate(), source.center().y + random.generate()));
 				hasCollition = input.hasCollitions(pedestrian);
 				if (!hasCollition) {
-					// if a pedestrian could not be placed, it will be scheduled for later on
+					pedestrian.recenterFuture();
 					FutureForceUpdaterComponent.setFutureInDesiredPath(pedestrian);
 					input.addPedestrian(pedestrian);
 					source.incTotalProduced(1);
 				}
 			} while (hasCollition && tries++ < MAX_TRIES);
-
 		}
 	}
 

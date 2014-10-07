@@ -35,7 +35,7 @@ public class PedestrianRenderer extends ShapeRenderer {
 				if (_pedestrianArearenderer.isRenderMoreDebugInfo()) {
 					float alpha = pedestrian.pedestrianRepulsionForceValues().alpha();
 					float beta = pedestrian.pedestrianRepulsionForceValues().beta();
-					String str = String.format("{%.0f,%.3f}", alpha, beta);
+					String str = String.format("%d{%.0f,%.3f}", pedestrian.getId(), alpha, beta);
 					drawString(g, str, center.x, center.y);
 				}
 			}

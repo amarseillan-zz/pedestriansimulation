@@ -14,8 +14,8 @@ public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 
 	private static final float kn = 0.5f;
 	private static final float kt = 0;
-	private static final float A = 600;
-	private static final float B = 0.6f;
+	public static float A = 600;
+	public static float B = 0.6f;
 
 	private static final SpringForceModel wallCollisionForceModel = new SpringForceModel();
 	private static final DrivingForce drivingForce = new DrivingForce();
@@ -26,10 +26,7 @@ public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 			pedesitan.getFuture().getBody().setCenter(pedesitan.getBody().getCenter());
 			Vector2f force = pedesitan.getBody().getAppliedForce();
 			force.set(Vectors.zero());
-			force
-				.add(fSocial(pedesitan, input.pedestrians()))
-				.add(fCollision(pedesitan, input.obstacles()))
-				.add(fDesire(pedesitan));
+			force.add(fSocial(pedesitan, input.pedestrians())).add(fCollision(pedesitan, input.obstacles())).add(fDesire(pedesitan));
 		}
 	}
 
@@ -74,7 +71,7 @@ public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 		for (Shape obstacle : shapes) {
 			Line line = (Line) obstacle;
 			if (pedesitan.getShape().intersects(line)) {
-				f.add(wallCollisionForceModel.getForce(pedesitan.getBody().getCollitionShape(), line));
+				f.add(wallCollisionForceModel.getForce(pedesitan.getBody(), line));
 			}
 		}
 		return f;

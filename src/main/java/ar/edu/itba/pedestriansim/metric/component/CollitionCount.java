@@ -2,42 +2,35 @@ package ar.edu.itba.pedestriansim.metric.component;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 public class CollitionCount implements CollitionMetric {
 
-	long count;
-	Map<Serializable, Serializable> lastCollitions;
-	Map<Serializable, Serializable> thisCollitions;
-
-	public CollitionCount() {
-		count = 0;
-		lastCollitions = new HashMap<Serializable, Serializable>();
-		thisCollitions = new HashMap<Serializable, Serializable>();
-	}
+	private long count = 0;
+	private Set<CollitionPair> lastCollitions = Sets.newHashSet();
+	private Set<CollitionPair> currentCollitions = Sets.newHashSet();
 
 	@Override
 	public void onIterationStart() {
 		lastCollitions.clear();
-		lastCollitions.putAll(thisCollitions);
-		thisCollitions.clear();
+		lastCollitions.addAll(currentCollitions);
+		currentCollitions.clear();
 	}
 
 	@Override
-	public void onCollition(float miliseconds, Serializable p1, Serializable p2) {
-		Serializable candidate = lastCollitions.get(p1);
-		if (candidate == null || !candidate.equals(p2)) {
+	public void onCollition(float miliseconds, int p1, int p2) {
+		CollitionPair collitionPair = new CollitionPair(p1, p2);
+		boolean alreadyColliding = lastCollitions.contains(collitionPair);
+		if (!alreadyColliding) {
 			count++;
 		}
-		thisCollitions.put(p1, p2);
-		thisCollitions.put(p2, p1);
+		currentCollitions.add(collitionPair);
 	}
 
 	@Override
 	public void onIterationEnd() {
-		//nothing to do
 	}
 
 	@Override
@@ -50,9 +43,28 @@ public class CollitionCount implements CollitionMetric {
 		}
 	}
 
-
 	public long getCount() {
-		return this.count;
+		return count;
 	}
 
+	private static class CollitionPair {
+		private final int _p1Id, _p2Id;
+
+		public CollitionPair(int p1Id, int p2Id) {
+			_p1Id = p1Id;
+			_p2Id = p2Id;
+		}
+
+		@Override
+		public int hashCode() {
+			
+			return Integer.hashCode(_p1Id) + Integer.hashCode(_p2Id);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			CollitionPair other = (CollitionPair) obj;
+			return _p1Id == other._p1Id && _p2Id == other._p2Id;
+		}
+	}
 }

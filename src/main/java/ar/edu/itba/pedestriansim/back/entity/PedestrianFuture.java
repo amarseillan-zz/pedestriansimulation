@@ -17,12 +17,10 @@ public class PedestrianFuture {
 	public RigidBody getBody() {
 		return _body;
 	}
-	
+
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-			.append("body", getBody())
-			.toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("body", getBody()).toString();
 	}
 
 }
