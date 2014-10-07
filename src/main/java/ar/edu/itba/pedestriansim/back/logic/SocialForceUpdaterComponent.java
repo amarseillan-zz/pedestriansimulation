@@ -12,8 +12,8 @@ import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 
-	private static final float kn = 0.5f;
-	private static final float kt = 0;
+	private static final float kn = 120000f;
+	private static final float kt = 240000f;
 	public static float A = 600;
 	public static float B = 0.6f;
 

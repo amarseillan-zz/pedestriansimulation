@@ -41,6 +41,8 @@ public class PedestrianSimApp implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
 
+
+	private final boolean FUTURE_FORCE_MODEL = false;
 	private final PedestrianAppConfig _config;
 
 	public PedestrianSimApp(PedestrianAppConfig config) {
@@ -55,7 +57,6 @@ public class PedestrianSimApp implements Runnable {
 	}
 
 	private PedestrianSim configure(PedestrianSim sim) {
-		final boolean isFutureForceModel = true;
 		final Closer fileCloser = Closer.create();
 		sim.cutCondition(new Predicate<PedestrianArea>() {
 			@Override
@@ -67,7 +68,7 @@ public class PedestrianSimApp implements Runnable {
 			fileCloser.register(newFileWriter(_config.staticfile())), 
 			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.03f)
 		);
-		if (isFutureForceModel) {
+		if (FUTURE_FORCE_MODEL) {
 			configureFutureModelComponents(sim);
 		} else {
 			configureSocialForceModelComponents(sim);
