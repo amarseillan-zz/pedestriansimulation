@@ -48,7 +48,7 @@ public class CollitionCount implements CollitionMetric {
 	}
 
 	private static class CollitionPair {
-		private final int _p1Id, _p2Id;
+		private final Integer _p1Id, _p2Id;
 
 		public CollitionPair(int p1Id, int p2Id) {
 			_p1Id = p1Id;
@@ -57,14 +57,13 @@ public class CollitionCount implements CollitionMetric {
 
 		@Override
 		public int hashCode() {
-
-			return Integer.hashCode(_p1Id) + Integer.hashCode(_p2Id);
+			return _p1Id.hashCode() + _p2Id.hashCode();
 		}
 
 		@Override
 		public boolean equals(Object obj) {
 			CollitionPair other = (CollitionPair) obj;
-			return _p1Id == other._p1Id && _p2Id == other._p2Id;
+			return _p1Id.intValue() == other._p1Id.intValue() && _p2Id.intValue() == other._p2Id.intValue();
 		}
 	}
 }

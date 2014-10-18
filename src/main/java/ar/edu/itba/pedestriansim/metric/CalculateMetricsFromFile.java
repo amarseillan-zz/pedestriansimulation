@@ -80,7 +80,7 @@ public class CalculateMetricsFromFile {
 		onSimulationEnd();
 	}
 
-	public boolean update(float delta) {
+	public boolean update(float dt) {
 		for (Metric metric : allMetrics) {
 			metric.onIterationStart();
 		}
@@ -96,14 +96,15 @@ public class CalculateMetricsFromFile {
 				StaticFileLine staticLinei = _staticPedestrianInfoById.get(linei.id());
 				StaticFileLine staticLinej = _staticPedestrianInfoById.get(linej.id());
 				float centerDist = linei.center().distance(linej.center());
-				if (centerDist <= staticLinei.radius() + staticLinej.radius()) {
+				float deltaDist = 0.1f;
+				if (centerDist <= staticLinei.radius() + staticLinej.radius() + deltaDist) {
 					for (CollitionMetric metric : collitionMetrics) {
-						metric.onCollition(delta, linei.id(), linej.id());
+						metric.onCollition(dt, linei.id(), linej.id());
 					}
 				}
 			}
 			for (SimpleMetric metric : simpleMetrics) {
-				metric.update(delta, linei, _staticPedestrianInfoById.get(linei.id()));
+				metric.update(dt, linei, _staticPedestrianInfoById.get(linei.id()));
 			}
 		}
 		for (Metric metric : allMetrics) {

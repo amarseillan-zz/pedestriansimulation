@@ -5,6 +5,7 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.force.ExponentialRepulsionForce;
 import ar.edu.itba.pedestriansim.back.entity.force.PedestrianFutureAdjustmentForce;
 import ar.edu.itba.pedestriansim.back.entity.force.ReactionDistanceDesireForce;
+import ar.edu.itba.pedestriansim.back.entity.force.ReactionDistanceDesireForce.FunctionType;
 import ar.edu.itba.pedestriansim.back.entity.force.SpringForceModel;
 
 public class PedestrianForcesFactory {
@@ -15,7 +16,7 @@ public class PedestrianForcesFactory {
 		forces.setWallRepulsionForceModel(new ExponentialRepulsionForce());
 		forces.setExternalForceRadiusThreshold(config.getExternalForceRadiusThreshold());
 		forces.setExternalForceThreshold(config.getExternalForceThreshold());
-		forces.setDesireForce(new ReactionDistanceDesireForce());
+		forces.setDesireForce(new ReactionDistanceDesireForce(FunctionType.SQ));
 		forces.setForceOnFuture(new PedestrianFutureAdjustmentForce(150, 10, 50));
 		forces.setCollisitionModel(new SpringForceModel());
 		return forces;

@@ -41,8 +41,7 @@ public class PedestrianSimApp implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
 
-
-	private final boolean FUTURE_FORCE_MODEL = false;
+	private final boolean FUTURE_FORCE_MODEL = true;
 	private final PedestrianAppConfig _config;
 
 	public PedestrianSimApp(PedestrianAppConfig config) {
@@ -66,7 +65,7 @@ public class PedestrianSimApp implements Runnable {
 		});
 		sim.onStep(new PedestrianAreaStateFileWriter(
 			fileCloser.register(newFileWriter(_config.staticfile())), 
-			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.03f)
+			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.01f)
 		);
 		if (FUTURE_FORCE_MODEL) {
 			configureFutureModelComponents(sim);
@@ -90,16 +89,16 @@ public class PedestrianSimApp implements Runnable {
 				}
 			})
 			.onEnd(new Function<PedestrianArea, PedestrianArea>() {
-			@Override
-			public PedestrianArea apply(PedestrianArea input) {
-				try {
-					fileCloser.close();
-				} catch (IOException e) {
-					throw new IllegalStateException(e);
+				@Override
+				public PedestrianArea apply(PedestrianArea input) {
+					try {
+						fileCloser.close();
+					} catch (IOException e) {
+						throw new IllegalStateException(e);
+					}
+					return input;
 				}
-				return input;
-			}
-		});
+			});
 		return sim;
 	}
 
@@ -115,7 +114,7 @@ public class PedestrianSimApp implements Runnable {
 		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
 		sim
 			.onStep(new FutureForceUpdaterComponent(forces))
-			.onStep(new FuturePositionUpdaterComponent())
+			.onStep(new FuturePositionUpdaterComponent(true, false))
 			.onStep(new PedestrianForceUpdaterComponent(forces));
 	}
 	

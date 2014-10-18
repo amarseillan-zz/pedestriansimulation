@@ -33,6 +33,8 @@ import com.google.common.io.Closer;
 
 public class GUIPedestrianSim extends BasicGame {
 
+	private static final int FPS = 120;
+
 	public static final Logger logger = Logger.getLogger(GUIPedestrianSim.class);
 	public static final CommandParser parser;
 	static {
@@ -107,7 +109,7 @@ public class GUIPedestrianSim extends BasicGame {
 		_camera.setZoom(20f);
 		_renderer = new PedestrianAreaRenderer(_camera);
 		gc.setAlwaysRender(true);
-		gc.setTargetFrameRate(60);
+		gc.setTargetFrameRate(FPS);
 		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
 	}
 

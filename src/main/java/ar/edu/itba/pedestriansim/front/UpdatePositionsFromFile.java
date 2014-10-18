@@ -15,7 +15,7 @@ import com.google.common.collect.Maps;
 
 public class UpdatePositionsFromFile extends PedestrianAreaStep {
 	
-	private final int framesToSkip = 2;
+	private final int framesToSkip = 0;
 	private int frameIndex = 0;
 
 	private Supplier<DymaimcFileStep> _stepsSupplier;
