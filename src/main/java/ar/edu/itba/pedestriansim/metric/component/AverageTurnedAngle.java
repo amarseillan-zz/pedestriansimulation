@@ -33,7 +33,11 @@ public class AverageTurnedAngle implements SimpleMetric {
 			value.velocity.set(pedestrian.velocity());
 		} else {
 			float deltaAngle = (float) (value.velocity.getTheta() - pedestrian.velocity().getTheta());
-			value.angle += Math.abs(deltaAngle);
+			deltaAngle = Math.abs(deltaAngle);
+			if (deltaAngle > 180) {
+				deltaAngle = 360 - deltaAngle;
+			}
+			value.angle += deltaAngle;
 			value.velocity.set(pedestrian.velocity());
 		}
 	}
@@ -58,8 +62,13 @@ public class AverageTurnedAngle implements SimpleMetric {
 	}
 
 	private static class PedestrianTurnedAngle {
-		Vector2f velocity = new Vector2f();
+		final Vector2f velocity = new Vector2f();
 		float angle = 0;
+		
+		@Override
+		public String toString() {
+			return angle + "";
+		}
 	}
 
 	@Override

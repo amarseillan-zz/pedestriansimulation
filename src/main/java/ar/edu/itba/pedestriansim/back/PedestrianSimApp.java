@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import ar.edu.itba.command.CommandParser;
+import ar.edu.itba.common.rand.RandomGenerator;
+import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
@@ -24,6 +26,7 @@ import ar.edu.itba.pedestriansim.back.logic.RemovePedestriansOnTarget;
 import ar.edu.itba.pedestriansim.back.logic.SocialForceUpdaterComponent;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.io.Closer;
@@ -65,7 +68,7 @@ public class PedestrianSimApp implements Runnable {
 		});
 		sim.onStep(new PedestrianAreaStateFileWriter(
 			fileCloser.register(newFileWriter(_config.staticfile())), 
-			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.01f)
+			fileCloser.register(newFileWriter(_config.dynamicfile())), 0.02f)
 		);
 		if (FUTURE_FORCE_MODEL) {
 			configureFutureModelComponents(sim);
@@ -112,9 +115,12 @@ public class PedestrianSimApp implements Runnable {
 
 	private void configureFutureModelComponents(PedestrianSim sim) {
 		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
+		final float noiseP = 0.1f;
 		sim
 			.onStep(new FutureForceUpdaterComponent(forces))
-			.onStep(new FuturePositionUpdaterComponent(true, false))
+			.onStep(new FuturePositionUpdaterComponent(
+				Optional.of(new UniformRandomGenerator(-noiseP, noiseP)), Optional.<RandomGenerator>absent())
+			)
 			.onStep(new PedestrianForceUpdaterComponent(forces));
 	}
 	

@@ -80,7 +80,7 @@ public class RunsGenerator {
 						}
 
 						private String buildFileId(float threshold, float alpha, Range<Float> beta) {
-							return "b=" + beta + "-a=" + alpha + "-t=" + threshold;
+							return "b=" + beta.lowerEndpoint() + "-a=" + alpha + "-t=" + threshold;
 						}
 					});
 				}
