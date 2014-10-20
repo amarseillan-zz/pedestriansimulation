@@ -1,9 +1,8 @@
 % Preview source code
 
-%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.1.1 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
-\usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage{float}
 \usepackage{amstext}
@@ -15,19 +14,21 @@
 \newcommand{\lyxmathsym}[1]{\ifmmode\begingroup\def\b@ld{bold}
   \text{\ifx\math@version\b@ld\bfseries\fi#1}\endgroup\else#1\fi}
 
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
 
 \makeatother
 
-\usepackage[english]{babel}
+\usepackage{babel}
 \begin{document}
 
 \title{A Pedestrian Simulation }
 
 
-\author{Daniel Parisi, Agustin Marseillan, Castiglione Gonzalo}
+\author{Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi}
 \maketitle
 \begin{abstract}
-En este paper se presenta un nuevo método para simular peatones virtuales
+En este paper se presenta un nuevo método para simular peatónes virtuales
 basado en el modelo de la fuerza social. En el modelo presentado,
 cada peatón posee un punto movil frente a el y camina siempre hasta
 este. Este punto representa un objetivo a corto plazo que se debe
@@ -41,13 +42,13 @@ pedestrian, collision avoidance, future, force model
 \pagebreak{}
 
 
-\section{Introduccion}
+\section{Introducción}
 
 // Daniel tiene ya preparada una introducción\\
 
 
 El transito de personas es un factor de suma importancia en el análisis
-y diseño de instalaciones tales como edificios públicos, peatonales,
+y diseño de instalaciones tales como edificios públicos, peatónales,
 estaciones de trenes, entre otros. 
 
 // Hace mucho tiempo que se viene estudiando a las personas en grupo
@@ -56,101 +57,108 @@ y se sabe que
 // Existen efectos de comportamiento colectivos de auto organización
 tales como cuellos de botellas, formaciones en filas, bloqueos. 
 
-// Decir porque una simulación de peatones es útil para estas situaciones.\\
+// Decir porque una simulación de peatónes es útil para estas situaciones.\\
 
 
-Analizar estructuras de transito de peatones usando los cambios propuestos
+Analizar estructuras de transito de peatónes usando los cambios propuestos
 para el modelo de la fuerza social. Implementar una interfaz gráfica
 para poder visualizar los resultados de cambiar el modelo y cada uno
 de los parámetros
 
 
-\section{Modelo de agentes}
+\section{Formulacíon del modelo}
 
-El actual modelo se encuentra definido uncamente por peatones. Estos
-se encuentran definidos por: 
+A continuación se presentan los efectos que van a determinar el movimiento
+de un peatón:
+\begin{enumerate}
+\item El peatón desea alcanzar su objetivo a largo plazo de la manera mas
+cómoda posible. Por lo tanto va a intentar alcanzarlo sin tener que
+tomar desvios innecesarios, por ejemplo el camino mas corto.
+\item El movimiento del peatón se ve influenciado por otros peatones. Dependiendo
+de la distancia con la que se encuentre de otro peatón y la trayectoria
+que se pueda predecir de este último, un peatón va a sentir la necesidad
+de realizar cambios a la ruta deseada a fin de evitar colisiones.
+Es por este efecto que el peatón va a necesitar recalcular su trayectoria
+según nuevos peatones aparecen en su campo de visión.
+\item La velocidad de movimiento se ver influenciada según necesidades o
+estados de ánimo del peatón en cuestión.
+\end{enumerate}
+Para representar los efectos presentados, un peatón se encuentra definido
+como según se especifica a continuación: 
 \begin{itemize}
 \item Area circular 
 
 
-Representa el área física que ocupa el peatón. El radio del círculo
-es generado aleatoriamente con el fin de representar peatones diferentes.
+Representa el área física y espacio personal ocupado. El radio del
+círculo es generado aleatoriamente a fin de representar peatónes diferentes.
 El rango de valores se distribuye uniformemente en el intervalo $[0.25,0.29]$
 $[cm]$.
 
 \item Objetivo a largo plazo 
 
 
-Se represa por por un segmento de recta, al tocarse, se considera
-que el objetivo fue cumplido. Se permite la definición de múltiples
-objetivos, en cuyo caso, se deben cumplir todos de manera secuencial
-según el orden en que fueron especificados.
+Representado por un área estática. Al ser tocada, se considera al
+objetivo como cumplido. Se permite la definición de múltiples objetivos,
+en cuyo caso, se deben cumplir todos de manera secuencial según el
+orden en que fueron especificados.
 
-\item Posición objetivo a corto plazo 
+\item Objetivo a corto plazo 
 
 
-Llamado Future, representa un punto a corta distancia del peatón,
-que debe ser alcanzado. El seguir este punto garantiza que se va a
-cumplir el objetivo a largo plazo, aunque podría recorrerse un camino
-no óptimo en cuanto a distancia recorrida. Este punto es un punto
-móvil y se puede aplicar fuerzas sobre el. La masa de este punto fue
-definida fija con un valor de $1$ $[kg]$.
+Llamado Future, representa un punto a una cierta distancia del centro
+del area circular. Este es un objetivo dinámico. 
+
+
+Se encuentra representado por una masa definida fija con un valor
+de $1$ $[kg]$. No es colisionable.
 
 \item Velocidad objetivo 
 
 
-Con el fin de representar peatones que puedan estar apurados o tranquilos,
-se definió la velocidad máxima deseada de un peatón de manera aleatoria.
-El rango de valores se encuentra definido en el intervalo $[1,1.6]$
+Representa la velocidad a la que el peatón desea avanzar. Este valor
+es un valor aleatorio ya que definido en el intervalo $[1.2,1.4]$
 $[m/s]$.
 
 \item Distancia de reacción 
 
 
-Representa la distancia a la cual va a tratar de posicionar de sí
-mismo un peatón su propio future. Una mayor distancia representa un
-peatón que reacciona más rápido a una posible colisión.
+Representa la distancia a la cual se va a tratar de posicionar de
+sí mismo un peatón su propio future. Una mayor distancia representa
+un peatón que reacciona antes frente a una posible colisión.
 
 \end{itemize}
+\vspace{1cm}
+
+
 En la siguiente imagen se puede observar de manera gráfica la descripción
 de un peatón:
 
 \begin{figure}[H]
-\begin{centering}
-\includegraphics[scale=0.5]{pedestrian-top}\caption{Vista superior de un peaton}
-
-\par\end{centering}
-
+\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{Vista superior de un peatón}
 \end{figure}
 
 
-// FALTA ESPECIFICAR: 
+Se reserva el uso de las letras para repersentar a un peatón y versión
+con tilde para representar su future en el resto del documento.\\
 
-// i representa un peaton e i\textquoteright{} representa el future
-del peaton 
-
-// que se usa Euler para el calculo del dx de cada cuerpo 
-
-// el dt usado
 
 
 \section{Funcionamiento}
 
-Cada peatón en la simulación posee un objetivo a largo plazo que sea
-desea que alcance. Para asegurar que esto se cumpla, se trata siempre
-de mantener su future (objetivo a corto plazo) alineado con el camino
-más óptimo hacia su objetivo. Sin embargo, pueden darse casos en donde
-exista uno o más peatones en el camino, obligando a tener que buscar
-rutas alternativas. Es en estas circunstancias en donde el objetivo
-a corto plazo va a cambiar su dirección según corresponda. 
+Cada peatón en la simulación posee como objetivo final, alcanzar el
+objetivo a largo plazo. Para asegurar esto, se trata siempre de mantener
+al future (objetivo a corto plazo) alineado con el camino más corto
+hacia el objetivo final. Sin embargo, pueden darse casos en donde
+existan otros peatónes en esta trayectoria, obligando a tener que
+utilizar rutas alternativas. Es en estas circunstancias es cuando
+el objetivo a corto plazo va a ser trasladado según la situación. 
 
-El movimiento de los peatones se realiza de manera sincrónica y se
-calcula en cuatro etapas: 
+El movimiento de los peatónes se calcula en cuatro etapas: 
 \begin{enumerate}
 \item Cálculo de la fuerza sobre sobre cada future. 
 \item Actualización de la posición de cada future. 
 \item Cálculo de la fuerza sobre cada peatón. 
-\item Actualización de la posicion de cada peatón. \\
+\item Actualización de la posición de cada peatón. \\
 
 \end{enumerate}
 En donde, cada etapa se define de la siguiente manera:
@@ -160,66 +168,100 @@ En donde, cada etapa se define de la siguiente manera:
 
 En esta etapa, lo que se va a hacer es calcular la fuerza que sufre
 cada uno de los futures existentes debido a la existencia de otros
-peatones. Esta se realiza sólo cuando la distancia entre el peatón
+peatónes. Esta se realiza sólo cuando la distancia entre el peatón
 y su future se encuentra por encima de cierto valor. Esto es así ya
-que a altos niveles de densidad de personas. Uno ya no intenta moverse
-ya que simplemente es arrastrado por la masa de gente. \textbf{(verificar
-si es correcta esta última frase)}
+que a altos niveles de densidad de personas. Uno ya no puede moverse
+y simplemente es arrastrado por la masa de gente.
 
 
 En el caso contrario, cuando que un peatón se encuentra habilitado
-para moverse, se realiza un filtro de todos aquellos peatones que
-se encuentran a sus espaldas, ya que estos no son casos que afectam
+para moverse, se realiza un filtro de todos aquellos peatónes que
+se encuentran a sus espaldas, ya que estos no son casos que afectan
 la trayectoria de la persona. La condición que debe cumplirse para
 considerar un peatón $j$ como detrás del peatón $i$ es: 
 
 
 \[
-v=normal(i,center.target.i)
+A=(Ax,\, Ay)=i
 \]
 \[
-v_{x1x0}=v_{x1}-v_{x0}
+B=(Bx,\, By)=A+rotation(\overrightarrow{ii'},\,\pi/2)
 \]
 \[
-v_{x1x0}.x*(i.y-v_{x0}.y)-v_{x1x0}.y*(i.x-v_{x0}.x)>0
+C=(Cx,\, Cy)=j
+\]
+Luego, se debe cumplir que:
+
+
+\[
+(Bx-Ax)*(Cy-Ay)-(By-Ay)*(Cx-Ax)>0
 \]
 
 
 
-Una vez filtrado los peatones, simplemente se calcula por cada future
+Una vez filtrados los peatónes, simplemente se calcula por cada future
 restante, la fuerza de repulsión entre estos. Este se realiza utilizando
 la fórmula: 
 
 
 \[
-F_{i',j'}=\alpha e^{-dist(i',j')/\beta}
+F_{ext}(i)=\sum_{j}F_{i',j'}=\sum_{j}\alpha e^{-dist(i',j')/\beta}
 \]
 
 
 
 en donde $\alpha$ y $\beta$ son constantes predefinidas y fijas.
-Los valores que se usaron son $?$ y $?$ respectivamente. Esto produce
-que los peatones tienda siempre a alejarse de grandes multitudes más
-de lo que aleja de una sola persona. Si la suma de todas las fuerzas
-ejercidas sobre todos los demás futures $j\lyxmathsym{\textquoteright}$
-al future $i\lyxmathsym{\textquoteright}$ es menor que cierto umbral,
-entonces se desprecia esta fuerza y el future $i\lyxmathsym{\textquoteright}$
-simplemente es posicionado sobre la recta que une al peatón $i$ con
-su objetivo a largo plazo a distancia que indique la distancia de
-reacción del peatón. 
+Los valores que se usaron son $\alpha=800$ y $\beta=[0.65,\,085]$
+con distribución uniforme. Luego de calculadado $F_{ext}$, si su
+valor es menor que cierto umbral, entonces se desprecia esta fuerza
+y el future $i\lyxmathsym{\textquoteright}$ simplemente se alinea
+con el objetivo estático a distancia que indique la distancia de reacción
+del peatón. Caso contrario, cuando la contribución de las fuerzas
+externas debe considerarse, se suma la contribución del peatón $i$
+sobre su future para ajustarlo según su objetivo estático. Esta fuerza
+se calcula a usando la formula del resorte. Los extremos de este resorte
+se encuentran en el punto a distancia ``distancia de reaccion''
+sobre el segmento de recta que une al peatón $i$ con su objetivo
+estático y la posición del future $i'$.
+
+
+A modo ilustrativo, se muestra en la figura 2 como la trayectoria
+del peatón $i$ es afectada por la del peatón $j$ a través de $F(i',\, j')$
+y es alineada al objetivo con $F(i,\, i')$
 
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\caption{Fuerzas que actúan sobre el Future $i'$}
+\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{Fuerzas que actúan sobre el Future $i'$}
 \end{figure}
 
-
+\begin{enumerate}
 \item Actualización de la posición de cada future. 
 
 
 En esta etapa, simplemente se actualiza la posición de cada future
-según el cálculo de la fuerza aplicada en la etapa previa. Este cálculo
-se realiza utilizando las fórmulas Eulerianas.
+según el cálculo de la fuerza $F$ aplicada en la etapa previa. Este
+cálculo se realiza utilizando las fórmulas de Euler. 
+
+
+Para romper con situaciones con altos grados de simetría, se agrega
+ruido $P=10\%$ sobre $F$. Para esto, se aplican dos formas de ruido:
+\begin{itemize}
+\item Ruido longitudinal:
+
+\begin{itemize}
+\item Se toma un valor $p$ según una distribución aleatoria uniforme en
+el intervalo $[-P,\, P]$ y se calcula: $FL_{i'}=F_{i'}*p$
+\end{itemize}
+\item Ruido angular:
+
+\begin{itemize}
+\item Se toma $sgn=\{-1,\,1\}$ utilizando una distribución uniforme y $p$
+en $[-P,\, P]$ con la misma distribución. Luego se calcula: $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
+\end{itemize}
+\end{itemize}
+
+Por último se toma $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ y de aplican
+las ecuaciones de movimiento.
 
 \item Cálculo de la fuerza sobre cada peatón. 
 
@@ -247,28 +289,78 @@ En donde $\tau=0.5$
 La nueva posicion de cada peatón es calculada en esta etapa utilizando
 las mismas fórmulas mencionada en la etapa 2.
 
-\item Validación del modelo 
+\end{enumerate}
+\end{enumerate}
 
+\section{Validación del modelo }
+
+Los resultados obtenidos fueron comparados utilizando el modelo ``Social
+Force Model'' utilizando los valores propuestos por Dirk Helbing
+{[}2{]}. Los escenarios de prueba fueron cruce y hallway. 
+
+Los resultados fueron cuantificados utilizando las siguientes métricas:
+\begin{enumerate}
+\item Cantidad total de colisiones
+
+
+TODO: (como se calcula)
+
+\item Duración promedio de las coliciones
+
+
+TODO: (como se calcula)
+
+\item Velocidad promedio de viaje
+
+
+TODO: (como se calcula)
+
+\item Tiempo promedio de viaje 
+
+
+TODO: (como se calcula)
+
+\item Promedio de la distancia recorrida 
+
+
+TODO: (como se calcula)
+
+\item Ángulo giro promedio
+
+
+TODO: (como se calcula)
+
+\end{enumerate}
+\vspace{1cm}
+En la tabla a continuación se presentan las mediciones de las métricas
+utilizando un total de $10$ corridas:
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline 
+Valores & 1 & 2 & 3 & 4 & 5 & 6\tabularnewline
+\hline 
+\hline 
+$\alpha=800,\,\beta=[0.65,\,0.85]$ & (1.800, 0.748)  & (34.600, 8.333)  & (1.024, 0.016)  & (1.910, 0.022)  & (2.392, 0.005)  & (111.062, 19.122)\tabularnewline
+\hline 
+$\alpha=2000,\,\beta=0.08$ & (5.333, 2.625) & (12.333, 8.340)  & (1.052, 0.003)  & (1.876, 0.003)  & (2.391, 0.002)  & (106.185, 13.778)\tabularnewline
+\hline 
+\end{tabular}
 
 \textbf{// Poner Graficos indicando distancias y esquemas del future
 y la particula. }
 
-\item Conclusiones
 
+\section{Conclusiones}
 
 \textbf{// agregar al final futuras opciones que se abren con este
 trabajo}
 
-\end{enumerate}
 \pagebreak{}
-\begin{enumerate}
-\item Referencias
 
 
-{[}1{]}... Karamouzas?
-
-
-{[}2{]}...\end{enumerate}
+\section{Referencias}
+\begin{itemize}
+\item {[}1{]} ... Karamouzas ...
+\item {[}2{]} ...Helbing ...\end{itemize}
 
 \end{document}
-

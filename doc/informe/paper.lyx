@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass article
@@ -12,13 +12,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,15 +29,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -94,7 +103,7 @@ pedestrian, collision avoidance, future, force model
 \end_layout
 
 \begin_layout Section
-Introduccion
+Introducción
 \end_layout
 
 \begin_layout Standard
@@ -139,12 +148,38 @@ Analizar estructuras de transito de peatónes usando los cambios propuestos
 \end_layout
 
 \begin_layout Section
-Modelo
+Formulacíon del modelo
 \end_layout
 
 \begin_layout Standard
-El actual modelo se encuentra definido por peatónes.
- Estos defininen según: 
+A continuación se presentan los efectos que van a determinar el movimiento
+ de un peatón:
+\end_layout
+
+\begin_layout Enumerate
+El peatón desea alcanzar su objetivo a largo plazo de la manera mas cómoda
+ posible.
+ Por lo tanto va a intentar alcanzarlo sin tener que tomar desvios innecesarios,
+ por ejemplo el camino mas corto.
+\end_layout
+
+\begin_layout Enumerate
+El movimiento del peatón se ve influenciado por otros peatones.
+ Dependiendo de la distancia con la que se encuentre de otro peatón y la
+ trayectoria que se pueda predecir de este último, un peatón va a sentir
+ la necesidad de realizar cambios a la ruta deseada a fin de evitar colisiones.
+ Es por este efecto que el peatón va a necesitar recalcular su trayectoria
+ según nuevos peatones aparecen en su campo de visión.
+\end_layout
+
+\begin_layout Enumerate
+La velocidad de movimiento se ver influenciada según necesidades o estados
+ de ánimo del peatón en cuestión.
+\end_layout
+
+\begin_layout Standard
+Para representar los efectos presentados, un peatón se encuentra definido
+ como según se especifica a continuación: 
 \end_layout
 
 \begin_layout Itemize
@@ -154,8 +189,8 @@ Area circular
 \begin_deeper
 \begin_layout Standard
 Representa el área física y espacio personal ocupado.
- El radio del círculo es generado aleatoriamente con el fin de representar
- peatónes diferentes.
+ El radio del círculo es generado aleatoriamente a fin de representar peatónes
+ diferentes.
  El rango de valores se distribuye uniformemente en el intervalo 
 \begin_inset Formula $[0.25,0.29]$
 \end_inset
@@ -175,7 +210,7 @@ Objetivo a largo plazo
 \begin_deeper
 \begin_layout Standard
 Representado por un área estática.
- Al tocarse, se considera al objetivo como cumplido.
+ Al ser tocada, se considera al objetivo como cumplido.
  Se permite la definición de múltiples objetivos, en cuyo caso, se deben
  cumplir todos de manera secuencial según el orden en que fueron especificados.
 \end_layout
@@ -187,9 +222,14 @@ Objetivo a corto plazo
 
 \begin_deeper
 \begin_layout Standard
-Llamado Future, representa un punto a una cierta distancia del peatón.
+Llamado Future, representa un punto a una cierta distancia del centro del
+ area circular.
  Este es un objetivo dinámico.
- Se encuentra representado por una masa definida fija con un valor de 
+ 
+\end_layout
+
+\begin_layout Standard
+Se encuentra representado por una masa definida fija con un valor de 
 \begin_inset Formula $1$
 \end_inset
 
@@ -208,10 +248,9 @@ Velocidad objetivo
 
 \begin_deeper
 \begin_layout Standard
-Con el fin de representar peatónes que puedan estar apurados o tranquilos,
- se definió la velocidad máxima deseada de un peatón de manera aleatoria.
- El rango de valores se encuentra definido en el intervalo 
-\begin_inset Formula $[1,1.6]$
+Representa la velocidad a la que el peatón desea avanzar.
+ Este valor es un valor aleatorio ya que definido en el intervalo 
+\begin_inset Formula $[1.2,1.4]$
 \end_inset
 
  
@@ -228,7 +267,7 @@ Distancia de reacción
 
 \begin_deeper
 \begin_layout Standard
-Representa la distancia a la cual va a tratar de posicionar de sí mismo
+Representa la distancia a la cual se va a tratar de posicionar de sí mismo
  un peatón su propio future.
  Una mayor distancia representa un peatón que reacciona antes frente a una
  posible colisión.
@@ -263,7 +302,7 @@ status open
 \end_inset
 
 
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Vista superior de un peatón
@@ -288,27 +327,19 @@ Se reserva el uso de las letras para repersentar a un peatón y versión con
 
 \end_layout
 
-\begin_layout Standard
-// FALTA ESPECIFICAR:
-\end_layout
-
-\begin_layout Standard
-// el dt usado
-\end_layout
-
 \begin_layout Section
 Funcionamiento
 \end_layout
 
 \begin_layout Standard
-Cada peatón en la simulación posee un objetivo a largo plazo que sea desea
- que alcance.
- Para asegurar que esto se cumpla, se trata siempre de mantener su future
- (objetivo a corto plazo) alineado con el camino más óptimo hacia su objetivo.
- Sin embargo, pueden darse casos en donde exista uno o más peatónes en el
- camino, obligando a tener que buscar rutas alternativas.
- Es en estas circunstancias en donde el objetivo a corto plazo va a cambiar
- su dirección según corresponda.
+Cada peatón en la simulación posee como objetivo final, alcanzar el objetivo
+ a largo plazo.
+ Para asegurar esto, se trata siempre de mantener al future (objetivo a
+ corto plazo) alineado con el camino más corto hacia el objetivo final.
+ Sin embargo, pueden darse casos en donde existan otros peatónes en esta
+ trayectoria, obligando a tener que utilizar rutas alternativas.
+ Es en estas circunstancias es cuando el objetivo a corto plazo va a ser
+ trasladado según la situación.
  
 \end_layout
 
@@ -332,7 +363,7 @@ Cálculo de la fuerza sobre cada peatón.
 \end_layout
 
 \begin_layout Enumerate
-Actualización de la posicion de cada peatón.
+Actualización de la posición de cada peatón.
  
 \begin_inset Newline newline
 \end_inset
@@ -441,16 +472,14 @@ en donde
 
  son constantes predefinidas y fijas.
  Los valores que se usaron son 
-\begin_inset Formula $?$
+\begin_inset Formula $\alpha=800$
 \end_inset
 
  y 
-\begin_inset Formula $?$
+\begin_inset Formula $\beta=[0.65,\,085]$
 \end_inset
 
- respectivamente.
- Esto produce que los peatónes tienda siempre a alejarse de grandes multitudes
- más de lo que aleja de una sola persona.
+ con distribución uniforme.
  Luego de calculadado 
 \begin_inset Formula $F_{ext}$
 \end_inset
@@ -514,7 +543,7 @@ A modo ilustrativo, se muestra en la figura 2 como la trayectoria del peatón
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -526,7 +555,7 @@ status open
 \end_inset
 
 
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Fuerzas que actúan sobre el Future 
@@ -546,7 +575,6 @@ Fuerzas que actúan sobre el Future
 
 \end_layout
 
-\end_deeper
 \begin_layout Enumerate
 Actualización de la posición de cada future.
  
@@ -555,8 +583,84 @@ Actualización de la posición de cada future.
 \begin_deeper
 \begin_layout Standard
 En esta etapa, simplemente se actualiza la posición de cada future según
- el cálculo de la fuerza aplicada en la etapa previa.
+ el cálculo de la fuerza 
+\begin_inset Formula $F$
+\end_inset
+
+ aplicada en la etapa previa.
  Este cálculo se realiza utilizando las fórmulas de Euler.
+ 
+\end_layout
+
+\begin_layout Standard
+Para romper con situaciones con altos grados de simetría, se agrega ruido
+ 
+\begin_inset Formula $P=10\%$
+\end_inset
+
+ sobre 
+\begin_inset Formula $F$
+\end_inset
+
+.
+ Para esto, se aplican dos formas de ruido:
+\end_layout
+
+\begin_layout Itemize
+Ruido longitudinal:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Se toma un valor 
+\begin_inset Formula $p$
+\end_inset
+
+ según una distribución aleatoria uniforme en el intervalo 
+\begin_inset Formula $[-P,\, P]$
+\end_inset
+
+ y se calcula: 
+\begin_inset Formula $FL_{i'}=F_{i'}*p$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ruido angular:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Se toma 
+\begin_inset Formula $sgn=\{-1,\,1\}$
+\end_inset
+
+ utilizando una distribución uniforme y 
+\begin_inset Formula $p$
+\end_inset
+
+ en 
+\begin_inset Formula $[-P,\, P]$
+\end_inset
+
+ con la misma distribución.
+ Luego se calcula: 
+\begin_inset Formula $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Por último se toma 
+\begin_inset Formula $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$
+\end_inset
+
+ y de aplican las ecuaciones de movimiento.
 \end_layout
 
 \end_deeper
@@ -613,11 +717,324 @@ La nueva posicion de cada peatón es calculada en esta etapa utilizando las
 \end_layout
 
 \end_deeper
-\begin_layout Enumerate
+\end_deeper
+\begin_layout Section
 Validación del modelo 
 \end_layout
 
+\begin_layout Standard
+Los resultados obtenidos fueron comparados utilizando el modelo 
+\begin_inset Quotes eld
+\end_inset
+
+Social Force Model
+\begin_inset Quotes erd
+\end_inset
+
+ utilizando los valores propuestos por Dirk Helbing [2].
+ Los escenarios de prueba fueron cruce y hallway.
+ 
+\end_layout
+
+\begin_layout Standard
+Los resultados fueron cuantificados utilizando las siguientes métricas:
+\end_layout
+
+\begin_layout Enumerate
+Cantidad total de colisiones
+\end_layout
+
 \begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Duración promedio de las coliciones
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Velocidad promedio de viaje
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Tiempo promedio de viaje 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Promedio de la distancia recorrida 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Ángulo giro promedio
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: (como se calcula)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+En la tabla a continuación se presentan las mediciones de las métricas utilizand
+o un total de 
+\begin_inset Formula $10$
+\end_inset
+
+ corridas:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Valores
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\alpha=800,\,\beta=[0.65,\,0.85]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(1.800, 0.748) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(34.600, 8.333) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(1.024, 0.016) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(1.910, 0.022) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(2.392, 0.005) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(111.062, 19.122)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\alpha=2000,\,\beta=0.08$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(5.333, 2.625)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(12.333, 8.340) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(1.052, 0.003) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(1.876, 0.003) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(2.391, 0.002) 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(106.185, 13.778)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
 \begin_layout Standard
 
 \series bold
@@ -625,19 +1042,16 @@ Validación del modelo
  
 \end_layout
 
-\end_deeper
-\begin_layout Enumerate
+\begin_layout Section
 Conclusiones
 \end_layout
 
-\begin_deeper
 \begin_layout Standard
 
 \series bold
 // agregar al final futuras opciones que se abren con este trabajo
 \end_layout
 
-\end_deeper
 \begin_layout Standard
 \begin_inset Newpage pagebreak
 \end_inset
@@ -645,20 +1059,18 @@ Conclusiones
 
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Section
 Referencias
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
-[1]...
- Karamouzas?
+\begin_layout Itemize
+[1] ...
+ Karamouzas ...
 \end_layout
 
-\begin_layout Standard
-[2]...
+\begin_layout Itemize
+[2] ...Helbing ...
 \end_layout
 
-\end_deeper
 \end_body
 \end_document

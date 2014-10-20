@@ -1,9 +1,7 @@
 TODOS:
 	Social fore model (comparacion de los modelos)
-	Ruido al beta 0.65 a 0.85
 	Curva de densidad con distintos valores de resorte frontal
 
-Agregar header
 B = 0.08;
 A = 2000;
 
@@ -12,3 +10,8 @@ Metricas que muestre que el social force model no es mejor que el modelo del fut
 	Probar aumentar el caudar (el SFM deberia ser malo con caudales grandes)
 
 Escribir manual
+	Probar curva no lineal que dice la velocidad con la que se va a mover el pedestrian hacia su future.
+	Probar ruido al future (tanto angular como longutudinal)
+	Considerar choques con cierto delta
+	velocidad entre de 1.3 - 1.4
+	Probar con k = 50? (k de separacion)
