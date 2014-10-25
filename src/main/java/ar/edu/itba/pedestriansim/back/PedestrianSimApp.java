@@ -115,12 +115,13 @@ public class PedestrianSimApp implements Runnable {
 
 	private void configureFutureModelComponents(PedestrianSim sim) {
 		final PedestrianForces forces = new PedestrianForcesFactory().build(_config);
-		final float noiseP = 0.1f;
-		sim
+		final float noiseP = 1f;
+		sim 
 			.onStep(new FutureForceUpdaterComponent(forces))
 			.onStep(new FuturePositionUpdaterComponent(
-				Optional.of(new UniformRandomGenerator(-noiseP, noiseP)), Optional.<RandomGenerator>absent())
-			)
+				Optional.<RandomGenerator>absent(),
+				Optional.of(new UniformRandomGenerator(-noiseP, noiseP))
+			))
 			.onStep(new PedestrianForceUpdaterComponent(forces));
 	}
 	
@@ -128,3 +129,4 @@ public class PedestrianSimApp implements Runnable {
 		sim.onStep(new SocialForceUpdaterComponent());
 	}
 }
+

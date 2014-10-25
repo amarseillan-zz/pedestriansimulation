@@ -113,8 +113,12 @@ public class Pedestrian {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("id", getId()).append("team", getTeam())
-				.append("location", getBody().getCenter()).append("velocity", getBody().getVelocity())
-				.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter())).build();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+			.append("id", getId())
+			.append("team", getTeam())
+			.append("location", getBody().getCenter())
+			.append("velocity", getBody().getVelocity())
+			.append("target(center)", getTargetSelection().getTarget().getClosesPoint(getBody().getCenter()))
+			.build();
 	}
 }
