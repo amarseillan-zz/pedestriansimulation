@@ -18,15 +18,25 @@ for i in list:
 	else:
 		averages[i[0]] = averages[i[0]][0]+1, averages[i[0]][1]+i[1]
 
-aggregated = []
+mean = []
 
 for i in averages:
 	if averages[i][0] != 0:
-		aggregated.append((i, averages[i][1]/averages[i][0]))
+		mean.append((i, averages[i][1]/averages[i][0]))
 	else:
-		aggregated.append((i, 0))
+		mean.append((i, 0))
+
+sd = {}
+
+for i in list:
+	if i[0] not in sd:
+		sd[i[0]] = 0
+	sd[i[0]] = sd[i[0]] + (i[1]-mean[i[0]][1])**2
 
 with open('octave.csv', 'wb') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',')
-    for i in aggregated:
-    	spamwriter.writerow([str(i[0]),str(i[1])])
+    for i in mean:
+    	spamwriter.writerow([str(i[0]),str(i[1]),str(sd[i[0]]/averages[i[0]][0])])
+
+
+

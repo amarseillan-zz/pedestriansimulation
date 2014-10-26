@@ -19,7 +19,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 		Range<Float> velocity = Range.closed(1.3f, 1.4f);
 		Range<Float> r = Range.closed(0.25f, 0.29f);
 		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(800f, Range.closed(0.65f, 0.85f));
-		Pair<Float, Float> wallAlphaBeta = Pair.of(200f, .2f);
+		Pair<Float, Float> wallAlphaBeta = Pair.of(800f, .55f);
 		return new PedestrianAppConfig()
 			.makeNewRun(true)
 			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))

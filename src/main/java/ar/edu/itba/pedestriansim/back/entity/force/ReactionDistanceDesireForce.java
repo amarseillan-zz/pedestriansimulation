@@ -6,6 +6,7 @@ import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 
 public class ReactionDistanceDesireForce implements PedestrianForce {
 
+	private final static float BETA = 0.25f;
 	private final DrivingForce forceModel;
 	
 	public ReactionDistanceDesireForce() {
@@ -16,8 +17,8 @@ public class ReactionDistanceDesireForce implements PedestrianForce {
 	public Vector2f apply(Pedestrian subject) {
 		Vector2f target = subject.getFuture().getBody().getCenter();
 		float distance = subject.getBody().getCenter().distance(target);
-		float p = distance / subject.getReactionDistance();
-		return forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity() * p);
+		float desiredVelocity = (float)(subject.getMaxVelocity() * Math.pow(distance / subject.getReactionDistance(), BETA));
+		return forceModel.getForce(subject.getBody(), target, desiredVelocity);
 	}
 
 }
