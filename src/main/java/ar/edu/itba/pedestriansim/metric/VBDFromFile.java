@@ -30,7 +30,7 @@ public class VBDFromFile {
 			}
 		} while (!staticSupplierFinished);
 
-		vbd = new VelocityByDensity();
+		vbd = new VelocityByDensity(13, 18);
 	}
 
 	public List<Pair<Long, Float>> runMetrics(float delta) {

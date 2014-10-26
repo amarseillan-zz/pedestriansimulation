@@ -3,7 +3,6 @@ package ar.edu.itba.pedestriansim.back.config;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.common.rand.GaussianRandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
@@ -12,6 +11,8 @@ import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 
 public class HallwayConfig implements ApplicationConfigBuilder {
+	
+	float delay = 1f;
 
 	@Override
 	public PedestrianAppConfig get() {
@@ -27,7 +28,7 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 		PedestrianMision mission = new PedestrianMision();
 		area.addSource(
 			new PedestrianSource(new Vector2f(27, 17), 1f, mission, 1)
-				.setProduceDelayGenerator(new UniformRandomGenerator(2, 2f))
+				.setProduceDelayGenerator(new UniformRandomGenerator(delay, delay))
 				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
 		);
 		mission.putFirst(new PedestrianTargetArea(new Line(10, 15, 10, 19)));
@@ -38,7 +39,7 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 		PedestrianMision mission = new PedestrianMision();
 		area.addSource(
 			new PedestrianSource(new Vector2f(5, 17), 1f, mission, 2)
-				.setProduceDelayGenerator(new UniformRandomGenerator(2, 2f))
+				.setProduceDelayGenerator(new UniformRandomGenerator(delay, delay))
 				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
 		);
 		mission.putFirst(new PedestrianTargetArea(new Line(22, 15, 22, 19)));

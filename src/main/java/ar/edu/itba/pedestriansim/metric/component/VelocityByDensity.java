@@ -18,8 +18,14 @@ public class VelocityByDensity implements SimpleMetric {
 	private List<Pair<Long, Float>> velocitiesByDensities;
 	private Long count;
 	private Average velocity;
+	
+	private int leftLimit;
+	private int rightLimit;
 
-	public VelocityByDensity() {
+	public VelocityByDensity(int left, int right) {
+		this.leftLimit = left;
+		this.rightLimit = right;
+		
 		this.velocitiesByDensities = Lists.newArrayList();
 		this.count = 0L;
 		this.velocity = new Average();
@@ -45,9 +51,12 @@ public class VelocityByDensity implements SimpleMetric {
 	}
 
 	@Override
-	public void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo) {
-		count++;
-		velocity.add(pedestrian.velocity().length());
+	public void update(float delta, PedestrianDynamicLineInfo pedestrian,
+			StaticFileLine pedestrianStaticInfo) {
+		if (pedestrian.center().x > this.leftLimit && pedestrian.center().x < this.rightLimit) {
+			this.count++;
+			this.velocity.add(pedestrian.velocity().length());
+		}
 	}
 
 	public List<Pair<Long, Float>> getVBDs() {

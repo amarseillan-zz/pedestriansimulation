@@ -39,6 +39,7 @@ public class ReactionDistanceDesireForce implements PedestrianForce {
 	public ReactionDistanceDesireForce(FunctionType functionType) {
 		_forceModel = new DrivingForce();
 		_functionType = functionType;
+
 	}
 
 	@Override
@@ -48,5 +49,6 @@ public class ReactionDistanceDesireForce implements PedestrianForce {
 		float p = _functionType.p(distance, subject.getReactionDistance());
 		Preconditions.checkArgument(0 <= p && p <= 1);
 		return _forceModel.getForce(subject.getBody(), target, subject.getMaxVelocity() * p);
+
 	}
 }
