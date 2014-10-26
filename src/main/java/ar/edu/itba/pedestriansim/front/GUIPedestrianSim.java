@@ -21,6 +21,7 @@ import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.config.ApplicationConfigBuilder;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.HallwayConfig;
 import ar.edu.itba.pedestriansim.back.config.PedestrianConfigurationFromFile;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
@@ -55,7 +56,7 @@ public class GUIPedestrianSim extends BasicGame {
 			properties.load(new FileInputStream(cmd.param("-config")));
 			configBuilder = new CrossingConfig(new PedestrianConfigurationFromFile(properties));
 		} else {
-			configBuilder = new CrossingConfig();
+			configBuilder = new HallwayConfig();
 		}
 		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(configBuilder));
 		appContainer.setUpdateOnlyWhenVisible(false);

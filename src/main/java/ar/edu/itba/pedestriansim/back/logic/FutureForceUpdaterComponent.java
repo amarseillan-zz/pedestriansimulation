@@ -42,7 +42,24 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 						.add(repulsionForce.between(future1, future2, subject.pedestrianRepulsionForceValues()))
 					;
 					final float x = body2Center.distance(future1);
-					final float alpha = 1f;
+					float alpha = 2f;
+					
+					//------- marsedev bro
+
+					Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
+					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
+					
+					double angle = Math.abs(futureVector1.getTheta() - futureVector2.getTheta());
+					double cos = Math.cos(Math.toRadians(angle));
+					
+					if (cos > 0) {
+						cos = 0;
+					} else {
+						cos = -cos;
+					}
+					alpha *= cos;
+					
+					//
 					final float x0 = 0.3f;
 					final float x1 = 0.8f;
 					float n;

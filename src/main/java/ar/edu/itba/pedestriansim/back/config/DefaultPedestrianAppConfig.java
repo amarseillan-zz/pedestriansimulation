@@ -16,7 +16,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		Range<Float> mass = Range.closed(60f, 80f);
-		Range<Float> velocity = Range.closed(1.1f, 1.2f);
+		Range<Float> velocity = Range.closed(1.3f, 1.4f);
 		Range<Float> r = Range.closed(0.25f, 0.29f);
 		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(800f, Range.closed(0.65f, 0.75f));
 		Pair<Float, Float> wallAlphaBeta = Pair.of(600f, .75f);

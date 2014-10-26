@@ -15,7 +15,7 @@ import ar.edu.itba.command.CommandParam;
 import ar.edu.itba.command.CommandParser;
 import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
-import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.HallwayConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.DymaimcFileStep;
@@ -121,7 +121,7 @@ public class VelocityByDensity {
 		for (int runNumber = 0; runNumber < RUNS_COUNT; runNumber++) {
 			String fileId = id + "-c=" + runNumber;
 			System.out.println("Started: " + fileId);
-			PedestrianAppConfig config = new CrossingConfig().get();
+			PedestrianAppConfig config = new HallwayConfig().get();
 			config.setStaticfile(new File(runsDirectory + File.separator + fileId + "-static.txt"));
 			config.setDynamicfile(new File(runsDirectory + File.separator + fileId + "-dynamic.txt"));
 			config.pedestrianFactory().setPedestrianAlphaBeta(alpha, beta);
