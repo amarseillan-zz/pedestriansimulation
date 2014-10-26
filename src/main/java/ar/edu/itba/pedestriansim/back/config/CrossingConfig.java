@@ -13,7 +13,7 @@ import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 public class CrossingConfig implements ApplicationConfigBuilder {
 
 	private ApplicationConfigBuilder _defaultBuilder;
-	
+
 	public CrossingConfig() {
 		this(new DefaultPedestrianAppConfig());
 	}
@@ -37,25 +37,24 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 	private void addSource1(PedestrianArea area) {
 		// Arriba
 		PedestrianMision mission = new PedestrianMision();
-		area.addSource(
-			new PedestrianSource(new Vector2f(_L + _W / 2, 2), 0.5f, mission, 1)
-				.setProduceDelayGenerator(new UniformRandomGenerator(2, 2f))
-				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
-		);
-		mission.putFirst(new PedestrianTargetArea(new Line(_L, 2 * _L + _W,  _L + _W, 2 * _L + _W)));
+		area.addSource(new PedestrianSource(new Vector2f(_L + _W / 2, 2), 0.5f,
+				mission, 1).setProduceDelayGenerator(
+				new UniformRandomGenerator(2, 2f))
+				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1)));
+		mission.putFirst(new PedestrianTargetArea(new Line(_L, 2 * _L + _W, _L
+				+ _W, 2 * _L + _W)));
 	}
 
 	private void addSource2(PedestrianArea area) {
 		// Derecha
 		PedestrianMision mission = new PedestrianMision();
-		area.addSource(
-			new PedestrianSource(new Vector2f(2 * _L + _W, _L + _W / 2), 0.5f, mission, 2)
-				.setProduceDelayGenerator(new UniformRandomGenerator(2, 2f))
-				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
-		);
+		area.addSource(new PedestrianSource(new Vector2f(2 * _L + _W, _L + _W
+				/ 2), 0.5f, mission, 2).setProduceDelayGenerator(
+				new UniformRandomGenerator(2, 2f))
+				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1)));
 		mission.putFirst(new PedestrianTargetArea(new Line(0, _L, 0, _L + _W)));
 	}
-	
+
 	private void addWalls(PedestrianArea area) {
 		// Arriba izquierda
 		area.addObstacle(new Line(_L, 0, _L, _L));
@@ -64,10 +63,10 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 		area.addObstacle(new Line(_L + _W, 0, _L + _W, _L));
 		area.addObstacle(new Line(_L + _W, _L, _L * 2 + _W, _L));
 		// Abajo izquierda
-		area.addObstacle(new Line(0, _L + _W, _L, _L + _W));
-		area.addObstacle(new Line(_L, _L + _W, _L, _L * 2 + _W));
+		// area.addObstacle(new Line(0, _L + _W, _L, _L + _W));
+		// area.addObstacle(new Line(_L, _L + _W, _L, _L * 2 + _W));
 		// Abajo derecha
 		area.addObstacle(new Line(_L + _W, _L + _W, _L * 2 + _W, _L + _W));
-		area.addObstacle(new Line(_L + _W, _L + _W, _L + _W, _L * 2+ _W));
+		area.addObstacle(new Line(_L + _W, _L + _W, _L + _W, _L * 2 + _W));
 	}
 }
