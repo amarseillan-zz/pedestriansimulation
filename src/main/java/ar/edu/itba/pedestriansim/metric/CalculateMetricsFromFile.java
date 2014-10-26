@@ -9,6 +9,7 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.Dymaim
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.PedestrianDynamicLineInfo;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer.StaticFileLine;
 import ar.edu.itba.pedestriansim.metric.component.AverageTravelTime;
+import ar.edu.itba.pedestriansim.metric.component.AverageTurnedAngle;
 import ar.edu.itba.pedestriansim.metric.component.AverageVelocity;
 import ar.edu.itba.pedestriansim.metric.component.AverageWalkDistance;
 import ar.edu.itba.pedestriansim.metric.component.CollitionCount;
