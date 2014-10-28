@@ -65,6 +65,14 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 		area.addObstacle(new Line(_L + _W, _L, _L * 2 + _W, _L));
 		// Abajo derecha
 		area.addObstacle(new Line(_L + _W, _L + _W, _L * 2 + _W, _L + _W));
-		area.addObstacle(new Line(_L + _W, _L + _W, _L + _W, _L * 2+ _W));
+		area.addObstacle(new Line(_L + _W, _L + _W, _L + _W, _L * 2 + _W));
+		// Abajo izquierda
+//		area.addObstacle(new Line(0, _L + _W, _L, _L + _W));
+//		area.addObstacle(new Line(_L, _L + _W + _L / 2, _L, _L + _W));
+		// Abajo izquierda (cortadas)
+		area.addObstacle(new Line(0, _L + _W, _L / 2 + _L / 4, _L + _W));
+		area.addObstacle(new Line(_L, _L + _W + _L / 2 - _L / 4, _L, _L * 2 + _W));
+		// Diagonal
+		area.addObstacle(new Line(_L / 2 + _L / 4, _L + _W, _L, _L + _W + _L / 2 - _L / 4));
 	}
 }

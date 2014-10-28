@@ -14,7 +14,6 @@ import ar.edu.itba.pedestriansim.back.entity.force.RepulsionForce;
 import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
@@ -33,48 +32,24 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		RepulsionForce repulsionForce = _forces.getRepulsionForceModel();
 		for (Pedestrian subject : input.pedestrians()) {
 			Vector2f repulsion = new Vector2f();
-			Vector2f future1 = subject.getFuture().getBody().getCenter();
+			Vector2f future1Center = subject.getFuture().getBody().getCenter();
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
-					Vector2f future2 = other.getFuture().getBody().getCenter();
-					Vector2f body2Center = other.getBody().getCenter();
-					repulsion
-						.add(repulsionForce.between(future1, future2, subject.pedestrianRepulsionForceValues()))
-					;
-					final float x = body2Center.distance(future1);
-					float alpha = 2f;
-					
-					//------- marsedev bro
-
+					Vector2f future2Center = other.getFuture().getBody().getCenter();
+					repulsion.add(
+						repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues())
+					);
 					Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
-					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
-					
+					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(other.getBody().getCenter());
 					double angle = Math.abs(futureVector1.getTheta() - futureVector2.getTheta());
-					double cos = Math.cos(Math.toRadians(angle));
-					
-					if (cos > 0) {
-						cos = 0;
-					} else {
-						cos = -cos;
+					if (angle > 180) {
+						angle = 360 - 180;
 					}
-					alpha *= cos;
-					
-					//
-					final float x0 = 0.3f;
-					final float x1 = 0.8f;
-					float n;
-					if (x > x1) {
-						n = 0;
-					} else if (x0 < x && x <= x1) {
-						n = 1 - (x - x0) / (x1 - x0);
-						Preconditions.checkArgument(0 <= n && n <= 1);
-					} else {
-						n = 1;
-					}
-					if (n > 0) {
-						n *= alpha;
-						Vector2f fb = repulsionForce.between(future1, body2Center, subject.pedestrianRepulsionForceValues());
-						repulsion.add(fb.scale(n));
+					Vector2f body2Center = other.getBody().getCenter();
+					if (future1Center.distance(body2Center) < 0.8f && angle > 120) {
+						repulsion.add(
+							repulsionForce.between(future1Center, body2Center, subject.pedestrianRepulsionForceValues()).scale(2)
+						);
 					}
 				}
 			}

@@ -6,6 +6,8 @@ import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianFuture;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
+import com.google.common.base.Preconditions;
+
 public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 
 	private final float _kAlign;
@@ -37,15 +39,30 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 	}
 
 	private Vector2f springSeparationPosition(Pedestrian input) {
-		if (_kSeparation == 0) {
-			return Vectors.zero();
-		}
 		Vector2f pedestrianCenter = input.getBody().getCenter();
 		Vector2f pedestrianFutureCenter = input.getFuture().getBody().getCenter();
+		Vector2f target = input.getTargetSelection().getTarget().getClosesPoint(pedestrianCenter); 
+		float deviationAngle = angle(pedestrianCenter, target, pedestrianFutureCenter);
+		float angleDeviationDecay = 1;
+		if (deviationAngle > 1) {
+			// XXX: careful with 0 division here!! 
+			angleDeviationDecay /= deviationAngle * 5;
+		}
 		return 
 			Vectors.pointBetween(pedestrianCenter, pedestrianFutureCenter, input.getReactionDistance(), positionCache)
 			.sub(pedestrianFutureCenter)
 			.normalise()
-			.scale(_kSeparation);
+			.scale(_kSeparation * angleDeviationDecay);
+	}
+
+	private float angle(Vector2f center, Vector2f target, Vector2f future) {
+		Vector2f d1 = future.copy().sub(center);
+		Vector2f d2 = target.copy().sub(center);
+		float angle = (float) Math.abs(d1.getTheta() - d2.getTheta());
+		if (angle > 180) {
+			angle = 360 - 180;
+		}
+		Preconditions.checkArgument(0 <= angle && angle <= 180);
+		return angle;
 	}
 }
