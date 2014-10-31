@@ -4,12 +4,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Line;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.force.RepulsionForce;
 import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
@@ -66,17 +66,19 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 	private Vector2f obstacleCollitionForces(Pedestrian subjet, PedestrianArea input) {
 		final Vector2f totalRepulsionForce = new Vector2f();
 		RepulsionForce repulsionForce = _forces.getWallRepulsionForceModel();
-		for (Shape shape : input.obstacles()) {
-			if (!(shape instanceof Line)) {
-				logger.error("obstacles that are not lines are not yet supported");
-				throw new RuntimeException();
-			}
-			Line line = (Line) shape;
+		for (Wall wall : input.obstacles()) {
+			Line line = wall.line();
 			RigidBody future = subjet.getFuture().getBody();
 			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
 			totalRepulsionForce
 				.add(_forces.getCollisitionModel().getForce(future, line))
 				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subjet.wallRepulsionForceValues()));
+			if (wall.isThick()) {
+				// Ysou shall not passs!
+				totalRepulsionForce.add(
+					_forces.getCollisitionModel().getForce(future, wall.thickBorder()).scale(100)
+				);
+			}
 		}
 		return totalRepulsionForce;
 	}

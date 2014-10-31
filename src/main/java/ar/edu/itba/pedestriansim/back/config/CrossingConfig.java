@@ -7,6 +7,7 @@ import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 
@@ -58,21 +59,21 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 	
 	private void addWalls(PedestrianArea area) {
 		// Arriba izquierda
-		area.addObstacle(new Line(_L, 0, _L, _L));
-		area.addObstacle(new Line(0, _L, _L, _L));
+		area.addObstacle(new Wall(new Line(_L, 0, _L, _L)));
+		area.addObstacle(new Wall(new Line(0, _L, _L, _L)));
 		// Arriba derecha
-		area.addObstacle(new Line(_L + _W, 0, _L + _W, _L));
-		area.addObstacle(new Line(_L + _W, _L, _L * 2 + _W, _L));
+		area.addObstacle(new Wall(new Line(_L + _W, 0, _L + _W, _L)));
+		area.addObstacle(new Wall(new Line(_L + _W, _L, _L * 2 + _W, _L)));
 		// Abajo derecha
-		area.addObstacle(new Line(_L + _W, _L + _W, _L * 2 + _W, _L + _W));
-		area.addObstacle(new Line(_L + _W, _L + _W, _L + _W, _L * 2 + _W));
+		area.addObstacle(new Wall(new Line(_L + _W, _L + _W, _L * 2 + _W, _L + _W)));
+		area.addObstacle(new Wall(new Line(_L + _W, _L + _W, _L + _W, _L * 2 + _W)));
 		// Abajo izquierda
 //		area.addObstacle(new Line(0, _L + _W, _L, _L + _W));
 //		area.addObstacle(new Line(_L, _L + _W + _L / 2, _L, _L + _W));
 		// Abajo izquierda (cortadas)
-		area.addObstacle(new Line(0, _L + _W, _L / 2 + _L / 4, _L + _W));
-		area.addObstacle(new Line(_L, _L + _W + _L / 2 - _L / 4, _L, _L * 2 + _W));
+		area.addObstacle(new Wall(new Line(0, _L + _W, _L / 2 + _L / 4, _L + _W)));
+		area.addObstacle(new Wall(new Line(_L, _L + _W + _L / 2 - _L / 4, _L, _L * 2 + _W)));
 		// Diagonal
-		area.addObstacle(new Line(_L / 2 + _L / 4, _L + _W, _L, _L + _W + _L / 2 - _L / 4));
+		area.addObstacle(new Wall(new Line(_L / 2 + _L / 4, _L + _W, _L, _L + _W + _L / 2 - _L / 4)));
 	}
 }

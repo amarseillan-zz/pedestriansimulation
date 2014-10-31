@@ -1,11 +1,11 @@
 package ar.edu.itba.pedestriansim.back.logic;
 
 import org.newdawn.slick.geom.Line;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.force.DrivingForce;
 import ar.edu.itba.pedestriansim.back.entity.force.SpringForceModel;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
@@ -66,10 +66,10 @@ public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 		return eps;
 	}
 
-	private Vector2f fCollision(Pedestrian pedesitan, Iterable<Shape> shapes) {
+	private Vector2f fCollision(Pedestrian pedesitan, Iterable<Wall> walls) {
 		Vector2f f = new Vector2f();
-		for (Shape obstacle : shapes) {
-			Line line = (Line) obstacle;
+		for (Wall wall : walls) {
+			Line line = wall.line();
 			if (pedesitan.getShape().intersects(line)) {
 				f.add(wallCollisionForceModel.getForce(pedesitan.getBody(), line));
 			}

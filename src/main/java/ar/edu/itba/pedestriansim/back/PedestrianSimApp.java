@@ -122,7 +122,8 @@ public class PedestrianSimApp implements Runnable {
 				Optional.<RandomGenerator>absent(),
 				Optional.of(new UniformRandomGenerator(-noiseP, noiseP))
 			))
-			.onStep(new PedestrianForceUpdaterComponent(forces));
+			.onStep(new PedestrianForceUpdaterComponent(forces))
+			.onStep(new KillPedestrianStuckOnWall());
 	}
 	
 	private void configureSocialForceModelComponents(PedestrianSim sim) {

@@ -7,6 +7,7 @@ import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.physics.EulerMethod;
+import ar.edu.itba.pedestriansim.back.entity.physics.IntegrationFunction;
 import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 
 import com.google.common.base.Optional;
@@ -19,7 +20,7 @@ public class FuturePositionUpdaterComponent extends PedestrianAreaStep {
 	private final Vector2f velocityCache = new Vector2f();
 	private final Vector2f positionCache = new Vector2f();
 
-	private EulerMethod _eulerMethod = new EulerMethod();
+	private IntegrationFunction _integrationMethod = new EulerMethod();
 
 	private Optional<? extends RandomGenerator> _longitudinalNoise, _perpendicularNoise;
 
@@ -39,8 +40,8 @@ public class FuturePositionUpdaterComponent extends PedestrianAreaStep {
 		RigidBody futureBody = pedestrian.getFuture().getBody();
 		Vector2f forceOnFuture = addNoise(futureBody.getAppliedForce());
 		float elapsedTimeInSeconds = input.timeStep().floatValue();
-		Vector2f deltaVelocity = _eulerMethod.deltaVelocity(futureBody, forceOnFuture, elapsedTimeInSeconds, velocityCache);
-		Vector2f deltaPosition = _eulerMethod.deltaPosition(futureBody, forceOnFuture, elapsedTimeInSeconds, positionCache);
+		Vector2f deltaVelocity = _integrationMethod.deltaVelocity(futureBody, forceOnFuture, elapsedTimeInSeconds, velocityCache);
+		Vector2f deltaPosition = _integrationMethod.deltaPosition(futureBody, forceOnFuture, elapsedTimeInSeconds, positionCache);
 		futureBody.apply(deltaVelocity, deltaPosition);
 	}
 

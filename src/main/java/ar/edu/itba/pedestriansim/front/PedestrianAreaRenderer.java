@@ -4,10 +4,10 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Shape;
 
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 
 public class PedestrianAreaRenderer extends ShapeRenderer {
 
@@ -31,8 +31,11 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 		}
 		_pedestrianRenderer.render(gc, g, pedestrianArea.pedestrians());
 		g.setColor(Color.white);
-		for (Shape obstacle : pedestrianArea.obstacles()) {
-			draw(g, obstacle);
+		for (Wall wall : pedestrianArea.obstacles()) {
+			draw(g, wall.line());
+			if (wall.isThick()) {
+				draw(g, wall.thickBorder());
+			}
 		}
 	}
 

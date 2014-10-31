@@ -7,12 +7,13 @@ import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 
 public class HallwayConfig implements ApplicationConfigBuilder {
 
-	private final float delay = 0.5f;
+	private final float delay = 1f;
 	
 	@Override
 	public PedestrianAppConfig get() {
@@ -47,8 +48,12 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 	
 	private void addWalls(PedestrianArea area) {
 		// Arriba
-		area.addObstacle(new Line(0, 15, 30, 15));
+		area.addObstacle(
+			new Wall(new Line(0, 15, 30, 15)).setThickBorder(new Line(0, 14.9f, 30, 14.9f))
+		);
 		// Abajo
-		area.addObstacle(new Line(0, 19, 30, 19));
+		area.addObstacle(
+			new Wall(new Line(0, 19, 30, 19)).setThickBorder(new Line(0, 19.1f, 30, 19.1f))
+		);
 	}
 }
