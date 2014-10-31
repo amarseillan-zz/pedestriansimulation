@@ -1,0 +1,40 @@
+Simulador:
+
+Para poder validar y calibrar el modelo, necesitamos un simulador. Gran parte del proyecto estuvo dedicada a la construcción de un simulador. Nuestros principales objetivos eran que este fuese fácil de cambiar, ya que tendríamos que hacer pruebas sobre él con diferentes parámetros, tipos de fuerza, y modelos.
+Al principio, usando java, hicimos un simulador altamente configurable, el cual poseía una interfaz gráfica para mostrar la trayectoria de los peatones, los puntos de nacimiento de los mismos, y las paredes u obstáculos. Luego requerimos agregar el FVP al modelo, y decidimos agregarlo al simulador para facilitar el estudio del mismo. Se agregó la posibilidad de hacer zoom y ajustar la cámara para poder ver la simulación desde donde se quiere. La simulación posee el concepto de "equipos", el cual no es más que un color que se le asigna a cada peatón de cada equipo para poder diferenciar entre diferentes direcciones o tipos de peatón.
+Luego tuvimos la necesidad de generar métricas sobre las corridas de la simulación, cosa que era difícil ya que toda corría en memoria y se mostraba en pantalla. Correr varias métricas sobre la misma ejecución era casi imposible, por lo que tuvimos que dar un giro en la arquitectura del simulador. La nueva arquitectura consta de tres grandes módulos: 
+	1. La capa de visualización o Front-End.
+	2. La capa de lógica o Back-End.
+	3. El módulo con las métricas.
+
+Estos son todos módulos que se pueden correr por separado. El backend es el encargado de generar las ejecuciones, las cuales se guardan en dos archivos de texto, uno estático, con todos los datos de las paredes y generadores, y uno dinámico, que guarda cada instante de la ejecución con todos sus peatones (con sus FVP), sus posiciones y sus velocidades.
+Una vez generado este archivo, el módulo de frontend o métricas pueden usarlo para visualizar la ejecución o generar las métricas de ella respectivamente.
+De esta manera, separamos lo que es visualización y métricas de lo que es la ejecución del simulador en sí, lo cual nos dejó poder empezar a estudiar el modelo de una manera más científica y compararlo con otros modelos existentes.
+
+
+FVP:
+
+Nuestro modelo se basa en la existencia de una FVP (Future Virtual Particle), la cual representa la posición del peatón en un futuro no muy lejano. Basamos esta idea en la noción de que los peatones al caminar no utilizan para esquivar la información de la posición de la gente en el momento si no que preveen donde va a estar esa gente en un futuro cercano.
+Situamos esta partícula a 1.5 metros del peatón gracias a experimentos que demuestran que los peatones empiezan a esquivarse a esa distancia.
+En nuestro modelo, el peatón se siente atraído hacia esta partícula, y esta partícula trata siempre de apuntar hacia donde el peatón quiere ir. Al contrario de SFM, es esta partícula quien siente una fuerza de las otras FVP y de las paredes u obstáculos, modificando así su posición. Dependiendo de la dirección de la fuerza, el FVP se verá obligado a acercarse más hacia su peatón (disminuyendo así la velocidad del mismo) o cambiando su ángulo respecto del peatón (cambiando así la dirección de la velocidad).
+
+
+Calibración:
+
+Para calibrar el modelo se corrieron cientos de métricas en escenarios típicos de estudio de avoidance. Encontramos que había dos sobre los cuales había mucho material de métricas, así que basamos nuestro estudio sobre ellas, ya que también consideramos que son dos casos muy descriptivos. Uno es el hallway o pasillo, en el cual peatones son enviados de izquierda a derecha y viceversa por un pasillo con paredes. El otro caso es el crossing o Florida y Lavalle, en el cual los peatones son enviados de manera horizontal y vertical con paredes formando una cruz.
+Con estos escenarios, se variaron parámetros y se buscó los que mejor representaban la realidad, las métricas que se usaron para definir los mejores parámetros fueron:
+	+ Cantidad total de colisiones
+	+ Duración promedio de las coliciones
+	+ Velocidad promedio de viaje
+	+ Tiempo promedio de viaje
+	+ Promedio de la distancia recorrida
+	+ Ángulo giro promedio
+
+//resultados no tenemos
+
+//comparaciones
+
+
+
+
+
