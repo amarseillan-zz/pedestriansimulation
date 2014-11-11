@@ -43,7 +43,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(other.getBody().getCenter());
 					double angle = Math.abs(futureVector1.getTheta() - futureVector2.getTheta());
 					if (angle > 180) {
-						angle = 360 - 180;
+						angle = 360 - angle;
 					}
 					Vector2f body2Center = other.getBody().getCenter();
 					if (future1Center.distance(body2Center) < 0.8f && angle > 120) {
