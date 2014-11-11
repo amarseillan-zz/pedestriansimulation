@@ -23,14 +23,19 @@ public class PedestrianFactory {
 
 	private float _wallAlpha;
 	private float _wallBeta;
+	
+	private float _futurePedestrianAlpha;
+	private float _futurePedestrianBeta;
 
 	public PedestrianFactory(Range<Float> mass, Range<Float> velocity, Range<Float> r, Pair<Float, Range<Float>> pedestrianAlphaBeta,
-			Pair<Float, Float> wallAlphaBeta) {
+			Pair<Float, Float> wallAlphaBeta, Pair<Float, Float> futurePedestrianAlphaBeta) {
 		_massGenerator = new UniformRandomGenerator(mass);
 		_velocityGenerator = new UniformRandomGenerator(velocity);
 		_radiusGenerator = new UniformRandomGenerator(r);
 		setPedestrianAlphaBeta(pedestrianAlphaBeta.getLeft(), pedestrianAlphaBeta.getRight());
 		setWallAlphaBeta(wallAlphaBeta.getLeft(), wallAlphaBeta.getRight());
+		setFuturePedestrianAlphaBeta(futurePedestrianAlphaBeta.getLeft(), futurePedestrianAlphaBeta.getRight());
+		
 	}
 
 	public PedestrianFactory setPedestrianAlphaBeta(float alpha, Range<Float> beta) {
@@ -44,12 +49,19 @@ public class PedestrianFactory {
 		_wallBeta = beta;
 		return this;
 	}
+	
+	public PedestrianFactory setFuturePedestrianAlphaBeta(float alpha, float beta) {
+		_futurePedestrianAlpha = alpha;
+		_futurePedestrianBeta = beta;
+		return this;
+	}
 
 	public Pedestrian build(Vector2f location, int team, PedestrianMision mission) {
 		RigidBody body = new RigidBody(_massGenerator.generate(), location, _radiusGenerator.generate());
 		Pedestrian pedestrian = new Pedestrian(lastId++, team, body);
 		pedestrian.pedestrianRepulsionForceValues().setAlpha(_pedestrianAlpha).setBeta(_pedestrianBetaGenerator.generate());
 		pedestrian.wallRepulsionForceValues().setAlpha(_wallAlpha).setBeta(_wallBeta);
+		pedestrian.futurePedestrianRepulsionForceValues().setAlpha(_futurePedestrianAlpha).setBeta(_futurePedestrianBeta);
 		pedestrian.setMission(mission.clone());
 		pedestrian.setMaxVelocity(_velocityGenerator.generate());
 		return pedestrian;

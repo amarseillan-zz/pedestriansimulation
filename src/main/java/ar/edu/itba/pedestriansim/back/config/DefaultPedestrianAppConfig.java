@@ -20,6 +20,7 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 		Range<Float> r = Range.closed(0.25f, 0.29f);
 		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(1000f, Range.closed(0.65f, 0.75f));
 		Pair<Float, Float> wallAlphaBeta = Pair.of(600f, .75f);
+		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(2000f, 0.2f);
 		return new PedestrianAppConfig()
 			.makeNewRun(true)
 			.setTimeStep(new BigDecimal(1 / 500f).setScale(5, RoundingMode.UP))
@@ -28,6 +29,6 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 			.setStaticfile(new File("static.txt"))
 			.setDynamicfile(new File("dynamic.txt"))
 			.setSimulationTime(100)
-			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta));
+			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta, futurePedestrianAlphaBeta));
 	}
 }

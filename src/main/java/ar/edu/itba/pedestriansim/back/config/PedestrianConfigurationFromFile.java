@@ -29,6 +29,7 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 		Range<Float> r = getRange("r");
 		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(getFloat("alpha"), getRange("beta"));
 		Pair<Float, Float> wallAlphaBeta = Pair.of(getFloat("wallAlpha"), getFloat("wallBeta"));
+		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(getFloat("futurePedestrianAlpha"), getFloat("futurePedestrianBeta"));
 		return new PedestrianAppConfig()
 			.setSimulationTime(getFloat("simulationTime"))
 			.setTimeStep(new BigDecimal(get("timeStep")).setScale(5, RoundingMode.UP))
@@ -36,7 +37,7 @@ public class PedestrianConfigurationFromFile implements ApplicationConfigBuilder
 			.setExternalForceThreshold(getFloat("externalForceThreshold"))
 			.setStaticfile(new File(get("staticfile")))
 			.setDynamicfile(new File(get("dynamicfile")))
-			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta))
+			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta, futurePedestrianAlphaBeta))
 			.makeNewRun(getBoolean("makeNewRun"));
 	}
 

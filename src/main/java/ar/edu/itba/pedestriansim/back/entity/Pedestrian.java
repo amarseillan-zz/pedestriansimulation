@@ -25,6 +25,7 @@ public class Pedestrian {
 	private float _reactionDistance;
 	private final RepulsionForceValues _pedestrianRepulsionForceValues;
 	private final RepulsionForceValues _wallRepulsionForceValues;
+	private final RepulsionForceValues _futurePedestrianRepulsionForceValues;
 
 	public Pedestrian(Integer id, int team, RigidBody body) {
 		_id = Preconditions.checkNotNull(id);
@@ -34,6 +35,7 @@ public class Pedestrian {
 		targetSelection = new TargetSelection(this);
 		_pedestrianRepulsionForceValues = new RepulsionForceValues();
 		_wallRepulsionForceValues = new RepulsionForceValues();
+		_futurePedestrianRepulsionForceValues = new RepulsionForceValues();
 	}
 
 	public void setMission(PedestrianMision mission) {
@@ -109,6 +111,10 @@ public class Pedestrian {
 	
 	public RepulsionForceValues wallRepulsionForceValues() {
 		return _wallRepulsionForceValues;
+	}
+	
+	public RepulsionForceValues futurePedestrianRepulsionForceValues() {
+		return _futurePedestrianRepulsionForceValues;
 	}
 
 	@Override

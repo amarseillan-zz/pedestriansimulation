@@ -46,9 +46,10 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 						angle = 360 - angle;
 					}
 					Vector2f body2Center = other.getBody().getCenter();
-					if (future1Center.distance(body2Center) < 0.8f && angle > 120) {
+					//if (future1Center.distance(body2Center) < 0.8f && angle > 120) {
+					if (angle > 120) {
 						repulsion.add(
-							repulsionForce.between(future1Center, body2Center, subject.pedestrianRepulsionForceValues()).scale(2)
+							repulsionForce.between(future1Center, body2Center, subject.futurePedestrianRepulsionForceValues())
 						);
 					}
 				}
