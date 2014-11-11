@@ -60,7 +60,7 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 		Vector2f d2 = target.copy().sub(center);
 		float angle = (float) Math.abs(d1.getTheta() - d2.getTheta());
 		if (angle > 180) {
-			angle = 360 - 180;
+			angle = 360 - angle;
 		}
 		Preconditions.checkArgument(0 <= angle && angle <= 180);
 		return angle;
