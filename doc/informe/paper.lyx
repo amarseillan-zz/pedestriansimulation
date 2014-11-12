@@ -70,7 +70,11 @@
 \begin_body
 
 \begin_layout Title
-A Pedestrian Simulation 
+A Pedestrian Simulation
+\end_layout
+
+\begin_layout Title
+Future Virtual Particle Force Model
 \end_layout
 
 \begin_layout Author
@@ -78,13 +82,11 @@ Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi
 \end_layout
 
 \begin_layout Abstract
-En este paper se presenta un nuevo método para simular peatónes virtuales
- basado en el modelo de la fuerza social.
- En el modelo presentado, cada peatón posee un punto movil frente a el y
- camina siempre hasta este.
- Este punto representa un objetivo a corto plazo que se debe cumplir.
- Cada peatón se encarga de mover este punto según a donde necesite llegar.
- 
+We present a novel method to simulate virtual pedestrians based on the social
+ force model.
+ In our model, each pedestrian has a point in front of him called Future
+ Virtual Particle (FVP) which represents where the pedestrian is headed
+ to and at what speed.
 \end_layout
 
 \begin_layout Standard
@@ -92,7 +94,7 @@ keywords:
 \end_layout
 
 \begin_layout Standard
-pedestrian, collision avoidance, future, force model
+pedestrian, collision avoidance, future virtual particle, force model
 \end_layout
 
 \begin_layout Standard
@@ -103,52 +105,126 @@ pedestrian, collision avoidance, future, force model
 \end_layout
 
 \begin_layout Section
-Introducción
+Introduction
 \end_layout
 
 \begin_layout Standard
-// Daniel tiene ya preparada una introducción
-\begin_inset Newline newline
-\end_inset
-
-
+Navigation of biological, sinthetic or virtual agents is a relevant problem
+ in several fields such as pedestrian dynamics, moving robots and animation
+ of characters for videogames and motion pictures.
 \end_layout
 
 \begin_layout Standard
-El transito de personas es un factor de suma importancia en el análisis
- y diseño de instalaciones tales como edificios públicos, peatónales, estaciones
- de trenes, entre otros.
+Modelling and simulating the displacement of agents througth arbitrarily
+ complex enviroments may be stated in an hierachical structure of mecahnisms
+ depending mianly on the distance from the agent.
+ This level has been named, from closer to further, as operational (walking,
+ lowst level physical-computaitnal model for displacement), tactical (wayfinding
+, route chocie) and strategic (general activity planning) [Hoogonen and
+ Bovy 2004].
+ These levels are not independient, factors affecting one level may impact
+ in the following and vice versa, for example, the route choice may vary
+ due to congestion of agents producing from previous route chice and walking
+ behavior.
+ Also, obstacles can impact on the operational level or tactical level depending
+ on the particular geometry of the enviroment.
+ The particular mechanism we want to address is the avoidance of obstacles
+ being fixed or moving (another agent) which involves operational and tactical
+ aspects of the navigation.
+\end_layout
+
+\begin_layout Standard
+A general approach is to take an existing operational model and equip it
+ with a higher level model which allows better and smoother collision avoidance
+ behavior.
+ Exisiting low level models can be taken from pedestrian dynamics field
+ and in general this models can be classified into rule based and force
+ based, discrete and continuous space description, etc.
+ [Schadschneider 2009].
+\end_layout
+
+\begin_layout Standard
+A famous example of continuos and force based model is the Social Focer
+ Model [Helbing 1995, 2000].
+ In this model the dynamic for virtual pedestrians is derived from the Newton
+ equation’s considering the total force exceterd over each agent is the
+ result of three forces: Contact, Social and Driving Force.
+ While the driving force points towards the final objective of each pedestrian,
+ the social force is repulsive and acts as a kind of collision avoidance
+ force.
+ However this social force term introduce several artefacts in some configuratio
+ns [see for example Lakoba et al.
+ 2005, Parisi et al 2009].
+\end_layout
+
+\begin_layout Standard
+Cellular automata models make use of a spacial grid, which can be occuied
+ or empty, along with a set of rules determining the evolution and conflict
+ resolution of virtual pedestrians moving over the cells of the grid.
+ An emblematic celluar automata model is the one proposed by Kirchner and
+ Schadschneider [2002].
+\end_layout
+
+\begin_layout Standard
+It have been also proposed hibrid models such as the Contractile Particle
+ Model [Baglietto and Parisi, 2011] in which a continuos description of
+ the space is combined with a set of simple rules governig the dynamcis
+ of the system.
+\end_layout
+
+\begin_layout Standard
+The basic operational model as the ones described above can be improved
+ if higher level mechanisms were added to manage more complex issues as
+ eficient avoidance.
+ Some recent examples can be found in the literature.
+\end_layout
+
+\begin_layout Standard
+Karamouzas et al.
+ (2009) proposed a method for collision avoidance modifying the social force
+ model, basically, replacing the social force term by a new “evasive” force
+ which tends to avoid future collisions.
+ The magnitud and direction of this force is calculaed considering the predictio
+ns of these possible collisions.
+\end_layout
+
+\begin_layout Standard
+Kretz et al.
+ 2011 have arrised the point that the key ingredient in social force model
+ is the driving force instead of interaction force, so in this work the
+ authors propose a method for dinamically adjust the desired velocity following
+ the gradient of a field given by a time map, in other words, the desired
+ velocity is choosen as the quickest path to the objective taking into account
+ the geometry and other agents (collision, congestions, jams, etc.).
+ Also mounted on the SFM, Moussaïd et al.
+ [2011] have presented a model using a “cognitive heuristics” to determine
+ the norm and direction of the desired velocity for each agent dinamically
+ during the evolution of the system.
  
 \end_layout
 
 \begin_layout Standard
-// Hace mucho tiempo que se viene estudiando a las personas en grupo y se
- sabe que 
-\end_layout
-
-\begin_layout Standard
-// Existen efectos de comportamiento colectivos de auto organización tales
- como cuellos de botellas, formaciones en filas, bloqueos.
+In the same line, we also proposed that the navigation capacity of virtual
+ agents should be concentrated in the on-line decision of the desired velocity.
+ Similar to this approach, we postulate a new method derived from the methods
+ used in robotics/artificial inteligence… The method deals with two aspects
+ of the navigation mechanism.
+ The first one is geometrical problem of finding intermediate goals when
+ the final goal is not visible from the current position of the virtual
+ agent.
+ The second aspect is the local avoidance of other agents, which is performed
+ via a reactive mechanism inspired in (robot navigation/ artificial inteligence)
+ aproaches ¿?¿?¿…..?¿?¿ [ Ref.??? ??? ].
  
 \end_layout
 
 \begin_layout Standard
-// Decir porque una simulación de peatónes es útil para estas situaciones.
-\begin_inset Newline newline
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Analizar estructuras de transito de peatónes usando los cambios propuestos
- para el modelo de la fuerza social.
- Implementar una interfaz gráfica para poder visualizar los resultados de
- cambiar el modelo y cada uno de los parámetros
+The method proposed could be mounted on different basic displacement models
+ like de SFM or the CPM, in the present work we have chosen the first one.
 \end_layout
 
 \begin_layout Section
-Formulacíon del modelo
+Model
 \end_layout
 
 \begin_layout Standard
