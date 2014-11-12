@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FutureForceUpdaterComponent.class);
 
 	private final PedestrianForces _forces;
@@ -46,7 +47,6 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 						angle = 360 - angle;
 					}
 					Vector2f body2Center = other.getBody().getCenter();
-					//if (future1Center.distance(body2Center) < 0.8f && angle > 120) {
 					if (angle > 120) {
 						repulsion.add(
 							repulsionForce.between(future1Center, body2Center, subject.futurePedestrianRepulsionForceValues())
@@ -95,6 +95,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private boolean futureIsFurtherThan(float distance, Pedestrian me) {
 		Vector2f futureLocation = me.getFuture().getBody().getCenter();
 		float radiusSum = me.getBody().getRadius() + me.getFuture().getBody().getRadius();

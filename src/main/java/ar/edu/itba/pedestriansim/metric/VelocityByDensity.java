@@ -55,6 +55,7 @@ public class VelocityByDensity {
 
 	private final float[] thresholds = { 0f };
 	private final float[] alphas = { 800 };
+	@SuppressWarnings("serial")
 	private List<Range<Float>> betas = new LinkedList<Range<Float>>() {{
 		add(Range.closed(0.65f, 0.85f));
 	}};
