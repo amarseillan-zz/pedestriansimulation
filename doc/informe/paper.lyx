@@ -228,50 +228,44 @@ Model
 \end_layout
 
 \begin_layout Standard
-A continuación se presentan los efectos que van a determinar el movimiento
- de un peatón:
+What defines a pedestrian's movement:
 \end_layout
 
 \begin_layout Enumerate
-El peatón desea alcanzar su objetivo a largo plazo de la manera mas cómoda
- posible.
- Por lo tanto va a intentar alcanzarlo sin tener que tomar desvios innecesarios,
- por ejemplo el camino mas corto.
+The pedestrian wants to get to his goal in the shortest possible path.
 \end_layout
 
 \begin_layout Enumerate
-El movimiento del peatón se ve influenciado por otros peatones.
- Dependiendo de la distancia con la que se encuentre de otro peatón y la
- trayectoria que se pueda predecir de este último, un peatón va a sentir
- la necesidad de realizar cambios a la ruta deseada a fin de evitar colisiones.
- Es por este efecto que el peatón va a necesitar recalcular su trayectoria
- según nuevos peatones aparecen en su campo de visión.
+The pedestrian's movement is influenced by other pedestrians.
+ Depending on the distance between the two of them and the predicted trayectory,
+ the pedestrian will feel the need to change his route to be able to avoid
+ the other pedestrian.
+ It is because of this effect that pedestrians will need to recalculate
+ their route as new pedestrians get closer to them.
 \end_layout
 
 \begin_layout Enumerate
-La velocidad de movimiento se ver influenciada según necesidades o estados
- de ánimo del peatón en cuestión.
+Movement speed will be influenced by needs.
 \end_layout
 
 \begin_layout Standard
-Para representar los efectos presentados, un peatón se encuentra definido
- como según se especifica a continuación: 
+A pedestrian is defined as follows:
 \end_layout
 
 \begin_layout Itemize
-Area circular 
+Circular shape
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Representa el área física y espacio personal ocupado.
- El radio del círculo es generado aleatoriamente a fin de representar peatónes
- diferentes.
- El rango de valores se distribuye uniformemente en el intervalo 
+Represents the space that this pedestrian occupies.
+ Circle's radio is generated randomly to represent different types of pedestrian
+s.
+ The range of values is distributed uniformly in 
 \begin_inset Formula $[0.25,0.29]$
 \end_inset
 
- 
+
 \begin_inset Formula $[cm]$
 \end_inset
 
@@ -280,32 +274,35 @@ Representa el área física y espacio personal ocupado.
 
 \end_deeper
 \begin_layout Itemize
-Objetivo a largo plazo 
+Long term objective
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Representado por un área estática.
- Al ser tocada, se considera al objetivo como cumplido.
- Se permite la definición de múltiples objetivos, en cuyo caso, se deben
- cumplir todos de manera secuencial según el orden en que fueron especificados.
+Represented by a static area.
+ When it is touched by a pedestrian, it is considered as accomplished.
+ Multiple objectives can by defined in a list, in this case, each of them
+ must be reached in order.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Objetivo a corto plazo 
+Short term objective
+\end_layout
+
+\begin_layout Itemize
+Objetivo a corto plazo
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Llamado Future, representa un punto a una cierta distancia del centro del
- area circular.
- Este es un objetivo dinámico.
- 
+Called FVP, it represents a point at a relative distance from the pedestrian's
+ center.
+ It's a dynamic objective.
 \end_layout
 
 \begin_layout Standard
-Se encuentra representado por una masa definida fija con un valor de 
+It is defined as a
 \begin_inset Formula $1$
 \end_inset
 
@@ -313,19 +310,19 @@ Se encuentra representado por una masa definida fija con un valor de
 \begin_inset Formula $[kg]$
 \end_inset
 
-.
- No es colisionable.
+ mass.
+ Not collisionable.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Velocidad objetivo 
+Desired speed
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Representa la velocidad a la que el peatón desea avanzar.
- Este valor es un valor aleatorio ya que definido en el intervalo 
+Represents the speed the pedestrian would walk if he was alone.
+ Varies randomly between
 \begin_inset Formula $[1.2,1.4]$
 \end_inset
 
@@ -338,15 +335,13 @@ Representa la velocidad a la que el peatón desea avanzar.
 
 \end_deeper
 \begin_layout Itemize
-Distancia de reacción 
+Reaction distance 
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Representa la distancia a la cual se va a tratar de posicionar de sí mismo
- un peatón su propio future.
- Una mayor distancia representa un peatón que reacciona antes frente a una
- posible colisión.
+Maximum distance between a pedestrian and his FVP, it represents the distance
+ at which a real pedestrian would react from an obstacle.
 \end_layout
 
 \end_deeper
@@ -358,8 +353,7 @@ Representa la distancia a la cual se va a tratar de posicionar de sí mismo
 \end_layout
 
 \begin_layout Standard
-En la siguiente imagen se puede observar de manera gráfica la descripción
- de un peatón:
+Fig 1: Pedestrian and his FVP.
 \end_layout
 
 \begin_layout Standard
@@ -395,8 +389,8 @@ Vista superior de un peatón
 \end_layout
 
 \begin_layout Standard
-Se reserva el uso de las letras para repersentar a un peatón y versión con
- tilde para representar su future en el resto del documento.
+In the document, we will call pedestrians with a letter and FVP of pedestrian
+ x will be called x'.
 \begin_inset Newline newline
 \end_inset
 
@@ -404,43 +398,36 @@ Se reserva el uso de las letras para repersentar a un peatón y versión con
 \end_layout
 
 \begin_layout Section
-Funcionamiento
+Implementation
 \end_layout
 
 \begin_layout Standard
-Cada peatón en la simulación posee como objetivo final, alcanzar el objetivo
- a largo plazo.
- Para asegurar esto, se trata siempre de mantener al future (objetivo a
- corto plazo) alineado con el camino más corto hacia el objetivo final.
- Sin embargo, pueden darse casos en donde existan otros peatónes en esta
- trayectoria, obligando a tener que utilizar rutas alternativas.
- Es en estas circunstancias es cuando el objetivo a corto plazo va a ser
- trasladado según la situación.
- 
+Each pedestrian has to reach the long term objective at some point, to ensure
+ this, the FVP always feels the need to be aligned with the shortest path
+ to the long term objective.
+ On the other hand, there are sometimes obstacles in the way, which will
+ make this impossible, in this cases, the route will have to change depending
+ on the situation.
 \end_layout
 
 \begin_layout Standard
-El movimiento de los peatónes se calcula en cuatro etapas: 
+The pedestrian movement is calculated in four steps:
 \end_layout
 
 \begin_layout Enumerate
-Cálculo de la fuerza sobre sobre cada future.
- 
+Calculate forces for each FVP.
 \end_layout
 
 \begin_layout Enumerate
-Actualización de la posición de cada future.
- 
+Update positions for each FVP.
 \end_layout
 
 \begin_layout Enumerate
-Cálculo de la fuerza sobre cada peatón.
- 
+Calculate forces for each pedestrian.
 \end_layout
 
 \begin_layout Enumerate
-Actualización de la posición de cada peatón.
- 
+Update positions for each pedestrian.
 \begin_inset Newline newline
 \end_inset
 
@@ -448,38 +435,20 @@ Actualización de la posición de cada peatón.
 \end_layout
 
 \begin_layout Standard
-En donde, cada etapa se define de la siguiente manera:
+Each step is defined as follows:
 \end_layout
 
 \begin_layout Enumerate
-Cálculo de la fuerza sobre sobre cada future.
+FVP force calculation.
  
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-En esta etapa, lo que se va a hacer es calcular la fuerza que sufre cada
- uno de los futures existentes debido a la existencia de otros peatónes.
- Esta se realiza sólo cuando la distancia entre el peatón y su future se
- encuentra por encima de cierto valor.
- Esto es así ya que a altos niveles de densidad de personas.
- Uno ya no puede moverse y simplemente es arrastrado por la masa de gente.
-\end_layout
-
-\begin_layout Standard
-En el caso contrario, cuando que un peatón se encuentra habilitado para
- moverse, se realiza un filtro de todos aquellos peatónes que se encuentran
- a sus espaldas, ya que estos no son casos que afectan la trayectoria de
- la persona.
- La condición que debe cumplirse para considerar un peatón 
-\begin_inset Formula $j$
-\end_inset
-
- como detrás del peatón 
-\begin_inset Formula $i$
-\end_inset
-
- es: 
+In each iteration, the FVP feels a force generated by the other pedestrians
+ and FVPs.
+ First of all, we filter de pedestrians j who are not in the range of sight
+ of pedestrian i as follows:
 \end_layout
 
 \begin_layout Standard
@@ -506,7 +475,7 @@ C=(Cx,\, Cy)=j
 
 \end_inset
 
-Luego, se debe cumplir que:
+The following must be valid:
 \end_layout
 
 \begin_layout Standard
@@ -521,9 +490,8 @@ Luego, se debe cumplir que:
 \end_layout
 
 \begin_layout Standard
-Una vez filtrados los peatónes, simplemente se calcula por cada future restante,
- la fuerza de repulsión entre estos.
- Este se realiza utilizando la fórmula: 
+Once filtered, the force is calculated for every other FVP.
+ The repulsion force between i' and j' is defined as follows:
 \end_layout
 
 \begin_layout Standard
@@ -538,80 +506,50 @@ F_{ext}(i)=\sum_{j}F_{i',j'}=\sum_{j}\alpha e^{-dist(i',j')/\beta}
 \end_layout
 
 \begin_layout Standard
-en donde 
+where 
 \begin_inset Formula $\alpha$
 \end_inset
 
- y 
+ and 
 \begin_inset Formula $\beta$
 \end_inset
 
- son constantes predefinidas y fijas.
- Los valores que se usaron son 
-\begin_inset Formula $\alpha=800$
+ are predefined constants.
+ Afterwards, we calculate the repulsion force between i' and j using the
+ same formula but different 
+\begin_inset Formula $\alpha$
 \end_inset
 
- y 
-\begin_inset Formula $\beta=[0.65,\,085]$
+ and 
+\begin_inset Formula $\beta$
 \end_inset
 
- con distribución uniforme.
- Luego de calculadado 
-\begin_inset Formula $F_{ext}$
-\end_inset
-
-, si su valor es menor que cierto umbral, entonces se desprecia esta fuerza
- y el future 
-\begin_inset Formula $i’$
-\end_inset
-
- simplemente se alinea con el objetivo estático a distancia que indique
- la distancia de reacción del peatón.
- Caso contrario, cuando la contribución de las fuerzas externas debe considerars
-e, se suma la contribución del peatón 
-\begin_inset Formula $i$
-\end_inset
-
- sobre su future para ajustarlo según su objetivo estático.
- Esta fuerza se calcula a usando la formula del resorte.
- Los extremos de este resorte se encuentran en el punto a distancia 
+.
+ Afterwards, we calculate the force between pedestrian i and his FVP i',
+ this is a force that pushes i' to be in its desired relative distance from
+ the pedestrian.
+ This force is represented with a spring of length 
 \begin_inset Quotes eld
 \end_inset
 
-distancia de reaccion
+reaction distance
 \begin_inset Quotes erd
 \end_inset
 
- sobre el segmento de recta que une al peatón 
-\begin_inset Formula $i$
+ and constant 
+\begin_inset Formula $K$
 \end_inset
 
- con su objetivo estático y la posición del future 
-\begin_inset Formula $i'$
+.
+ When we sum all these, we get the final 
+\begin_inset Formula $F_{ext}$
 \end_inset
 
 .
 \end_layout
 
 \begin_layout Standard
-A modo ilustrativo, se muestra en la figura 2 como la trayectoria del peatón
- 
-\begin_inset Formula $i$
-\end_inset
-
- es afectada por la del peatón 
-\begin_inset Formula $j$
-\end_inset
-
- a través de 
-\begin_inset Formula $F(i',\, j')$
-\end_inset
-
- y es alineada al objetivo con 
-\begin_inset Formula $F(i,\, i')$
-\end_inset
-
-
+Fig 2: FVP force calculation.
 \end_layout
 
 \begin_layout Standard
@@ -652,113 +590,95 @@ Fuerzas que actúan sobre el Future
 \end_layout
 
 \begin_layout Enumerate
-Actualización de la posición de cada future.
- 
+FVP position update.
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-En esta etapa, simplemente se actualiza la posición de cada future según
- el cálculo de la fuerza 
-\begin_inset Formula $F$
-\end_inset
-
- aplicada en la etapa previa.
- Este cálculo se realiza utilizando las fórmulas de Euler.
- 
+In this stage, the position of the FVP is updated with Euler's formula and
+ the forces calculated in the previous step.
 \end_layout
 
+\end_deeper
 \begin_layout Standard
-Para romper con situaciones con altos grados de simetría, se agrega ruido
- 
+To avoid high simetry situations, a low noise 
 \begin_inset Formula $P=10\%$
 \end_inset
 
- sobre 
+ is added to 
 \begin_inset Formula $F$
 \end_inset
 
 .
- Para esto, se aplican dos formas de ruido:
+ There are two ways to apply this noise:
 \end_layout
 
 \begin_layout Itemize
-Ruido longitudinal:
+Radial noise:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Se toma un valor 
+A value 
 \begin_inset Formula $p$
 \end_inset
 
- según una distribución aleatoria uniforme en el intervalo 
+ is taken randomly from a uniform distribution 
 \begin_inset Formula $[-P,\, P]$
 \end_inset
 
- y se calcula: 
+ and calculate: 
 \begin_inset Formula $FL_{i'}=F_{i'}*p$
 \end_inset
 
 
 \end_layout
 
-\end_deeper
 \begin_layout Itemize
-Ruido angular:
+Angular noise:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Se toma 
+A value 
 \begin_inset Formula $sgn=\{-1,\,1\}$
 \end_inset
 
- utilizando una distribución uniforme y 
+ is taken randomly from a uniform distribution and a value 
 \begin_inset Formula $p$
 \end_inset
 
- en 
+ from 
 \begin_inset Formula $[-P,\, P]$
 \end_inset
 
- con la misma distribución.
- Luego se calcula: 
+.
+ Then 
 \begin_inset Formula $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
 \end_inset
 
-
+ is calculated.
 \end_layout
 
 \end_deeper
 \begin_layout Standard
-Por último se toma 
+At last, we find 
 \begin_inset Formula $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$
 \end_inset
 
- y de aplican las ecuaciones de movimiento.
+ and apply euler's movement equations.
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
-Cálculo de la fuerza sobre cada peatón.
+Pedestrian forces calculation.
  
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-El peatón siempre se mueve hacia la dirección en la que apunta su future
- y de acuerdo a la fuerza de deseo.
-\end_layout
-
-\begin_layout Standard
-Esta fuerza representa la atracción que un peatón 
-\begin_inset Formula $i$
-\end_inset
-
- ejerce sobre sí mismo a fin de dar un paso hacia su future y tratar de
- alcanzarlo.
- Esta definida por la siguiente fórmula: 
+The pedestrian always wants to move in the direction his FVP is pointing
+ and its magnitude is defined as Fd or desire force:
 \end_layout
 
 \begin_layout Standard
@@ -773,7 +693,7 @@ F_{deseo}=\frac{dist(i',i)}{dist_{react}}\frac{v_{desire}-v_{curr}}{\tau}\frac{i
 \end_layout
 
 \begin_layout Standard
-En donde 
+Where 
 \begin_inset Formula $\tau=0.5$
 \end_inset
 
@@ -782,18 +702,30 @@ En donde
 
 \end_deeper
 \begin_layout Enumerate
-Actualización de la posición de cada peatón.
+Pedestrian position update.
  
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-La nueva posicion de cada peatón es calculada en esta etapa utilizando las
- mismas fórmulas mencionada en la etapa 2.
+The new position of the pedestrian will be calculated using Euler's formula
+ and the desire force calculated in the previous step.
 \end_layout
 
 \end_deeper
 \end_deeper
+\begin_layout Standard
+TODO: Los valores que se usaron son 
+\begin_inset Formula $\alpha=800$
+\end_inset
+
+ y 
+\begin_inset Formula $\beta=[0.65,\,085]$
+\end_inset
+
+ con distribución uniforme.
+\end_layout
+
 \begin_layout Section
 Validación del modelo 
 \end_layout
