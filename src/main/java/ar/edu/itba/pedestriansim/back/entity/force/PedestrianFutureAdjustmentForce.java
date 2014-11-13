@@ -46,7 +46,7 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 		float angleDeviationDecay = 1;
 		if (deviationAngle > 1) {
 			// XXX: careful with 0 division here!! 
-			angleDeviationDecay /= deviationAngle * 5;
+			angleDeviationDecay /= deviationAngle * 10;
 		}
 		return 
 			Vectors.pointBetween(pedestrianCenter, pedestrianFutureCenter, input.getReactionDistance(), positionCache)

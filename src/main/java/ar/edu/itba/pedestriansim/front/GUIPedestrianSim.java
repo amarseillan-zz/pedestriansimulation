@@ -41,6 +41,7 @@ public class GUIPedestrianSim extends BasicGame {
 	static {
 		parser = new CommandParser()
 			.param(new CommandParam("-config").message("Archivo (.properties) de donde se va a leer la configuracion de la aplicacion."))
+			.param(new CommandParam("-map").required().constrained("cross", "hallway").message("Mapa en el cual correr la simulacion"))
 		;
 	}
 
@@ -54,10 +55,11 @@ public class GUIPedestrianSim extends BasicGame {
 		if (cmd.hasParam("-config")) {
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(cmd.param("-config")));
-			configBuilder = new CrossingConfig(new PedestrianConfigurationFromFile(properties));
+			configBuilder = new PedestrianConfigurationFromFile(properties);
 		} else {
-			configBuilder = new HallwayConfig();
+			configBuilder = new DefaultPedestrianAppConfig();
 		}
+		configBuilder = "cross".equalsIgnoreCase(cmd.param("-map")) ? new CrossingConfig(configBuilder) : new HallwayConfig(configBuilder);
 		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(configBuilder));
 		appContainer.setUpdateOnlyWhenVisible(false);
 		appContainer.setDisplayMode(1200, 700, false);

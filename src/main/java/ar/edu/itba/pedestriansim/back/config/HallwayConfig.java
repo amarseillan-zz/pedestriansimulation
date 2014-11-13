@@ -15,9 +15,19 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 
 	private final float delay = 1f;
 	
+	private ApplicationConfigBuilder _defaultBuilder;
+	
+	public HallwayConfig() {
+		this(new DefaultPedestrianAppConfig());
+	}
+
+	public HallwayConfig(ApplicationConfigBuilder defaultBuilder) {
+		_defaultBuilder = defaultBuilder;
+	}
+
 	@Override
 	public PedestrianAppConfig get() {
-		PedestrianAppConfig config = new DefaultPedestrianAppConfig().get();
+		PedestrianAppConfig config = _defaultBuilder.get();
 		addWalls(config.pedestrianArea());
 		addSource1(config.pedestrianArea());
 		addSource2(config.pedestrianArea());
