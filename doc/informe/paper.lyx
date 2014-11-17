@@ -27,8 +27,8 @@
 \paperfontsize default
 \spacing single
 \use_hyperref false
-\papersize default
-\use_geometry false
+\papersize a4paper
+\use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
 \use_package cancel 1
@@ -52,6 +52,10 @@
 \shortcut idx
 \color #008000
 \end_index
+\topmargin 1in
+\bottommargin 1in
+\headheight 1in
+\headsep 1in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -108,6 +112,10 @@ pedestrian, collision avoidance, future virtual particle, force model
 Introduction
 \end_layout
 
+\begin_layout Subsection
+Motivacion y antecedentes
+\end_layout
+
 \begin_layout Standard
 Navigation of biological, sinthetic or virtual agents is a relevant problem
  in several fields such as pedestrian dynamics, moving robots and animation
@@ -144,7 +152,7 @@ A general approach is to take an existing operational model and equip it
 \end_layout
 
 \begin_layout Standard
-A famous example of continuos and force based model is the Social Focer
+A famous example of continuos and force based model is the Social Force
  Model [Helbing 1995, 2000].
  In this model the dynamic for virtual pedestrians is derived from the Newton
  equation’s considering the total force exceterd over each agent is the
@@ -213,8 +221,8 @@ In the same line, we also proposed that the navigation capacity of virtual
  the final goal is not visible from the current position of the virtual
  agent.
  The second aspect is the local avoidance of other agents, which is performed
- via a reactive mechanism inspired in (robot navigation/ artificial inteligence)
- aproaches ¿?¿?¿…..?¿?¿ [ Ref.??? ??? ].
+ via a reactive mechanism inspired in (robot navigation / artificial inteligence
+) aproaches ¿?¿?¿…..?¿?¿ [ Ref.??? ??? ].
  
 \end_layout
 
@@ -223,16 +231,292 @@ The method proposed could be mounted on different basic displacement models
  like de SFM or the CPM, in the present work we have chosen the first one.
 \end_layout
 
-\begin_layout Section
-Model
+\begin_layout Subsection
+Social Force Model
 \end_layout
 
 \begin_layout Standard
-What defines a pedestrian's movement:
+En el Social Force Model cada peatón se rige por una serie de reglas presentads
+ por Helbing en sus paper [Helbing 1995, 2000].
+ A partir de estas reglas, proupso un modelo en donde cada peatón sufre
+ una fuerza de deseo que lo provoca a acercarse hacia su objetivo y una
+ fuerza de repulsión contra cada uno de los demas peatones.
+ Junto a estas dos, existe la fuerza de contacto producto del conectacto
+ físico.
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Cada una de las fuerzas en el modelo se define usando las siguientes fórmulas:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fuerza de contacto (Granular):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En donde: 
+\begin_inset Formula $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sfm/ganular.png
+	lyxscale 50
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fuerza de contact granular
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fuerza social:
+\begin_inset Formula 
+\[
+F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sfm/sf.png
+	lyxscale 50
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fuerza social
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fuerza de deseo:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sfm/drivingforce.png
+	lyxscale 50
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Driving force
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Luego, se calcula 
+\begin_inset Formula $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En donde los parametros se encuentran definidos con lo siguientes valores:
+ 
+\begin_inset Formula $A=2000\,[N]$
+\end_inset
+
+, 
+\begin_inset Formula $B=0.08\,[m]$
+\end_inset
+
+, 
+\begin_inset Formula $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$
+\end_inset
+
+, 
+\begin_inset Formula $k_{t}=2.4\,10^{5}\,[\frac{kg}{m/s}]$
+\end_inset
+
+ y 
+\begin_inset Formula $\tau=0.5\,[s]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Future Vector Particle Model
+\end_layout
+
+\begin_layout Standard
+Debido a que el SFM presenta una fuerza ficticia sobre el peatón, se generan
+ artificios en la navegación ante la presencia de grandes cantidades de
+ peatones.
+ {...}
+\end_layout
+
+\begin_layout Standard
+Frente a esto se presenta un nuevo modelo 
+\end_layout
+
+\begin_layout Standard
+// no reproduce valores de Caudal Específico ni Diagrama Fundamental
+\end_layout
+
+\begin_layout Standard
+// To do: explicar nuestros aportes al modelo, observaciones sobre el SFM
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The Model
+\end_layout
+
+\begin_layout Subsection
+Hipotesis
+\end_layout
+
+\begin_layout Standard
+In the following the main effects that determine the motion of a pedestrian
+ will be introduced: (agregar que son las mismas hipotesis que presenta
+ Helbin en su paper)
 \end_layout
 
 \begin_layout Enumerate
-The pedestrian wants to get to his goal in the shortest possible path.
+The pedestrian wants to reach to his goal in the shortest possible path.
 \end_layout
 
 \begin_layout Enumerate
@@ -246,6 +530,10 @@ The pedestrian's movement is influenced by other pedestrians.
 
 \begin_layout Enumerate
 Movement speed will be influenced by needs.
+\end_layout
+
+\begin_layout Subsection
+??
 \end_layout
 
 \begin_layout Standard
@@ -367,6 +655,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename pedestrian-top.png
+	lyxscale 50
 	scale 50
 
 \end_inset
@@ -375,7 +664,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Vista superior de un peatón
+Pedestrian top view
 \end_layout
 
 \end_inset
@@ -397,7 +686,7 @@ In the document, we will call pedestrians with a letter and FVP of pedestrian
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Implementation
 \end_layout
 
@@ -445,32 +734,28 @@ FVP force calculation.
 
 \begin_deeper
 \begin_layout Standard
-In each iteration, the FVP feels a force generated by the other pedestrians
- and FVPs.
- First of all, we filter de pedestrians j who are not in the range of sight
- of pedestrian i as follows:
+In each iteration, the FVP from pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ feels a force generated by the other pedestrians and FVPs.
+ First of all, we filter de pedestrians 
+\begin_inset Formula $j$
+\end_inset
+
+ who are not in the range of sight of pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-A=(Ax,\, Ay)=i
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-B=(Bx,\, By)=A+rotation(\overrightarrow{ii'},\,\pi/2)
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-C=(Cx,\, Cy)=j
+k=i+\begin{pmatrix}0 & -1\\
+1 & 0
+\end{pmatrix}\overrightarrow{ii'}
 \]
 
 \end_inset
@@ -481,7 +766,7 @@ The following must be valid:
 \begin_layout Standard
 \begin_inset Formula 
 \[
-(Bx-Ax)*(Cy-Ay)-(By-Ay)*(Cx-Ax)>0
+(k_{x}-i_{x})*(j_{y}-i_{y})-(k_{y}-i_{y})*(j_{x}-i_{x})>0
 \]
 
 \end_inset
@@ -557,13 +842,13 @@ Fig 2: FVP force calculation.
 placement H
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename pedestrian-top-forces.png
-	lyxscale 70
+	lyxscale 50
 	scale 50
 
 \end_inset
@@ -727,7 +1012,11 @@ TODO: Los valores que se usaron son
 \end_layout
 
 \begin_layout Section
-Validación del modelo 
+Calibracion
+\end_layout
+
+\begin_layout Subsection
+Metricas a usar
 \end_layout
 
 \begin_layout Standard
@@ -808,6 +1097,10 @@ TODO: (como se calcula)
 \end_layout
 
 \end_deeper
+\begin_layout Section
+Results
+\end_layout
+
 \begin_layout Standard
 \begin_inset VSpace 1cm
 \end_inset
