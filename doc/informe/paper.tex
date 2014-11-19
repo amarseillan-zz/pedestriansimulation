@@ -3,17 +3,17 @@
 %% LyX 2.1.1 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
+\usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,headheight=1in,headsep=1in}
 \usepackage{float}
-\usepackage{amstext}
+\usepackage{amsmath}
 \usepackage{graphicx}
 
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-\newcommand{\lyxmathsym}[1]{\ifmmode\begingroup\def\b@ld{bold}
-  \text{\ifx\math@version\b@ld\bfseries\fi#1}\endgroup\else#1\fi}
-
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
 
@@ -22,186 +22,335 @@
 \usepackage{babel}
 \begin{document}
 
-\title{A Pedestrian Simulation }
+\title{A Pedestrian Simulationnnnnn}
+
+
+\title{Future Virtual Particle Force Model}
 
 
 \author{Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi}
 \maketitle
 \begin{abstract}
-En este paper se presenta un nuevo método para simular peatónes virtuales
-basado en el modelo de la fuerza social. En el modelo presentado,
-cada peatón posee un punto movil frente a el y camina siempre hasta
-este. Este punto representa un objetivo a corto plazo que se debe
-cumplir. Cada peatón se encarga de mover este punto según a donde
-necesite llegar. 
+We present a novel method to simulate virtual pedestrians based on
+the social force model. In our model, each pedestrian has a point
+in front of him called Future Virtual Particle (FVP) which represents
+where the pedestrian is headed to and at what speed.
 \end{abstract}
 keywords:
 
-pedestrian, collision avoidance, future, force model
+pedestrian, collision avoidance, future virtual particle, force model
 
 \pagebreak{}
 
 
-\section{Introducción}
-
-// Daniel tiene ya preparada una introducción\\
+\section{Introduction}
 
 
-El transito de personas es un factor de suma importancia en el análisis
-y diseño de instalaciones tales como edificios públicos, peatónales,
-estaciones de trenes, entre otros. 
+\subsection{Motivacion y antecedentes}
 
-// Hace mucho tiempo que se viene estudiando a las personas en grupo
-y se sabe que 
+Navigation of biological, sinthetic or virtual agents is a relevant
+problem in several fields such as pedestrian dynamics, moving robots
+and animation of characters for videogames and motion pictures.
 
-// Existen efectos de comportamiento colectivos de auto organización
-tales como cuellos de botellas, formaciones en filas, bloqueos. 
+Modelling and simulating the displacement of agents througth arbitrarily
+complex enviroments may be stated in an hierachical structure of mecahnisms
+depending mianly on the distance from the agent. This level has been
+named, from closer to further, as operational (walking, lowst level
+physical-computaitnal model for displacement), tactical (wayfinding,
+route chocie) and strategic (general activity planning) {[}Hoogonen
+and Bovy 2004{]}. These levels are not independient, factors affecting
+one level may impact in the following and vice versa, for example,
+the route choice may vary due to congestion of agents producing from
+previous route chice and walking behavior. Also, obstacles can impact
+on the operational level or tactical level depending on the particular
+geometry of the enviroment. The particular mechanism we want to address
+is the avoidance of obstacles being fixed or moving (another agent)
+which involves operational and tactical aspects of the navigation.
 
-// Decir porque una simulación de peatónes es útil para estas situaciones.\\
+A general approach is to take an existing operational model and equip
+it with a higher level model which allows better and smoother collision
+avoidance behavior. Exisiting low level models can be taken from pedestrian
+dynamics field and in general this models can be classified into rule
+based and force based, discrete and continuous space description,
+etc. {[}Schadschneider 2009{]}.
+
+A famous example of continuos and force based model is the Social
+Force Model {[}Helbing 1995, 2000{]}. In this model the dynamic for
+virtual pedestrians is derived from the Newton equation\textquoteright s
+considering the total force exceterd over each agent is the result
+of three forces: Contact, Social and Driving Force. While the driving
+force points towards the final objective of each pedestrian, the social
+force is repulsive and acts as a kind of collision avoidance force.
+However this social force term introduce several artefacts in some
+configurations {[}see for example Lakoba et al. 2005, Parisi et al
+2009{]}.
+
+Cellular automata models make use of a spacial grid, which can be
+occuied or empty, along with a set of rules determining the evolution
+and conflict resolution of virtual pedestrians moving over the cells
+of the grid. An emblematic celluar automata model is the one proposed
+by Kirchner and Schadschneider {[}2002{]}.
+
+It have been also proposed hibrid models such as the Contractile Particle
+Model {[}Baglietto and Parisi, 2011{]} in which a continuos description
+of the space is combined with a set of simple rules governig the dynamcis
+of the system.
+
+The basic operational model as the ones described above can be improved
+if higher level mechanisms were added to manage more complex issues
+as eficient avoidance. Some recent examples can be found in the literature.
+
+Karamouzas et al. (2009) proposed a method for collision avoidance
+modifying the social force model, basically, replacing the social
+force term by a new \textquotedblleft evasive\textquotedblright{}
+force which tends to avoid future collisions. The magnitud and direction
+of this force is calculaed considering the predictions of these possible
+collisions.
+
+Kretz et al. 2011 have arrised the point that the key ingredient in
+social force model is the driving force instead of interaction force,
+so in this work the authors propose a method for dinamically adjust
+the desired velocity following the gradient of a field given by a
+time map, in other words, the desired velocity is choosen as the quickest
+path to the objective taking into account the geometry and other agents
+(collision, congestions, jams, etc.). Also mounted on the SFM, Moussaïd
+et al. {[}2011{]} have presented a model using a \textquotedblleft cognitive
+heuristics\textquotedblright{} to determine the norm and direction
+of the desired velocity for each agent dinamically during the evolution
+of the system. 
+
+In the same line, we also proposed that the navigation capacity of
+virtual agents should be concentrated in the on-line decision of the
+desired velocity. Similar to this approach, we postulate a new method
+derived from the methods used in robotics/artificial inteligence\dots{}
+The method deals with two aspects of the navigation mechanism. The
+first one is geometrical problem of finding intermediate goals when
+the final goal is not visible from the current position of the virtual
+agent. The second aspect is the local avoidance of other agents, which
+is performed via a reactive mechanism inspired in (robot navigation
+/ artificial inteligence) aproaches ¿?¿?¿\dots ..?¿?¿ {[} Ref.???
+??? {]}. 
+
+The method proposed could be mounted on different basic displacement
+models like de SFM or the CPM, in the present work we have chosen
+the first one.
 
 
-Analizar estructuras de transito de peatónes usando los cambios propuestos
-para el modelo de la fuerza social. Implementar una interfaz gráfica
-para poder visualizar los resultados de cambiar el modelo y cada uno
-de los parámetros
+\subsection{Social Force Model}
+
+En el Social Force Model cada peatón se rige por una serie de reglas
+presentads por Helbing en sus paper {[}Helbing 1995, 2000{]}. A partir
+de estas reglas, proupso un modelo en donde cada peatón sufre una
+fuerza de deseo que lo provoca a acercarse hacia su objetivo y una
+fuerza de repulsión contra cada uno de los demas peatones. Junto a
+estas dos, existe la fuerza de contacto producto del conectacto físico.
+\\
+ 
+
+Cada una de las fuerzas en el modelo se define usando las siguientes
+fórmulas:\\
 
 
-\section{Formulacíon del modelo}
+Fuerza de contacto (Granular):
 
-A continuación se presentan los efectos que van a determinar el movimiento
-de un peatón:
+\[
+F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
+\]
+
+
+En donde: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
+
+\begin{figure}[H]
+\begin{centering}
+\includegraphics[scale=0.4]{sfm/ganular}
+\par\end{centering}
+
+\protect\caption{Fuerza de contact granular}
+
+
+\end{figure}
+
+
+\vspace{1cm}
+
+
+Fuerza social:
+\[
+F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
+\]
+
+
+\vspace{1cm}
+
+
+\begin{figure}[H]
+\begin{centering}
+\includegraphics[scale=0.6]{sfm/sf}
+\par\end{centering}
+
+\protect\caption{Fuerza social}
+\end{figure}
+
+
+Fuerza de deseo:
+
+\[
+F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
+\]
+
+
+\begin{figure}[H]
+\begin{centering}
+\includegraphics[scale=0.7]{sfm/drivingforce}
+\par\end{centering}
+
+\protect\caption{Driving force}
+\end{figure}
+
+
+\vspace{1cm}
+
+
+Luego, se calcula $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$
+
+En donde los parametros se encuentran definidos con lo siguientes
+valores: $A=2000\,[N]$, $B=0.08\,[m]$, $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$,
+$k_{t}=2.4\,10^{5}\,[\frac{kg}{m/s}]$ y $\tau=0.5\,[s]$.
+
+
+\subsection{Future Vector Particle Model}
+
+Debido a que el SFM presenta una fuerza ficticia sobre el peatón,
+se generan artificios en la navegación ante la presencia de grandes
+cantidades de peatones. \{...\}
+
+Frente a esto se presenta un nuevo modelo 
+
+// no reproduce valores de Caudal Específico ni Diagrama Fundamental
+
+// To do: explicar nuestros aportes al modelo, observaciones sobre
+el SFM\\
+
+
+
+\section{The Model}
+
+
+\subsection{Hipotesis}
+
+In the following the main effects that determine the motion of a pedestrian
+will be introduced: (agregar que son las mismas hipotesis que presenta
+Helbin en su paper)
 \begin{enumerate}
-\item El peatón desea alcanzar su objetivo a largo plazo de la manera mas
-cómoda posible. Por lo tanto va a intentar alcanzarlo sin tener que
-tomar desvios innecesarios, por ejemplo el camino mas corto.
-\item El movimiento del peatón se ve influenciado por otros peatones. Dependiendo
-de la distancia con la que se encuentre de otro peatón y la trayectoria
-que se pueda predecir de este último, un peatón va a sentir la necesidad
-de realizar cambios a la ruta deseada a fin de evitar colisiones.
-Es por este efecto que el peatón va a necesitar recalcular su trayectoria
-según nuevos peatones aparecen en su campo de visión.
-\item La velocidad de movimiento se ver influenciada según necesidades o
-estados de ánimo del peatón en cuestión.
+\item The pedestrian wants to reach to his goal in the shortest possible
+path.
+\item The pedestrian's movement is influenced by other pedestrians. Depending
+on the distance between the two of them and the predicted trayectory,
+the pedestrian will feel the need to change his route to be able to
+avoid the other pedestrian. It is because of this effect that pedestrians
+will need to recalculate their route as new pedestrians get closer
+to them.
+\item Movement speed will be influenced by needs.
 \end{enumerate}
-Para representar los efectos presentados, un peatón se encuentra definido
-como según se especifica a continuación: 
+
+\subsection{??}
+
+A pedestrian is defined as follows:
 \begin{itemize}
-\item Area circular 
+\item Circular shape
 
 
-Representa el área física y espacio personal ocupado. El radio del
-círculo es generado aleatoriamente a fin de representar peatónes diferentes.
-El rango de valores se distribuye uniformemente en el intervalo $[0.25,0.29]$
-$[cm]$.
+Represents the space that this pedestrian occupies. Circle's radio
+is generated randomly to represent different types of pedestrians.
+The range of values is distributed uniformly in $[0.25,0.29]$$[cm]$.
 
-\item Objetivo a largo plazo 
-
-
-Representado por un área estática. Al ser tocada, se considera al
-objetivo como cumplido. Se permite la definición de múltiples objetivos,
-en cuyo caso, se deben cumplir todos de manera secuencial según el
-orden en que fueron especificados.
-
-\item Objetivo a corto plazo 
+\item Long term objective
 
 
-Llamado Future, representa un punto a una cierta distancia del centro
-del area circular. Este es un objetivo dinámico. 
+Represented by a static area. When it is touched by a pedestrian,
+it is considered as accomplished. Multiple objectives can by defined
+in a list, in this case, each of them must be reached in order.
+
+\item Short term objective
+\item Objetivo a corto plazo
 
 
-Se encuentra representado por una masa definida fija con un valor
-de $1$ $[kg]$. No es colisionable.
-
-\item Velocidad objetivo 
+Called FVP, it represents a point at a relative distance from the
+pedestrian's center. It's a dynamic objective.
 
 
-Representa la velocidad a la que el peatón desea avanzar. Este valor
-es un valor aleatorio ya que definido en el intervalo $[1.2,1.4]$
-$[m/s]$.
+It is defined as a$1$ $[kg]$ mass. Not collisionable.
 
-\item Distancia de reacción 
+\item Desired speed
 
 
-Representa la distancia a la cual se va a tratar de posicionar de
-sí mismo un peatón su propio future. Una mayor distancia representa
-un peatón que reacciona antes frente a una posible colisión.
+Represents the speed the pedestrian would walk if he was alone. Varies
+randomly between$[1.2,1.4]$ $[m/s]$.
+
+\item Reaction distance 
+
+
+Maximum distance between a pedestrian and his FVP, it represents the
+distance at which a real pedestrian would react from an obstacle.
 
 \end{itemize}
 \vspace{1cm}
 
 
-En la siguiente imagen se puede observar de manera gráfica la descripción
-de un peatón:
+Fig 1: Pedestrian and his FVP.
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{Vista superior de un peatón}
+\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{Pedestrian top view}
 \end{figure}
 
 
-Se reserva el uso de las letras para repersentar a un peatón y versión
-con tilde para representar su future en el resto del documento.\\
+In the document, we will call pedestrians with a letter and FVP of
+pedestrian x will be called x'.\\
 
 
 
-\section{Funcionamiento}
+\subsection{Implementation}
 
-Cada peatón en la simulación posee como objetivo final, alcanzar el
-objetivo a largo plazo. Para asegurar esto, se trata siempre de mantener
-al future (objetivo a corto plazo) alineado con el camino más corto
-hacia el objetivo final. Sin embargo, pueden darse casos en donde
-existan otros peatónes en esta trayectoria, obligando a tener que
-utilizar rutas alternativas. Es en estas circunstancias es cuando
-el objetivo a corto plazo va a ser trasladado según la situación. 
+Each pedestrian has to reach the long term objective at some point,
+to ensure this, the FVP always feels the need to be aligned with the
+shortest path to the long term objective. On the other hand, there
+are sometimes obstacles in the way, which will make this impossible,
+in this cases, the route will have to change depending on the situation.
 
-El movimiento de los peatónes se calcula en cuatro etapas: 
+The pedestrian movement is calculated in four steps:
 \begin{enumerate}
-\item Cálculo de la fuerza sobre sobre cada future. 
-\item Actualización de la posición de cada future. 
-\item Cálculo de la fuerza sobre cada peatón. 
-\item Actualización de la posición de cada peatón. \\
+\item Calculate forces for each FVP.
+\item Update positions for each FVP.
+\item Calculate forces for each pedestrian.
+\item Update positions for each pedestrian.\\
 
 \end{enumerate}
-En donde, cada etapa se define de la siguiente manera:
+Each step is defined as follows:
 \begin{enumerate}
-\item Cálculo de la fuerza sobre sobre cada future. 
+\item FVP force calculation. 
 
 
-En esta etapa, lo que se va a hacer es calcular la fuerza que sufre
-cada uno de los futures existentes debido a la existencia de otros
-peatónes. Esta se realiza sólo cuando la distancia entre el peatón
-y su future se encuentra por encima de cierto valor. Esto es así ya
-que a altos niveles de densidad de personas. Uno ya no puede moverse
-y simplemente es arrastrado por la masa de gente.
-
-
-En el caso contrario, cuando que un peatón se encuentra habilitado
-para moverse, se realiza un filtro de todos aquellos peatónes que
-se encuentran a sus espaldas, ya que estos no son casos que afectan
-la trayectoria de la persona. La condición que debe cumplirse para
-considerar un peatón $j$ como detrás del peatón $i$ es: 
+In each iteration, the FVP from pedestrian $i$ feels a force generated
+by the other pedestrians and FVPs. First of all, we filter de pedestrians
+$j$ who are not in the range of sight of pedestrian $i$ as follows:
 
 
 \[
-A=(Ax,\, Ay)=i
+k=i+\begin{pmatrix}0 & -1\\
+1 & 0
+\end{pmatrix}\overrightarrow{ii'}
 \]
-\[
-B=(Bx,\, By)=A+rotation(\overrightarrow{ii'},\,\pi/2)
-\]
-\[
-C=(Cx,\, Cy)=j
-\]
-Luego, se debe cumplir que:
+The following must be valid:
 
 
 \[
-(Bx-Ax)*(Cy-Ay)-(By-Ay)*(Cx-Ax)>0
+(k_{x}-i_{x})*(j_{y}-i_{y})-(k_{y}-i_{y})*(j_{x}-i_{x})>0
 \]
 
 
 
-Una vez filtrados los peatónes, simplemente se calcula por cada future
-restante, la fuerza de repulsión entre estos. Este se realiza utilizando
-la fórmula: 
+Once filtered, the force is calculated for every other FVP. The repulsion
+force between i' and j' is defined as follows:
 
 
 \[
@@ -210,24 +359,16 @@ F_{ext}(i)=\sum_{j}F_{i',j'}=\sum_{j}\alpha e^{-dist(i',j')/\beta}
 
 
 
-en donde $\alpha$ y $\beta$ son constantes predefinidas y fijas.
-Los valores que se usaron son $\alpha=800$ y $\beta=[0.65,\,085]$
-con distribución uniforme. Luego de calculadado $F_{ext}$, si su
-valor es menor que cierto umbral, entonces se desprecia esta fuerza
-y el future $i\lyxmathsym{\textquoteright}$ simplemente se alinea
-con el objetivo estático a distancia que indique la distancia de reacción
-del peatón. Caso contrario, cuando la contribución de las fuerzas
-externas debe considerarse, se suma la contribución del peatón $i$
-sobre su future para ajustarlo según su objetivo estático. Esta fuerza
-se calcula a usando la formula del resorte. Los extremos de este resorte
-se encuentran en el punto a distancia ``distancia de reaccion''
-sobre el segmento de recta que une al peatón $i$ con su objetivo
-estático y la posición del future $i'$.
+where $\alpha$ and $\beta$ are predefined constants. Afterwards,
+we calculate the repulsion force between i' and j using the same formula
+but different $\alpha$ and $\beta$. Afterwards, we calculate the
+force between pedestrian i and his FVP i', this is a force that pushes
+i' to be in its desired relative distance from the pedestrian. This
+force is represented with a spring of length ``reaction distance''
+and constant $K$. When we sum all these, we get the final $F_{ext}$.
 
 
-A modo ilustrativo, se muestra en la figura 2 como la trayectoria
-del peatón $i$ es afectada por la del peatón $j$ a través de $F(i',\, j')$
-y es alineada al objetivo con $F(i,\, i')$
+Fig 2: FVP force calculation.
 
 
 \begin{figure}[H]
@@ -235,44 +376,41 @@ y es alineada al objetivo con $F(i,\, i')$
 \end{figure}
 
 \begin{enumerate}
-\item Actualización de la posición de cada future. 
+\item FVP position update.
 
 
-En esta etapa, simplemente se actualiza la posición de cada future
-según el cálculo de la fuerza $F$ aplicada en la etapa previa. Este
-cálculo se realiza utilizando las fórmulas de Euler. 
+In this stage, the position of the FVP is updated with Euler's formula
+and the forces calculated in the previous step.
 
+\end{enumerate}
 
-Para romper con situaciones con altos grados de simetría, se agrega
-ruido $P=10\%$ sobre $F$. Para esto, se aplican dos formas de ruido:
+To avoid high simetry situations, a low noise $P=10\%$ is added to
+$F$. There are two ways to apply this noise:
 \begin{itemize}
-\item Ruido longitudinal:
-
-\begin{itemize}
-\item Se toma un valor $p$ según una distribución aleatoria uniforme en
-el intervalo $[-P,\, P]$ y se calcula: $FL_{i'}=F_{i'}*p$
-\end{itemize}
-\item Ruido angular:
+\item Radial noise:
 
 \begin{itemize}
-\item Se toma $sgn=\{-1,\,1\}$ utilizando una distribución uniforme y $p$
-en $[-P,\, P]$ con la misma distribución. Luego se calcula: $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
+\item A value $p$ is taken randomly from a uniform distribution $[-P,\, P]$
+and calculate: $FL_{i'}=F_{i'}*p$
+\item Angular noise:
+
+\begin{itemize}
+\item A value $sgn=\{-1,\,1\}$ is taken randomly from a uniform distribution
+and a value $p$ from $[-P,\, P]$. Then $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
+is calculated.
 \end{itemize}
 \end{itemize}
 
-Por último se toma $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ y de aplican
-las ecuaciones de movimiento.
+At last, we find $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ and apply euler's
+movement equations.
 
-\item Cálculo de la fuerza sobre cada peatón. 
-
-
-El peatón siempre se mueve hacia la dirección en la que apunta su
-future y de acuerdo a la fuerza de deseo.
+\end{itemize}
+\begin{enumerate}
+\item Pedestrian forces calculation. 
 
 
-Esta fuerza representa la atracción que un peatón $i$ ejerce sobre
-sí mismo a fin de dar un paso hacia su future y tratar de alcanzarlo.
-Esta definida por la siguiente fórmula: 
+The pedestrian always wants to move in the direction his FVP is pointing
+and its magnitude is defined as Fd or desire force:
 
 
 \[
@@ -281,18 +419,24 @@ F_{deseo}=\frac{dist(i',i)}{dist_{react}}\frac{v_{desire}-v_{curr}}{\tau}\frac{i
 
 
 
-En donde $\tau=0.5$
+Where $\tau=0.5$
 
-\item Actualización de la posición de cada peatón. 
+\item Pedestrian position update. 
 
 
-La nueva posicion de cada peatón es calculada en esta etapa utilizando
-las mismas fórmulas mencionada en la etapa 2.
+The new position of the pedestrian will be calculated using Euler's
+formula and the desire force calculated in the previous step.
 
 \end{enumerate}
 \end{enumerate}
+TODO: Los valores que se usaron son $\alpha=800$ y $\beta=[0.65,\,085]$
+con distribución uniforme.
 
-\section{Validación del modelo }
+
+\section{Calibracion}
+
+
+\subsection{Metricas a usar}
 
 Los resultados obtenidos fueron comparados utilizando el modelo ``Social
 Force Model'' utilizando los valores propuestos por Dirk Helbing
@@ -331,6 +475,9 @@ TODO: (como se calcula)
 TODO: (como se calcula)
 
 \end{enumerate}
+
+\section{Results}
+
 \vspace{1cm}
 En la tabla a continuación se presentan las mediciones de las métricas
 utilizando un total de $10$ corridas:
@@ -345,6 +492,8 @@ $\alpha=800,\,\beta=[0.65,\,0.85]$ & (1.800, 0.748)  & (34.600, 8.333)  & (1.024
 $\alpha=2000,\,\beta=0.08$ & (5.333, 2.625) & (12.333, 8.340)  & (1.052, 0.003)  & (1.876, 0.003)  & (2.391, 0.002)  & (106.185, 13.778)\tabularnewline
 \hline 
 \end{tabular}
+
+
 
 \textbf{// Poner Graficos indicando distancias y esquemas del future
 y la particula. }
