@@ -17,7 +17,6 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianSim;
 import ar.edu.itba.pedestriansim.back.factory.PedestrianForcesFactory;
 import ar.edu.itba.pedestriansim.back.logic.FutureForceUpdaterComponent;
 import ar.edu.itba.pedestriansim.back.logic.FuturePositionUpdaterComponent;
-import ar.edu.itba.pedestriansim.back.logic.KillPedestrianStuckOnWall;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStateFileWriter;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianAreaStep;
 import ar.edu.itba.pedestriansim.back.logic.PedestrianForceUpdaterComponent;
@@ -124,7 +123,8 @@ public class PedestrianSimApp implements Runnable {
 				Optional.of(new UniformRandomGenerator(-noiseP, noiseP))
 			))
 			.onStep(new PedestrianForceUpdaterComponent(forces))
-			.onStep(new KillPedestrianStuckOnWall());
+//			.onStep(new KillPedestrianStuckOnWall())
+		;
 	}
 	
 	private void configureSocialForceModelComponents(PedestrianSim sim) {

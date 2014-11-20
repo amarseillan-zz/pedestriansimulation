@@ -21,8 +21,10 @@ import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.config.ApplicationConfigBuilder;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.DefaultPedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.config.HallwayConfig;
 import ar.edu.itba.pedestriansim.back.config.PedestrianConfigurationFromFile;
+import ar.edu.itba.pedestriansim.back.config.SquareRoomConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAreaFileSerializer;
@@ -41,7 +43,7 @@ public class GUIPedestrianSim extends BasicGame {
 	static {
 		parser = new CommandParser()
 			.param(new CommandParam("-config").message("Archivo (.properties) de donde se va a leer la configuracion de la aplicacion."))
-			.param(new CommandParam("-map").required().constrained("cross", "hallway").message("Mapa en el cual correr la simulacion"))
+			.param(new CommandParam("-map").required().constrained("cross", "hallway", "room").message("Mapa en el cual correr la simulacion"))
 		;
 	}
 
@@ -59,7 +61,10 @@ public class GUIPedestrianSim extends BasicGame {
 		} else {
 			configBuilder = new DefaultPedestrianAppConfig();
 		}
-		configBuilder = "cross".equalsIgnoreCase(cmd.param("-map")) ? new CrossingConfig(configBuilder) : new HallwayConfig(configBuilder);
+		String mapName = cmd.param("-map").toLowerCase();
+		configBuilder = "cross".equals(mapName) ? new CrossingConfig(configBuilder) 
+			: "hallway".equals(mapName) ? new HallwayConfig(configBuilder) 
+			: new SquareRoomConfig(configBuilder);
 		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(configBuilder));
 		appContainer.setUpdateOnlyWhenVisible(false);
 		appContainer.setDisplayMode(1200, 700, false);

@@ -22,6 +22,10 @@ public class PedestrianArea {
 		_elapsedTime = _elapsedTime.add(delta).setScale(4, RoundingMode.HALF_DOWN);
 	}
 
+	public void setElapsedTime(BigDecimal elapsedTime) {
+		_elapsedTime = elapsedTime.setScale(4, RoundingMode.HALF_DOWN);
+	}
+
 	public void setTimeStep(BigDecimal timeStep) {
 		_timeStep = timeStep;
 	}

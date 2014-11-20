@@ -60,7 +60,6 @@ public class Pedestrian {
 
 	public void stop() {
 		_body.getVelocity().set(0, 0);
-		getFuture().getBody().setCenter(getBody().getCenter());
 	}
 
 	public RigidBody getBody() {

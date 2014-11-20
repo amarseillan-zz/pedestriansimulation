@@ -13,18 +13,11 @@ public class PedestrianMision {
 
 	public PedestrianMision() {
 		_targetTransition = Maps.newHashMap();
-		clear();
 	}
 
 	private PedestrianMision(Map<PedestrianTarget, PedestrianTarget> targets) {
 		this();
 		_targetTransition.putAll(targets);
-	}
-
-	public final void clear() {
-		_targetTransition.clear();
-		_current = null;
-		currTargetSet = false;
 	}
 
 	public void putFirst(PedestrianTarget first) {
@@ -48,15 +41,14 @@ public class PedestrianMision {
 	}
 
 	public PedestrianTarget next() {
-		return _targetTransition.get(current());
+		if (_current == null && currTargetSet) {
+			return null;
+		}
+		return _targetTransition.get(_current);
 	}
 
 	public PedestrianTarget setNext() {
 		return (_current = next());
-	}
-
-	public boolean currentIsSet() {
-		return current() != null;
 	}
 
 	public boolean hasNextTarget() {

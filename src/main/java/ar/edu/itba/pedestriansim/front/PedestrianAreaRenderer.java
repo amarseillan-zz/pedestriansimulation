@@ -37,6 +37,7 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 				draw(g, wall.thickBorder());
 			}
 		}
+		g.drawString(pedestrianArea.elapsedTime().toString(), gc.getScreenWidth() * 0.8f, gc.getScreenHeight() * 0.85f);
 	}
 
 	public void toggleRenderDebugInfo() {

@@ -7,10 +7,9 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
 import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.force.SpringForceModel;
+import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
 public class PedestrianForceUpdaterComponent extends PedestrianAreaStep {
-
-	private static final Vector2f nullForce = new Vector2f();
 
 	private final Vector2f forces = new Vector2f();
 	private final PedestrianForces _pedestrianForces;
@@ -22,7 +21,7 @@ public class PedestrianForceUpdaterComponent extends PedestrianAreaStep {
 	@Override
 	public void update(PedestrianArea input) {
 		for (Pedestrian subject : input.pedestrians()) {
-			forces.set(nullForce);
+			forces.set(Vectors.zero());
 			forces.add(_pedestrianForces.getDesireForce().apply(subject));
 			forces.add(getExternalForces(input, subject));
 			subject.getBody().setAppliedForce(forces);
