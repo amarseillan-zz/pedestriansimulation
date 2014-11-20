@@ -113,7 +113,7 @@ Introduction
 \end_layout
 
 \begin_layout Subsection
-Motivacion y antecedentes
+Motivation and previous work
 \end_layout
 
 \begin_layout Standard
@@ -236,30 +236,28 @@ Social Force Model
 \end_layout
 
 \begin_layout Standard
-En el Social Force Model cada peatón se rige por una serie de reglas presentads
- por Helbing en sus paper [Helbing 1995, 2000].
- A partir de estas reglas, proupso un modelo en donde cada peatón sufre
- una fuerza de deseo que lo provoca a acercarse hacia su objetivo y una
- fuerza de repulsión contra cada uno de los demas peatones.
- Junto a estas dos, existe la fuerza de contacto producto del conectacto
- físico.
- 
-\begin_inset Newline newline
+[Helbing 1995, 2000] presents a Model in which each pedestrian feels a 
+\begin_inset Quotes eld
 \end_inset
 
- 
+desire force
+\begin_inset Quotes erd
+\end_inset
+
+ towards his objective and a 
+\begin_inset Quotes eld
+\end_inset
+
+repulsion force
+\begin_inset Quotes erd
+\end_inset
+
+ towards other pedestrians.
+ On a lower level, a collission force is present.
 \end_layout
 
 \begin_layout Standard
-Cada una de las fuerzas en el modelo se define usando las siguientes fórmulas:
-\begin_inset Newline newline
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Fuerza de contacto (Granular):
+Collision force (Granular):
 \end_layout
 
 \begin_layout Standard
@@ -274,7 +272,7 @@ F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\eps
 \end_layout
 
 \begin_layout Standard
-En donde: 
+Where: 
 \begin_inset Formula $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
 \end_inset
 
@@ -329,7 +327,7 @@ Fuerza de contact granular
 \end_layout
 
 \begin_layout Standard
-Fuerza social:
+Social Force:
 \begin_inset Formula 
 \[
 F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
@@ -384,7 +382,7 @@ Fuerza social
 \end_layout
 
 \begin_layout Standard
-Fuerza de deseo:
+Desire Force:
 \end_layout
 
 \begin_layout Standard
@@ -442,16 +440,15 @@ Driving force
 \end_layout
 
 \begin_layout Standard
-Luego, se calcula 
+Afterwards 
 \begin_inset Formula $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$
 \end_inset
 
-
+is calculated
 \end_layout
 
 \begin_layout Standard
-En donde los parametros se encuentran definidos con lo siguientes valores:
- 
+Fixed parameter values: 
 \begin_inset Formula $A=2000\,[N]$
 \end_inset
 
@@ -474,31 +471,28 @@ En donde los parametros se encuentran definidos con lo siguientes valores:
 .
 \end_layout
 
+\begin_layout Standard
+While this model doesn't present a very real behaviour for pedestrians,
+ it worked as a starting point for numerous projects.
+\end_layout
+
 \begin_layout Subsection
 Future Vector Particle Model
 \end_layout
 
 \begin_layout Standard
-Debido a que el SFM presenta una fuerza ficticia sobre el peatón, se generan
- artificios en la navegación ante la presencia de grandes cantidades de
- peatones.
- {...}
+Given that the SFM adds a fictional force on pedestrians, navigation stops
+ imitating reality when there's a big quantity of pedestrians.
+ Pedestrians also show a collision avoidance method that resembles magnetism,
+ with movements that are clearly governed by the squared distance to the
+ other pedestrian.
+ Also, SFM didn't have the same values as well known metrics for real-case
+ scenarios such as the flow of pedestrians going out a door and the fundamental
+ diagram.
 \end_layout
 
 \begin_layout Standard
-Frente a esto se presenta un nuevo modelo 
-\end_layout
-
-\begin_layout Standard
-// no reproduce valores de Caudal Específico ni Diagrama Fundamental
-\end_layout
-
-\begin_layout Standard
-// To do: explicar nuestros aportes al modelo, observaciones sobre el SFM
-\begin_inset Newline newline
-\end_inset
-
-
+Because of this, we present a new model.
 \end_layout
 
 \begin_layout Section
@@ -510,20 +504,19 @@ Hipotesis
 \end_layout
 
 \begin_layout Standard
-In the following the main effects that determine the motion of a pedestrian
- will be introduced: (agregar que son las mismas hipotesis que presenta
- Helbin en su paper)
+The main effects that govern the motion of a pedestrian are the same as
+ Helbin's:
 \end_layout
 
 \begin_layout Enumerate
-The pedestrian wants to reach to his goal in the shortest possible path.
+The pedestrian wants to reach his goal in the shortest possible path.
 \end_layout
 
 \begin_layout Enumerate
 The pedestrian's movement is influenced by other pedestrians.
  Depending on the distance between the two of them and the predicted trayectory,
  the pedestrian will feel the need to change his route to be able to avoid
- the other pedestrian.
+ the other pedestrians.
  It is because of this effect that pedestrians will need to recalculate
  their route as new pedestrians get closer to them.
 \end_layout
@@ -533,7 +526,7 @@ Movement speed will be influenced by needs.
 \end_layout
 
 \begin_layout Subsection
-??
+Definition
 \end_layout
 
 \begin_layout Standard
@@ -576,10 +569,6 @@ Represented by a static area.
 \end_deeper
 \begin_layout Itemize
 Short term objective
-\end_layout
-
-\begin_layout Itemize
-Objetivo a corto plazo
 \end_layout
 
 \begin_deeper
@@ -687,7 +676,7 @@ In the document, we will call pedestrians with a letter and FVP of pedestrian
 \end_layout
 
 \begin_layout Subsection
-Implementation
+Algorithm
 \end_layout
 
 \begin_layout Standard
@@ -999,8 +988,110 @@ The new position of the pedestrian will be calculated using Euler's formula
 
 \end_deeper
 \end_deeper
+\begin_layout Section
+Calibration
+\end_layout
+
+\begin_layout Subsection
+Metrics
+\end_layout
+
 \begin_layout Standard
-TODO: Los valores que se usaron son 
+The results where compared to the SFM using the values propposed by Dirk
+ Helbing [2].
+ The test scenarios where crossing and hallway for they present the main
+ two types of simmetry (90 degrees and 180 degrees).
+\end_layout
+
+\begin_layout Standard
+The metrics used where:
+\end_layout
+
+\begin_layout Enumerate
+Number of collisions
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+When a pedestrian's body is touching another one, a counter is incremented,
+ it won't be incremented again unless it separates and touch again.
+ This counter represents the amount of collisions.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Total duration of collisions:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+When a pedestrian's body is touching another one, a counter is incremented
+ by the time step of the simulation.
+ This counter will represent the total time pedestrians were colliding.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average walking speed:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+//TODO
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average travel time:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+When a pedestrian appears in the map, this time is recorded, once he reaches
+ his goal, the travel time is calculated with this value.
+ The average of all this times represents the average travel time.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average travel distance:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Each step, the distance a pedestrian has traveled from the source is saved.
+ When this pedestrian reaches his goal, that distance is considered as finished
+ and it is saved elsewhere.
+ Afterwards, an average of all finished distances is calculated.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average turn angle:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Each step, the angle of the previous velocity of a pedestrian and the current
+ one is saved and added to a total.
+ When this pedestrians reaches his goal, this total is considered as finished
+ and it is saved elsewhere.
+ Afterwards, an average of all finished turn angles is calculated.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Values
+\end_layout
+
+\begin_layout Standard
+To calibrate the model, runs varying parameters were made.
+ A wide spectrum of values was covered, testing every combination of every
+ possible one.
+ After seeing clear preferences towards certain values, the values were
+ refined within that scope.
+ After numerous iterations of this process, the values that best suit these
+ metrics are
 \begin_inset Formula $\alpha=800$
 \end_inset
 
@@ -1008,95 +1099,13 @@ TODO: Los valores que se usaron son
 \begin_inset Formula $\beta=[0.65,\,085]$
 \end_inset
 
- con distribución uniforme.
-\end_layout
-
-\begin_layout Section
-Calibracion
-\end_layout
-
-\begin_layout Subsection
-Metricas a usar
+ uniformly distributed.
 \end_layout
 
 \begin_layout Standard
-Los resultados obtenidos fueron comparados utilizando el modelo 
-\begin_inset Quotes eld
-\end_inset
-
-Social Force Model
-\begin_inset Quotes erd
-\end_inset
-
- utilizando los valores propuestos por Dirk Helbing [2].
- Los escenarios de prueba fueron cruce y hallway.
- 
+//TODO todos los demás parámetros
 \end_layout
 
-\begin_layout Standard
-Los resultados fueron cuantificados utilizando las siguientes métricas:
-\end_layout
-
-\begin_layout Enumerate
-Cantidad total de colisiones
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-Duración promedio de las coliciones
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-Velocidad promedio de viaje
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-Tiempo promedio de viaje 
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-Promedio de la distancia recorrida 
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-Ángulo giro promedio
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-TODO: (como se calcula)
-\end_layout
-
-\end_deeper
 \begin_layout Section
 Results
 \end_layout
@@ -1105,12 +1114,16 @@ Results
 \begin_inset VSpace 1cm
 \end_inset
 
-En la tabla a continuación se presentan las mediciones de las métricas utilizand
-o un total de 
+
+\end_layout
+
+\begin_layout Standard
+Metrics comparing SFM vs FVPM.
+ Average of 
 \begin_inset Formula $10$
 \end_inset
 
- corridas:
+ runs.
 \end_layout
 
 \begin_layout Standard
@@ -1129,7 +1142,7 @@ o un total de
 \begin_inset Text
 
 \begin_layout Plain Layout
-Valores
+Values
 \end_layout
 
 \end_inset
@@ -1344,7 +1357,7 @@ Valores
 \end_layout
 
 \begin_layout Section
-Conclusiones
+Conclusions
 \end_layout
 
 \begin_layout Standard
@@ -1361,7 +1374,7 @@ Conclusiones
 \end_layout
 
 \begin_layout Section
-Referencias
+References
 \end_layout
 
 \begin_layout Itemize
