@@ -1,5 +1,6 @@
 package ar.edu.itba.pedestriansim.front;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
@@ -39,6 +40,7 @@ public class UpdatePositionsFromFile extends PedestrianAreaStep {
 		if (step == null) {
 			return;	// XXX: simulation finished!
 		}
+		input.setElapsedTime(new BigDecimal(step.step()));
 		frameIndex++;
 		if (frameIndex <= framesToSkip) {
 			return;
