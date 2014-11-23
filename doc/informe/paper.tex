@@ -22,7 +22,7 @@
 \usepackage{babel}
 \begin{document}
 
-\title{A Pedestrian Simulationnnnnn}
+\title{A Pedestrian Simulation}
 
 
 \title{Future Virtual Particle Force Model}
@@ -46,7 +46,7 @@ pedestrian, collision avoidance, future virtual particle, force model
 \section{Introduction}
 
 
-\subsection{Motivacion y antecedentes}
+\subsection{Motivation and previous work}
 
 Navigation of biological, sinthetic or virtual agents is a relevant
 problem in several fields such as pedestrian dynamics, moving robots
@@ -138,27 +138,19 @@ the first one.
 
 \subsection{Social Force Model}
 
-En el Social Force Model cada peatón se rige por una serie de reglas
-presentads por Helbing en sus paper {[}Helbing 1995, 2000{]}. A partir
-de estas reglas, proupso un modelo en donde cada peatón sufre una
-fuerza de deseo que lo provoca a acercarse hacia su objetivo y una
-fuerza de repulsión contra cada uno de los demas peatones. Junto a
-estas dos, existe la fuerza de contacto producto del conectacto físico.
-\\
- 
+{[}Helbing 1995, 2000{]} presents a Model in which each pedestrian
+feels a ``desire force'' towards his objective and a ``repulsion
+force'' towards other pedestrians. On a lower level, a collission
+force is present.
 
-Cada una de las fuerzas en el modelo se define usando las siguientes
-fórmulas:\\
-
-
-Fuerza de contacto (Granular):
+Collision force (Granular):
 
 \[
 F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
 \]
 
 
-En donde: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
+Where: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
 
 \begin{figure}[H]
 \begin{centering}
@@ -174,7 +166,7 @@ En donde: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
 \vspace{1cm}
 
 
-Fuerza social:
+Social Force:
 \[
 F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
 \]
@@ -185,14 +177,14 @@ F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
 
 \begin{figure}[H]
 \begin{centering}
-\includegraphics[scale=0.6]{sfm/sf}
+\includegraphics[scale=0.4]{sfm/sf}
 \par\end{centering}
 
-\protect\caption{Fuerza social}
+\protect\caption{Social Force}
 \end{figure}
 
 
-Fuerza de deseo:
+Desire Force:
 
 \[
 F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
@@ -201,7 +193,7 @@ F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
 
 \begin{figure}[H]
 \begin{centering}
-\includegraphics[scale=0.7]{sfm/drivingforce}
+\includegraphics[scale=0.4]{sfm/drivingforce}
 \par\end{centering}
 
 \protect\caption{Driving force}
@@ -211,26 +203,26 @@ F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
 \vspace{1cm}
 
 
-Luego, se calcula $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$
+Afterwards $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$is calculated
 
-En donde los parametros se encuentran definidos con lo siguientes
-valores: $A=2000\,[N]$, $B=0.08\,[m]$, $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$,
+Fixed parameter values: $A=2000\,[N]$, $B=0.08\,[m]$, $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$,
 $k_{t}=2.4\,10^{5}\,[\frac{kg}{m/s}]$ y $\tau=0.5\,[s]$.
 
+While this model doesn't present a very real behaviour for pedestrians,
+it worked as a starting point for numerous projects.
 
-\subsection{Future Vector Particle Model}
 
-Debido a que el SFM presenta una fuerza ficticia sobre el peatón,
-se generan artificios en la navegación ante la presencia de grandes
-cantidades de peatones. \{...\}
+\subsection{Future Virtual Particle Model}
 
-Frente a esto se presenta un nuevo modelo 
+Given that the SFM adds a fictional force on pedestrians, navigation
+stops imitating reality when there's a big quantity of pedestrians.
+Pedestrians also show a collision avoidance method that resembles
+magnetism, with movements that are clearly governed by the squared
+distance to the other pedestrian. Also, SFM didn't have the same values
+as well known metrics for real-case scenarios such as the flow of
+pedestrians going out a door and the fundamental diagram.
 
-// no reproduce valores de Caudal Específico ni Diagrama Fundamental
-
-// To do: explicar nuestros aportes al modelo, observaciones sobre
-el SFM\\
-
+Because of this, we present a new model.
 
 
 \section{The Model}
@@ -238,22 +230,20 @@ el SFM\\
 
 \subsection{Hipotesis}
 
-In the following the main effects that determine the motion of a pedestrian
-will be introduced: (agregar que son las mismas hipotesis que presenta
-Helbin en su paper)
+The main effects that govern the motion of a pedestrian are the same
+as Helbin's:
 \begin{enumerate}
-\item The pedestrian wants to reach to his goal in the shortest possible
-path.
+\item The pedestrian wants to reach his goal in the shortest possible path.
 \item The pedestrian's movement is influenced by other pedestrians. Depending
 on the distance between the two of them and the predicted trayectory,
 the pedestrian will feel the need to change his route to be able to
-avoid the other pedestrian. It is because of this effect that pedestrians
+avoid the other pedestrians. It is because of this effect that pedestrians
 will need to recalculate their route as new pedestrians get closer
 to them.
 \item Movement speed will be influenced by needs.
 \end{enumerate}
 
-\subsection{??}
+\subsection{Definition}
 
 A pedestrian is defined as follows:
 \begin{itemize}
@@ -272,7 +262,6 @@ it is considered as accomplished. Multiple objectives can by defined
 in a list, in this case, each of them must be reached in order.
 
 \item Short term objective
-\item Objetivo a corto plazo
 
 
 Called FVP, it represents a point at a relative distance from the
@@ -309,7 +298,7 @@ pedestrian x will be called x'.\\
 
 
 
-\subsection{Implementation}
+\subsection{Algorithm}
 
 Each pedestrian has to reach the long term objective at some point,
 to ensure this, the FVP always feels the need to be aligned with the
@@ -412,15 +401,16 @@ movement equations.
 The pedestrian always wants to move in the direction his FVP is pointing
 and its magnitude is defined as Fd or desire force:
 
+\end{enumerate}
 
 \[
-F_{deseo}=\frac{dist(i',i)}{dist_{react}}\frac{v_{desire}-v_{curr}}{\tau}\frac{i'-i}{|i'-i|}
+F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
 \]
 
 
 
 Where $\tau=0.5$
-
+\begin{enumerate}
 \item Pedestrian position update. 
 
 
@@ -429,69 +419,94 @@ formula and the desire force calculated in the previous step.
 
 \end{enumerate}
 \end{enumerate}
-TODO: Los valores que se usaron son $\alpha=800$ y $\beta=[0.65,\,085]$
-con distribución uniforme.
+
+\section{Calibration}
 
 
-\section{Calibracion}
+\subsection{Metrics}
 
+The results where compared to the SFM using the values propposed by
+Dirk Helbing {[}2{]}. The test scenarios where crossing and hallway
+for they present the main two types of simmetry (90 degrees and 180
+degrees).
 
-\subsection{Metricas a usar}
-
-Los resultados obtenidos fueron comparados utilizando el modelo ``Social
-Force Model'' utilizando los valores propuestos por Dirk Helbing
-{[}2{]}. Los escenarios de prueba fueron cruce y hallway. 
-
-Los resultados fueron cuantificados utilizando las siguientes métricas:
+The metrics used where:
 \begin{enumerate}
-\item Cantidad total de colisiones
+\item Number of collisions
 
 
-TODO: (como se calcula)
+When a pedestrian's body is touching another one, a counter is incremented,
+it won't be incremented again unless it separates and touch again.
+This counter represents the amount of collisions.
 
-\item Duración promedio de las coliciones
-
-
-TODO: (como se calcula)
-
-\item Velocidad promedio de viaje
+\item Total duration of collisions:
 
 
-TODO: (como se calcula)
+When a pedestrian's body is touching another one, a counter is incremented
+by the time step of the simulation. This counter will represent the
+total time pedestrians were colliding.
 
-\item Tiempo promedio de viaje 
-
-
-TODO: (como se calcula)
-
-\item Promedio de la distancia recorrida 
+\item Average walking speed:
 
 
-TODO: (como se calcula)
+//TODO
 
-\item Ángulo giro promedio
+\item Average travel time:
 
 
-TODO: (como se calcula)
+When a pedestrian appears in the map, this time is recorded, once
+he reaches his goal, the travel time is calculated with this value.
+The average of all this times represents the average travel time.
+
+\item Average travel distance:
+
+
+Each step, the distance a pedestrian has traveled from the source
+is saved. When this pedestrian reaches his goal, that distance is
+considered as finished and it is saved elsewhere. Afterwards, an average
+of all finished distances is calculated.
+
+\item Average turn angle:
+
+
+Each step, the angle of the previous velocity of a pedestrian and
+the current one is saved and added to a total. When this pedestrians
+reaches his goal, this total is considered as finished and it is saved
+elsewhere. Afterwards, an average of all finished turn angles is calculated.
 
 \end{enumerate}
+
+\subsection{Values}
+
+To calibrate the model, runs varying parameters were made. A wide
+spectrum of values was covered, testing every combination of every
+possible one. After seeing clear preferences towards certain values,
+the values were refined within that scope. After numerous iterations
+of this process, the values that best suit these metrics are$\alpha=800$
+y $\beta=[0.65,\,085]$ uniformly distributed.
+
+//TODO todos los demás parámetros
+
 
 \section{Results}
 
 \vspace{1cm}
-En la tabla a continuación se presentan las mediciones de las métricas
-utilizando un total de $10$ corridas:
 
+
+\begin{table}[H]
+{\scriptsize{}}%
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline 
-Valores & 1 & 2 & 3 & 4 & 5 & 6\tabularnewline
+{\scriptsize{}Values} & {\scriptsize{}1} & {\scriptsize{}2} & {\scriptsize{}3} & {\scriptsize{}4} & {\scriptsize{}5} & {\scriptsize{}6}\tabularnewline
 \hline 
 \hline 
-$\alpha=800,\,\beta=[0.65,\,0.85]$ & (1.800, 0.748)  & (34.600, 8.333)  & (1.024, 0.016)  & (1.910, 0.022)  & (2.392, 0.005)  & (111.062, 19.122)\tabularnewline
+{\scriptsize{}$\alpha=800,\,\beta=[0.65,\,0.85]$} & {\scriptsize{}(1.800, 0.748) } & {\scriptsize{}(34.600, 8.333) } & {\scriptsize{}(1.024, 0.016) } & {\scriptsize{}(1.910, 0.022) } & {\scriptsize{}(2.392, 0.005) } & {\scriptsize{}(111.062, 19.122)}\tabularnewline
 \hline 
-$\alpha=2000,\,\beta=0.08$ & (5.333, 2.625) & (12.333, 8.340)  & (1.052, 0.003)  & (1.876, 0.003)  & (2.391, 0.002)  & (106.185, 13.778)\tabularnewline
+{\scriptsize{}$\alpha=2000,\,\beta=0.08$} & {\scriptsize{}(5.333, 2.625)} & {\scriptsize{}(12.333, 8.340) } & {\scriptsize{}(1.052, 0.003) } & {\scriptsize{}(1.876, 0.003) } & {\scriptsize{}(2.391, 0.002) } & {\scriptsize{}(106.185, 13.778)}\tabularnewline
 \hline 
-\end{tabular}
+\end{tabular}\protect\caption{Metrics comparing SFM vs FVPM. Average of $10$ runs.}
+\end{table}
+
 
 
 
@@ -499,7 +514,7 @@ $\alpha=2000,\,\beta=0.08$ & (5.333, 2.625) & (12.333, 8.340)  & (1.052, 0.003) 
 y la particula. }
 
 
-\section{Conclusiones}
+\section{Conclusions}
 
 \textbf{// agregar al final futuras opciones que se abren con este
 trabajo}
@@ -507,7 +522,7 @@ trabajo}
 \pagebreak{}
 
 
-\section{Referencias}
+\section{References}
 \begin{itemize}
 \item {[}1{]} ... Karamouzas ...
 \item {[}2{]} ...Helbing ...\end{itemize}

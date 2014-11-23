@@ -356,8 +356,8 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename sfm/sf.png
-	lyxscale 50
-	scale 60
+	lyxscale 30
+	scale 40
 
 \end_inset
 
@@ -368,7 +368,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Fuerza social
+Social Force
 \end_layout
 
 \end_inset
@@ -401,14 +401,14 @@ F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
 placement H
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename sfm/drivingforce.png
-	lyxscale 50
-	scale 70
+	lyxscale 40
+	scale 40
 
 \end_inset
 
@@ -477,7 +477,7 @@ While this model doesn't present a very real behaviour for pedestrians,
 \end_layout
 
 \begin_layout Subsection
-Future Vector Particle Model
+Future Virtual Particle Model
 \end_layout
 
 \begin_layout Standard
@@ -638,7 +638,7 @@ Fig 1: Pedestrian and his FVP.
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -837,7 +837,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename pedestrian-top-forces.png
-	lyxscale 50
+	lyxscale 30
 	scale 50
 
 \end_inset
@@ -955,10 +955,11 @@ The pedestrian always wants to move in the direction his FVP is pointing
  and its magnitude is defined as Fd or desire force:
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 \begin_inset Formula 
 \[
-F_{deseo}=\frac{dist(i',i)}{dist_{react}}\frac{v_{desire}-v_{curr}}{\tau}\frac{i'-i}{|i'-i|}
+F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
 \]
 
 \end_inset
@@ -974,7 +975,6 @@ Where
 
 \end_layout
 
-\end_deeper
 \begin_layout Enumerate
 Pedestrian position update.
  
@@ -1118,15 +1118,15 @@ Results
 \end_layout
 
 \begin_layout Standard
-Metrics comparing SFM vs FVPM.
- Average of 
-\begin_inset Formula $10$
-\end_inset
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
 
- runs.
-\end_layout
+\begin_layout Plain Layout
 
-\begin_layout Standard
+\size scriptsize
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="7">
 <features rotate="0" tabularvalignment="middle">
@@ -1142,6 +1142,8 @@ Metrics comparing SFM vs FVPM.
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 Values
 \end_layout
 
@@ -1151,6 +1153,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 1
 \end_layout
 
@@ -1160,6 +1164,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 2
 \end_layout
 
@@ -1169,6 +1175,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 3
 \end_layout
 
@@ -1178,6 +1186,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 4
 \end_layout
 
@@ -1187,6 +1197,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 5
 \end_layout
 
@@ -1196,6 +1208,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 6
 \end_layout
 
@@ -1207,6 +1221,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 \begin_inset Formula $\alpha=800,\,\beta=[0.65,\,0.85]$
 \end_inset
 
@@ -1219,6 +1235,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (1.800, 0.748) 
 \end_layout
 
@@ -1228,6 +1246,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (34.600, 8.333) 
 \end_layout
 
@@ -1237,6 +1257,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (1.024, 0.016) 
 \end_layout
 
@@ -1246,6 +1268,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (1.910, 0.022) 
 \end_layout
 
@@ -1255,6 +1279,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (2.392, 0.005) 
 \end_layout
 
@@ -1264,6 +1290,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (111.062, 19.122)
 \end_layout
 
@@ -1275,6 +1303,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 \begin_inset Formula $\alpha=2000,\,\beta=0.08$
 \end_inset
 
@@ -1287,6 +1317,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (5.333, 2.625)
 \end_layout
 
@@ -1296,6 +1328,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (12.333, 8.340) 
 \end_layout
 
@@ -1305,6 +1339,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (1.052, 0.003) 
 \end_layout
 
@@ -1314,6 +1350,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (1.876, 0.003) 
 \end_layout
 
@@ -1323,6 +1361,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (2.391, 0.002) 
 \end_layout
 
@@ -1332,6 +1372,8 @@ Values
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size scriptsize
 (106.185, 13.778)
 \end_layout
 
@@ -1339,6 +1381,27 @@ Values
 </cell>
 </row>
 </lyxtabular>
+
+\end_inset
+
+
+\size default
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Metrics comparing SFM vs FVPM.
+ Average of 
+\begin_inset Formula $10$
+\end_inset
+
+ runs.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
