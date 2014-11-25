@@ -5,14 +5,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Vector2f;
 
-public class RigidBody {
+public final class RigidBody {
 
-	private Vector2f _center;
-	private Vector2f _velocity;
-	private Vector2f _appliedForce;
-	private float _mass;
-	private float _radius;
-	private Circle _shape;
+	private final Vector2f _center;
+	private final Vector2f _velocity;
+	private final Vector2f _appliedForce;
+	private final float _mass;
+	private final float _radius;
+	private final Circle _shape;
 
 	public RigidBody(float mass, Vector2f location, float radius) {
 		_mass = mass;
@@ -25,10 +25,6 @@ public class RigidBody {
 
 	public float getMass() {
 		return _mass;
-	}
-
-	public void setMass(float mass) {
-		this._mass = mass;
 	}
 
 	public Vector2f getVelocity() {

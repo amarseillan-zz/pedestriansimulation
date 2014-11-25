@@ -2,6 +2,9 @@ package ar.edu.itba.pedestriansim.back.entity.physics;
 
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
+
+import com.google.common.base.Preconditions;
+
 /**
  * Class used to make calculations with vectors
  * 
@@ -40,4 +43,12 @@ public class Vectors {
 		return alignmentVector;
 	}
 
+	public static float angle(Vector2f v1, Vector2f v2) {
+		double angle = Math.abs(v1.getTheta() - v2.getTheta());
+		if (angle > 180) {
+			angle = 360 - angle;
+		}
+		Preconditions.checkArgument(0 <= angle && angle <= 180);
+		return (float) angle;
+	}
 }

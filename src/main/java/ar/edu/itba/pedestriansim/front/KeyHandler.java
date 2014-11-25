@@ -2,7 +2,6 @@ package ar.edu.itba.pedestriansim.front;
 
 import java.util.List;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 
@@ -10,19 +9,15 @@ import com.google.common.collect.Lists;
 
 public class KeyHandler implements KeyListener {
 
-	private PedestrianAreaRenderer _renderer;
 	private Camera _camera;
-	private GameContainer _gc;
 
 	private final List<KeyMapping> handlers = Lists.newLinkedList();
-	
-	public KeyHandler(Camera camera, PedestrianAreaRenderer renderer, GameContainer gc) {
+
+	public KeyHandler(Camera camera) {
 		_camera = camera;
-		_renderer = renderer;
-		_gc = gc;
 		initialize();
 	}
-	
+
 	private void initialize() {
 		handlers.add(new KeyMapping(13, new ZoomIn()));
 		handlers.add(new KeyMapping(Input.KEY_ADD, new ZoomIn()));
@@ -38,11 +33,6 @@ public class KeyHandler implements KeyListener {
 		handlers.add(new KeyMapping(Input.KEY_S, new ScrollDown()));
 		handlers.add(new KeyMapping(Input.KEY_A, new ScrollLeft()));
 		handlers.add(new KeyMapping(Input.KEY_D, new ScrollRight()));
-		
-		handlers.add(new KeyMapping(Input.KEY_C, new ToggleRenderDebugInfo()));
-		handlers.add(new KeyMapping(Input.KEY_V, new ToggleRenderMoreDebugInfo()));
-		handlers.add(new KeyMapping(Input.KEY_P, new PauseToogle()));
-		
 	}
 
 	@Override
@@ -64,7 +54,8 @@ public class KeyHandler implements KeyListener {
 	}
 
 	@Override
-	public void setInput(Input arg0) {}
+	public void setInput(Input arg0) {
+	}
 
 	@Override
 	public void keyPressed(int keyCode, char c) {
@@ -91,12 +82,12 @@ public class KeyHandler implements KeyListener {
 		}
 		return null;
 	}
-	
+
 	private static class KeyMapping {
 		private int _keyCode;
 		private InputKey _key;
 		private boolean pressed;
-		
+
 		public KeyMapping(int keyCode, InputKey key) {
 			_keyCode = keyCode;
 			_key = key;
@@ -143,35 +134,5 @@ public class KeyHandler implements KeyListener {
 		public void pressed() {
 			_camera.scrollDown();
 		}
-	}
-	private final class ToggleRenderDebugInfo extends InputKey {
-		public ToggleRenderDebugInfo() {
-			super(true);
-		}
-		@Override
-		public void pressed() {
-			_renderer.toggleRenderDebugInfo();
-		}
-	}
-	private final class ToggleRenderMoreDebugInfo extends InputKey {
-		public ToggleRenderMoreDebugInfo() {
-			super(true);
-		}
-		@Override
-		public void pressed() {
-			_renderer.toggleRenderMoreDebugInfo();
-		}
-	}
-	private final class PauseToogle extends InputKey {
-
-		public PauseToogle() {
-			super(true);
-		}
-		
-		@Override
-		public void pressed() {
-			_gc.setPaused(!_gc.isPaused());
-		}
-		
 	}
 }

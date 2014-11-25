@@ -35,7 +35,7 @@ public class PedestrianForceUpdaterComponent extends PedestrianAreaStep {
 			externalForces.add(collitionModel.getForce(subject.getBody(), other.getBody()));
 		}
 		for (Wall wall : input.obstacles()) {
-			externalForces.add(collitionModel.getForce(subject.getBody(), wall.line()));
+			externalForces.add(collitionModel.getForce(subject.getBody(), wall));
 		}
 		return externalForces;
 	}

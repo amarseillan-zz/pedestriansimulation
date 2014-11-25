@@ -1,18 +1,23 @@
 package ar.edu.itba.pedestriansim.back.entity;
 
 import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Vector2f;
 
-public class Wall {
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
-	private Line _thickBorder;
+public final class Wall {
+
 	private Line _line;
+	private Optional<Vector2f> _normal = Optional.absent();
 
 	public Wall(Line line) {
 		_line = line;
 	}
 
-	public Wall setThickBorder(Line extraBorder) {
-		_thickBorder = extraBorder;
+	public Wall setThickDirection(Vector2f normal) {
+		Preconditions.checkArgument(Math.abs(new Vector2f(line().getNormal(0)).dot(normal)) == 1);
+		_normal = Optional.of(normal);
 		return this;
 	}
 
@@ -20,11 +25,11 @@ public class Wall {
 		return _line;
 	}
 
-	public Line thickBorder() {
-		return _thickBorder;
+	public Optional<Vector2f> normal() {
+		return _normal;
 	}
 
 	public boolean isThick() {
-		return _thickBorder != null;
+		return normal().isPresent();
 	}
 }

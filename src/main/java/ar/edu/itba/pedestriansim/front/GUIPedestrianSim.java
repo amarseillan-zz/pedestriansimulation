@@ -36,7 +36,7 @@ import com.google.common.io.Closer;
 
 public class GUIPedestrianSim extends BasicGame {
 
-	private static final int FPS = 160;
+	private static final int FPS = 80;
 
 	public static final Logger logger = Logger.getLogger(GUIPedestrianSim.class);
 	public static final CommandParser parser;
@@ -71,11 +71,13 @@ public class GUIPedestrianSim extends BasicGame {
 		appContainer.start();
 	}
 
+	private GameContainer _gc;
 	private PedestrianAppConfig _config;
 	private Camera _camera;
 	private PedestrianSim _simulation;
 	private PedestrianAreaRenderer _renderer;
 	private boolean _simulationIsFinished = false;
+	private boolean _initialized;
 
 	public GUIPedestrianSim(ApplicationConfigBuilder configBuilder) {
 		super("Pedestrian simulation");
@@ -86,10 +88,12 @@ public class GUIPedestrianSim extends BasicGame {
 		} else {
 			logger.info("Assuming already defined run on given configuration");
 		}
+		_initialized = false;
 	}
 
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		_gc = gc;
 		final Closer closer = Closer.create();
 		Scanner staticReader = closer.register(newScanner(_config.staticfile()));
 		Scanner dynamicReader = closer.register(newScanner(_config.dynamicfile()));
@@ -113,12 +117,15 @@ public class GUIPedestrianSim extends BasicGame {
 				}
 			})
 		;
-		_camera = new Camera();
-		_camera.setZoom(20f);
-		_renderer = new PedestrianAreaRenderer(_camera);
-		gc.setAlwaysRender(true);
-		gc.setTargetFrameRate(FPS);
-		gc.getInput().addKeyListener(new KeyHandler(_camera, _renderer, gc));
+		if (!_initialized) {
+			_initialized = true;
+			_camera = new Camera();
+			_camera.setZoom(20f);
+			_renderer = new PedestrianAreaRenderer(_camera);
+			gc.setAlwaysRender(true);
+			gc.setTargetFrameRate(FPS);
+		}
+		gc.getInput().addKeyListener(new KeyHandler(_camera));
 	}
 
 	private Scanner newScanner(File file) {
@@ -136,16 +143,39 @@ public class GUIPedestrianSim extends BasicGame {
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		_camera.update(gc);
-		if (gc.getInput().isKeyDown(Input.KEY_X) || gc.getInput().isKeyDown(Input.KEY_ESCAPE) || _simulation.isFinished()) {
-			System.out.println("Simulation finished... Exiting application!");
-			gc.exit();
-			return;
-		}
 		if (delta > 0) { // 0 = means paused!
 			_simulation.step();
 		}
-		if (gc.getInput().isKeyDown(Input.KEY_R)) {
-			gc.reinit();
+	}
+
+	@Override
+	public void keyPressed(int key, char c) {
+		super.keyPressed(key, c);
+		try {
+			if (Input.KEY_R == key) {
+				_gc.reinit();
+			}
+			if (Input.KEY_P == key) {
+				_gc.setPaused(!_gc.isPaused());
+			}
+			if (Input.KEY_NUMPAD1 == key) {
+				_gc.setTargetFrameRate((int) (_gc.getFPS() * 0.6f));
+			}
+			if (Input.KEY_NUMPAD2 == key) {
+				_gc.setTargetFrameRate((int) (_gc.getFPS() * 1.2f));
+			}
+			if (Input.KEY_ESCAPE == key) {
+				System.out.println("Simulation finished... Exiting application!");
+				_gc.exit();
+			}
+			if (Input.KEY_C == key) {
+				_renderer.toggleRenderDebugInfo();
+			}
+			if (Input.KEY_V == key) {
+				_renderer.toggleRenderMoreDebugInfo();
+			}
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

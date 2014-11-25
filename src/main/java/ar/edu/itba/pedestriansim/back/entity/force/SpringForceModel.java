@@ -2,10 +2,9 @@ package ar.edu.itba.pedestriansim.back.entity.force;
 
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Line;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
+import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.physics.Collitions;
 import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
@@ -30,34 +29,45 @@ public class SpringForceModel {
 		return Vectors.zero();
 	}
 
-	public Vector2f getForce(RigidBody shape1, Shape shape) {
-		if (shape instanceof Line) {
-			return getForce(shape1, (Line) shape);
-		}
-		if (shape instanceof Rectangle) {
-			Rectangle rectangle = (Rectangle) shape;
-			Line closest = null;
-			float closestDistance = 0;
-			Line border = new Line(0, 0);
-			for (int i = 0; i < 4; i++) {
-				border.set(rectangle.getPoint(i), rectangle.getPoint((i + 1) % 4));
-				float currDistance = border.distance(shape1.getCenter());
-				if (closest == null || currDistance < closestDistance) {
-					closest = border;
-					closestDistance = currDistance;
+	public Vector2f getForce(RigidBody body, Wall wall) {
+		Vector2f center = body.getCenter();
+		Line line = wall.line();
+		final float wallTicknesSq = 1;
+		if (wall.isThick()) {
+			line.getClosestPoint(center, closestPointCache);
+			Vector2f wallDir = closestPointCache.copy().sub(center);
+			Vector2f wallDirNorm = closestPointCache.copy().sub(center).normalise();
+			float dot = wallDirNorm.dot(wall.normal().get());
+			if (dot == 1) {
+				float rSq = body.getRadius() * body.getRadius() * 4;
+				if (closestPointCache.distanceSquared(line.getStart()) < rSq || closestPointCache.distanceSquared(line.getEnd()) < rSq) {
+					return Vectors.zero();
 				}
+				if (center.distanceSquared(closestPointCache) > wallTicknesSq) {
+					return Vectors.zero();
+				}
+				float overlapping = Collitions.overlapping(body.getShape(), line);
+				overlapping = (overlapping == 0) ? body.getRadius() : overlapping;
+				return springCollition(overlapping, wallDir);
+			} else {
+				float overlapping = Collitions.overlapping(body.getShape(), line);
+				return springCollition(overlapping, wallDir.scale(-1));
 			}
-			return getForce(shape1, closest);
+		} else {
+			float overlapping = Collitions.overlapping(body.getShape(), line);
+			if (overlapping > 0) {
+				line.getClosestPoint(center, closestPointCache);
+				return center.copy().sub(closestPointCache).scale(_K * overlapping * WALL_MAGIC);
+			}
+			return Vectors.zero();
 		}
-		throw new IllegalStateException("Not implemented");
 	}
-
-	public Vector2f getForce(RigidBody shape1, Line line) {
-		float overlapping = Collitions.overlapping(shape1.getShape(), line);
+	
+	private Vector2f springCollition(float overlapping, Vector2f dir) {
 		if (overlapping > 0) {
-			line.getClosestPoint(shape1.getCenter(), closestPointCache);
-			return shape1.getCenter().copy().sub(closestPointCache).scale(_K * overlapping * WALL_MAGIC);
+			return dir.scale(_K * overlapping * WALL_MAGIC);
 		}
 		return Vectors.zero();
 	}
+
 }

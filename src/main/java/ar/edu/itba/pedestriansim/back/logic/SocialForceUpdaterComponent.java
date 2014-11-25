@@ -71,7 +71,7 @@ public class SocialForceUpdaterComponent extends PedestrianAreaStep {
 		for (Wall wall : walls) {
 			Line line = wall.line();
 			if (pedesitan.getShape().intersects(line)) {
-				f.add(wallCollisionForceModel.getForce(pedesitan.getBody(), line));
+				f.add(wallCollisionForceModel.getForce(pedesitan.getBody(), wall));
 			}
 		}
 		return f;

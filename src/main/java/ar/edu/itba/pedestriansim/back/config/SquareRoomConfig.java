@@ -68,19 +68,18 @@ public class SquareRoomConfig implements ApplicationConfigBuilder {
 		// derecha
 		area.addObstacle(new Wall(new Line(maxX, yOffset, maxX, maxY)));
 		// Abajo
-		float thick = 0.1f;
 		area.addObstacle(new Wall(new Line(xOffset, maxY, doorXMin, maxY))
-			.setThickBorder(new Line(xOffset, maxY + thick, doorXMin, maxY + thick))
+			.setThickDirection(new Vector2f(0, -1))
 		);
 		area.addObstacle(new Wall(new Line(doorXMax, maxY, maxX, maxY))
-			.setThickBorder(new Line(doorXMax, maxY + thick, maxX, maxY + thick))
+			.setThickDirection(new Vector2f(0, -1))
 		);
 		// Pasillo al final
 		area.addObstacle(new Wall(new Line(doorXMin, maxY, doorXMin, maxY + 4))
-			.setThickBorder(new Line(doorXMin + thick, maxY, doorXMin + thick, maxY + 4))
+			.setThickDirection(new Vector2f(1, 0))
 		);
 		area.addObstacle(new Wall(new Line(doorXMax, maxY, doorXMax, maxY + 4))
-			.setThickBorder(new Line(doorXMax - thick, maxY, doorXMax - thick, maxY + 4))
+			.setThickDirection(new Vector2f(-1, 0))
 		);
 	}
 }

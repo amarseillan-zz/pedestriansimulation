@@ -2,22 +2,13 @@ package ar.edu.itba.pedestriansim.front;
 
 public abstract class InputKey {
 
-	private boolean _oncePerClick;
 	private boolean _pressed;
 
 	public InputKey() {
-		this(false);
-	}
-
-	public InputKey(boolean oncePerTap) {
-		_oncePerClick = oncePerTap;
 		_pressed = false;
 	}
 
 	public void onKeyPressed() {
-		if (_pressed && _oncePerClick) {
-			return;
-		}
 		_pressed = true;
 		pressed();
 	}

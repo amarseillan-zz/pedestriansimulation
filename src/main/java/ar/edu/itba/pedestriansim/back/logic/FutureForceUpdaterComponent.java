@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 //	private final Function<Float, Float> _wallRepulsionSmooth = new StepFunction(1.5f);
-	private final Function<Float, Float> _wallRepulsionSmooth = new LinearFunction(2f, 3f);
+	private final Function<Float, Float> _repulsionSmooth = new LinearFunction(2f, 3f);
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FutureForceUpdaterComponent.class);
@@ -40,21 +40,20 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 			Vector2f repulsion = new Vector2f();
 			Vector2f future1Center = subject.getFuture().getBody().getCenter();
 			Vector2f subjectCenter = subject.getBody().getCenter();
-			float d = _wallRepulsionSmooth.apply(subject.getTargetSelection().getTarget().getClosesPoint(subjectCenter).distance(future1Center));
+			float d = _repulsionSmooth.apply(subject.getTargetSelection().getTarget().getClosesPoint(subjectCenter).distance(future1Center));
+			Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
 					Vector2f future2Center = other.getFuture().getBody().getCenter();
 					repulsion.add(
-						repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues()).scale(d)
+						repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues())
 					);
-					Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
 					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(other.getBody().getCenter());
-					double angle = Math.abs(futureVector1.getTheta() - futureVector2.getTheta());
-					angle = (angle > 180) ? 360 - angle : angle; 
+					double angle = Vectors.angle(futureVector1, futureVector2);
 					if (angle > 120) {
 						Vector2f body2Center = other.getBody().getCenter();
 						repulsion.add(
-							repulsionForce.between(future1Center, body2Center, subject.futurePedestrianRepulsionForceValues()).scale(d)
+							repulsionForce.between(future1Center, body2Center, subject.futurePedestrianRepulsionForceValues())
 						);
 					}
 				}
@@ -77,14 +76,9 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 			RigidBody future = subject.getFuture().getBody();
 			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
 			totalRepulsionForce
-				.add(_forces.getCollisitionModel().getForce(future, line))
-				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subject.wallRepulsionForceValues()).scale(d));
-			if (wall.isThick()) {
-				// You shall not pass!
-				totalRepulsionForce.add(
-					_forces.getCollisitionModel().getForce(future, wall.thickBorder()).scale(100)
-				);
-			}
+				.add(_forces.getCollisitionModel().getForce(future, wall))
+				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subject.wallRepulsionForceValues()).scale(d))
+			;
 		}
 		return totalRepulsionForce;
 	}

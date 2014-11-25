@@ -59,11 +59,11 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 	private void addWalls(PedestrianArea area) {
 		// Arriba
 		area.addObstacle(
-			new Wall(new Line(0, 15, 30, 15)).setThickBorder(new Line(0, 14.9f, 30, 14.9f))
+			new Wall(new Line(0, 15, 30, 15)).setThickDirection(new Vector2f(0, 1))
 		);
 		// Abajo
 		area.addObstacle(
-			new Wall(new Line(0, 19, 30, 19)).setThickBorder(new Line(0, 19.1f, 30, 19.1f))
+			new Wall(new Line(0, 19, 30, 19)).setThickDirection(new Vector2f(0, -1))
 		);
 	}
 }
