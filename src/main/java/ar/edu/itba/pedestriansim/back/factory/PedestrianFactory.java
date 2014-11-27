@@ -35,7 +35,6 @@ public class PedestrianFactory {
 		setPedestrianAlphaBeta(pedestrianAlphaBeta.getLeft(), pedestrianAlphaBeta.getRight());
 		setWallAlphaBeta(wallAlphaBeta.getLeft(), wallAlphaBeta.getRight());
 		setFuturePedestrianAlphaBeta(futurePedestrianAlphaBeta.getLeft(), futurePedestrianAlphaBeta.getRight());
-		
 	}
 
 	public PedestrianFactory setPedestrianAlphaBeta(float alpha, Range<Float> beta) {

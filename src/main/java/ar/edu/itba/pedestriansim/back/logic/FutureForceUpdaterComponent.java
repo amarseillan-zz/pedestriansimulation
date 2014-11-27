@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
-import ar.edu.itba.common.util.LinearFunction;
 import ar.edu.itba.pedestriansim.back.entity.Pedestrian;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
@@ -15,13 +14,9 @@ import ar.edu.itba.pedestriansim.back.entity.force.RepulsionForce;
 import ar.edu.itba.pedestriansim.back.entity.physics.RigidBody;
 import ar.edu.itba.pedestriansim.back.entity.physics.Vectors;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 public class FutureForceUpdaterComponent extends PedestrianAreaStep {
-
-//	private final Function<Float, Float> _wallRepulsionSmooth = new StepFunction(1.5f);
-	private final Function<Float, Float> _repulsionSmooth = new LinearFunction(2f, 3f);
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FutureForceUpdaterComponent.class);
@@ -39,8 +34,6 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		for (Pedestrian subject : input.pedestrians()) {
 			Vector2f repulsion = new Vector2f();
 			Vector2f future1Center = subject.getFuture().getBody().getCenter();
-			Vector2f subjectCenter = subject.getBody().getCenter();
-			float d = _repulsionSmooth.apply(subject.getTargetSelection().getTarget().getClosesPoint(subjectCenter).distance(future1Center));
 			Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
@@ -58,7 +51,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 					}
 				}
 			}
-			repulsion.add(obstacleCollitionForces(subject, input, d));
+			repulsion.add(obstacleCollitionForces(subject, input));
 			forceOnFuture.put(subject, repulsion);
 		}
 		for (Pedestrian subject : input.pedestrians()) {
@@ -68,7 +61,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 	private static final Vector2f _wallClosestPointCache = new Vector2f();
 
-	private Vector2f obstacleCollitionForces(Pedestrian subject, PedestrianArea input, float d) {
+	private Vector2f obstacleCollitionForces(Pedestrian subject, PedestrianArea input) {
 		final Vector2f totalRepulsionForce = new Vector2f();
 		RepulsionForce repulsionForce = _forces.getWallRepulsionForceModel();
 		for (Wall wall : input.obstacles()) {
@@ -77,7 +70,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
 			totalRepulsionForce
 				.add(_forces.getCollisitionModel().getForce(future, wall))
-				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subject.wallRepulsionForceValues()).scale(d))
+				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subject.wallRepulsionForceValues()))
 			;
 		}
 		return totalRepulsionForce;
@@ -101,12 +94,11 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		return (me.getBody().getCenter().distance(futureLocation) - radiusSum) > distance;
 	}
 
-	private boolean isOnBack(Pedestrian p1, Pedestrian p2) {
-//		Vector2f p1Center = p1.getBody().getCenter();
-//		Vector2f p1f1 = p1.getFuture().getBody().getCenter().copy().sub(p1Center);
-//		Vector2f p1p2 = p2.getBody().getCenter().copy().sub(p1Center);
-//		return abs(p1f1.getTheta() - p1p2.getTheta()) > 90;
-		return false;
+	private boolean isOnBack(Pedestrian subject, Pedestrian other) {
+		Vector2f p1Center = subject.getBody().getCenter();
+		Vector2f p1f1 = subject.getFuture().getBody().getCenter().copy().sub(p1Center);
+		Vector2f p1p2 = other.getBody().getCenter().copy().sub(p1Center);
+		return Vectors.angle(p1f1, p1p2) > 90;
 	}
 
 	private static final Vector2f _targetCache = new Vector2f();

@@ -16,7 +16,7 @@ public class SquareRoomConfig implements ApplicationConfigBuilder {
 	private final float xOffset = 1;
 	private final float yOffset = xOffset;
 	private final float WALL_WIDTH = 20;
-	private final float DOOR_WIDTH = 1.2f;
+	private final float DOOR_WIDTH = 1.5f;
 	
 	private final float delay = 0.2f;
 
@@ -54,9 +54,9 @@ public class SquareRoomConfig implements ApplicationConfigBuilder {
 				.setProduceLimit(100)
 		);
 		PedestrianTargetArea first; 
-		mission.putFirst(first = new PedestrianTargetArea(new Line(doorXMin + 1f, maxY + 0.2f, doorXMax - 1f, maxY + 0.2f)).setId(1));
+		mission.putFirst(first = new PedestrianTargetArea(new Line(doorXMin + 1.1f, maxY + 0.0f, doorXMax - 1.1f, maxY + 0.0f)).setId(1));
 		mission.putTransition(first, new PedestrianTargetArea(
-			new Line(doorXMin, maxY + 5, doorXMax, maxY + 5)
+			new Line(doorXMin, maxY + 4, doorXMax, maxY + 4)
 		).setId(2));
 	}
 
@@ -75,10 +75,10 @@ public class SquareRoomConfig implements ApplicationConfigBuilder {
 			.setThickDirection(new Vector2f(0, -1))
 		);
 		// Pasillo al final
-		area.addObstacle(new Wall(new Line(doorXMin, maxY, doorXMin, maxY + 4))
+		area.addObstacle(new Wall(new Line(doorXMin, maxY, doorXMin, maxY + 10))
 			.setThickDirection(new Vector2f(1, 0))
 		);
-		area.addObstacle(new Wall(new Line(doorXMax, maxY, doorXMax, maxY + 4))
+		area.addObstacle(new Wall(new Line(doorXMax, maxY, doorXMax, maxY + 10))
 			.setThickDirection(new Vector2f(-1, 0))
 		);
 	}

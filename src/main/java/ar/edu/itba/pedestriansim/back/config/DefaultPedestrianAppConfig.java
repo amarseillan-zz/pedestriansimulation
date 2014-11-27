@@ -18,12 +18,12 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 		Range<Float> mass = Range.closed(60f, 80f);
 		Range<Float> velocity = Range.closed(1.2f, 1.4f);
 		Range<Float> r = Range.closed(0.25f, 0.29f);
-		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(1000f, Range.closed(0.65f, 0.75f));
-		Pair<Float, Float> wallAlphaBeta = Pair.of(600f, .75f);
-		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(2000f, 0.2f);
+		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(1000f, Range.closed(0.60f, 0.70f));
+		Pair<Float, Float> wallAlphaBeta = Pair.of(5000f, .15f);
+		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(5000f, 0.2f);
 		return new PedestrianAppConfig()
 			.makeNewRun(true)
-			.setTimeStep(new BigDecimal(1 / 500f).setScale(5, RoundingMode.UP))
+			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))
 			.setExternalForceRadiusThreshold(0)
 			.setExternalForceThreshold(0)
 			.setStaticfile(new File("static.txt"))
