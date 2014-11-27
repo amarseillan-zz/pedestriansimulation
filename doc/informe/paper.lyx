@@ -736,22 +736,13 @@ In each iteration, the FVP from pedestrian
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-k=i+\begin{pmatrix}0 & -1\\
-1 & 0
-\end{pmatrix}\overrightarrow{ii'}
-\]
-
-\end_inset
-
 The following must be valid:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-(k_{x}-i_{x})*(j_{y}-i_{y})-(k_{y}-i_{y})*(j_{x}-i_{x})>0
+\overrightarrow{ii'}\bullet\overrightarrow{ij'}<0
 \]
 
 \end_inset
