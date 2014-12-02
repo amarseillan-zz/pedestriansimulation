@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import ar.edu.itba.command.CommandParam;
 import ar.edu.itba.command.CommandParser;
 import ar.edu.itba.command.ParsedCommand;
@@ -98,7 +100,7 @@ public class RunsGenerator {
 			PedestrianAppConfig config = new CrossingConfig().get();
 			config.setStaticfile(new File(runsDirectory + File.separator + fileId + "-static.txt"));
 			config.setDynamicfile(new File(runsDirectory + File.separator + fileId + "-dynamic.txt"));
-			config.pedestrianFactory().setPedestrianAlphaBeta(alpha, beta);
+			config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(alpha, beta));
 			config.setExternalForceThreshold(threshold);
 			if (_newRun) {
 				new PedestrianSimApp(config).run();

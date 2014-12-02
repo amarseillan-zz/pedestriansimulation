@@ -1,5 +1,6 @@
 package ar.edu.itba.pedestriansim.back.config;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -10,6 +11,8 @@ import ar.edu.itba.pedestriansim.back.entity.PedestrianSource;
 import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
+
+import com.google.common.collect.Range;
 
 public class HallwayConfig implements ApplicationConfigBuilder {
 
@@ -28,6 +31,7 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		PedestrianAppConfig config = _defaultBuilder.get();
+		config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(1000f, Range.closed(0.3f, 0.4f)));
 		addWalls(config.pedestrianArea());
 		addSource1(config.pedestrianArea());
 		addSource2(config.pedestrianArea());

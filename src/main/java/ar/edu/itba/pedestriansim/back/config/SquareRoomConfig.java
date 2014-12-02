@@ -1,7 +1,10 @@
 package ar.edu.itba.pedestriansim.back.config;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
+
+import com.google.common.collect.Range;
 
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
@@ -39,6 +42,7 @@ public class SquareRoomConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		PedestrianAppConfig config = _defaultBuilder.get();
+		config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(1000f, Range.closed(0.3f, 0.4f)));
 		addWalls(config.pedestrianArea());
 		addSource1(config.pedestrianArea());
 		return config;

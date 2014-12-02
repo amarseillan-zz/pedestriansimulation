@@ -32,14 +32,14 @@ public class PedestrianFactory {
 		_massGenerator = new UniformRandomGenerator(mass);
 		_velocityGenerator = new UniformRandomGenerator(velocity);
 		_radiusGenerator = new UniformRandomGenerator(r);
-		setPedestrianAlphaBeta(pedestrianAlphaBeta.getLeft(), pedestrianAlphaBeta.getRight());
+		setPedestrianAlphaBeta(pedestrianAlphaBeta);
 		setWallAlphaBeta(wallAlphaBeta.getLeft(), wallAlphaBeta.getRight());
 		setFuturePedestrianAlphaBeta(futurePedestrianAlphaBeta.getLeft(), futurePedestrianAlphaBeta.getRight());
 	}
 
-	public PedestrianFactory setPedestrianAlphaBeta(float alpha, Range<Float> beta) {
-		_pedestrianAlpha = alpha;
-		_pedestrianBetaGenerator = new UniformRandomGenerator(beta);
+	public PedestrianFactory setPedestrianAlphaBeta(Pair<Float, Range<Float>> pedestrianAlphaBeta) {
+		_pedestrianAlpha = pedestrianAlphaBeta.getLeft();
+		_pedestrianBetaGenerator = new UniformRandomGenerator(pedestrianAlphaBeta.getRight());
 		return this;
 	}
 

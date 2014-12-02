@@ -34,21 +34,11 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 		for (Pedestrian subject : input.pedestrians()) {
 			Vector2f repulsion = new Vector2f();
 			Vector2f future1Center = subject.getFuture().getBody().getCenter();
-			Vector2f futureVector1 = subject.getFuture().getBody().getCenter().copy().sub(subject.getBody().getCenter());
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
 					Vector2f future2Center = other.getFuture().getBody().getCenter();
-					repulsion.add(
-						repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues())
-					);
-					Vector2f futureVector2 = other.getFuture().getBody().getCenter().copy().sub(other.getBody().getCenter());
-					double angle = Vectors.angle(futureVector1, futureVector2);
-					if (angle > 120) {
-						Vector2f body2Center = other.getBody().getCenter();
-						repulsion.add(
-							repulsionForce.between(future1Center, body2Center, subject.futurePedestrianRepulsionForceValues())
-						);
-					}
+					repulsion.add(repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues()));
+					repulsion.add(repulsionForce.between(future1Center, other.getBody().getCenter(), subject.futurePedestrianRepulsionForceValues()));
 				}
 			}
 			repulsion.add(obstacleCollitionForces(subject, input));

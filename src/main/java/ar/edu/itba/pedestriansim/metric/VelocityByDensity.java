@@ -125,7 +125,7 @@ public class VelocityByDensity {
 			PedestrianAppConfig config = new HallwayConfig().get();
 			config.setStaticfile(new File(runsDirectory + File.separator + fileId + "-static.txt"));
 			config.setDynamicfile(new File(runsDirectory + File.separator + fileId + "-dynamic.txt"));
-			config.pedestrianFactory().setPedestrianAlphaBeta(alpha, beta);
+			config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(alpha, beta));
 			config.setExternalForceThreshold(threshold);
 			if (_newRun) {
 				new PedestrianSimApp(config).run();
