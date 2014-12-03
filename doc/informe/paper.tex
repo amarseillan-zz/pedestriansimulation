@@ -8,7 +8,6 @@
 \usepackage[a4paper]{geometry}
 \geometry{verbose,tmargin=1in,bmargin=1in,headheight=1in,headsep=1in}
 \usepackage{float}
-\usepackage{amsmath}
 \usepackage{graphicx}
 
 \makeatletter
@@ -22,10 +21,7 @@
 \usepackage{babel}
 \begin{document}
 
-\title{A Pedestrian Simulation}
-
-
-\title{Future Virtual Particle Force Model}
+\title{Future Virtual Particle Method for Pedestrian Navigation}
 
 
 \author{Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi}
@@ -324,16 +320,11 @@ by the other pedestrians and FVPs. First of all, we filter de pedestrians
 $j$ who are not in the range of sight of pedestrian $i$ as follows:
 
 
-\[
-k=i+\begin{pmatrix}0 & -1\\
-1 & 0
-\end{pmatrix}\overrightarrow{ii'}
-\]
 The following must be valid:
 
 
 \[
-(k_{x}-i_{x})*(j_{y}-i_{y})-(k_{y}-i_{y})*(j_{x}-i_{x})>0
+\overrightarrow{ii'}\bullet\overrightarrow{ij'}<0
 \]
 
 
@@ -484,8 +475,6 @@ possible one. After seeing clear preferences towards certain values,
 the values were refined within that scope. After numerous iterations
 of this process, the values that best suit these metrics are$\alpha=800$
 y $\beta=[0.65,\,085]$ uniformly distributed.
-
-//TODO todos los demás parámetros
 
 
 \section{Results}
