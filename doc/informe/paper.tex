@@ -3,11 +3,12 @@
 %% LyX 2.1.1 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
-\usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage[a4paper]{geometry}
 \geometry{verbose,tmargin=1in,bmargin=1in,headheight=1in,headsep=1in}
 \usepackage{float}
+\usepackage{amsthm}
+\usepackage{amsmath}
 \usepackage{graphicx}
 
 \makeatletter
@@ -15,6 +16,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
 
 \makeatother
 
@@ -135,57 +140,36 @@ the first one.
 \subsection{Social Force Model}
 
 {[}Helbing 1995, 2000{]} presents a Model in which each pedestrian
-feels a ``desire force'' towards his objective and a ``repulsion
-force'' towards other pedestrians. On a lower level, a collission
-force is present.
+is subject to ``social forces''. This forces are a measure for the
+internal motivations of the individual to perform certain actions.
+In its simplest form, the Social Force Model consist on three main
+terms. Each of there term represent a force that a pedestrian will
+suffer in order to reach his objective.
 
-Collision force (Granular):
-
-\[
-F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
-\]
-
-
-Where: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
-
-\begin{figure}[H]
-\begin{centering}
-\includegraphics[scale=0.4]{sfm/ganular}
-\par\end{centering}
-
-\protect\caption{Fuerza de contact granular}
-
-
-\end{figure}
-
-
-\vspace{1cm}
-
-
-Social Force:
-\[
-F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
-\]
-
-
-\vspace{1cm}
-
-
-\begin{figure}[H]
-\begin{centering}
-\includegraphics[scale=0.4]{sfm/sf}
-\par\end{centering}
-
-\protect\caption{Social Force}
-\end{figure}
-
-
-Desire Force:
+The first term describes the acceleration that a pedestrian keeps
+towards his desired velocity of motion. This term is known as the
+``Desire Force'' and it's calculated as follows:
 
 \[
 F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
 \]
 
+
+In this latest formula, $v_{di}$ represents the desire velocity for
+the pedestrian $i$, $v_{i}$ is the current velocity and $e_{i}$
+represents the desired direction of motion of the pedestrian $i$
+and is calculated as follows:
+
+\[
+e_{i}(t)=\frac{r_{i}^{k}-r_{i}(t)}{||r_{i}^{k}-r_{i}(t)||}
+\]
+
+
+where $r_{\alpha}(t)$ denotes the actual position of the pedestrian
+$i$ at the time $t$. The goal is represented as an area, and the
+vector $e_{i}$ will be pointing towards the closest pont. Figure
+$1.1$ shows en example of a pedestrian currenty moving in direction
+of $v$ but correcting its trayectory towards $e$.
 
 \begin{figure}[H]
 \begin{centering}
@@ -199,7 +183,61 @@ F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
 \vspace{1cm}
 
 
-Afterwards $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$is calculated
+The second term represents the fact that a pedestrian keeps a certain
+distance to other pedestrians and borders. This term is known as the
+``Social Force'' and it's caluclated as follows:
+
+\[
+F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
+\]
+
+
+In this formula the terms $A$ and $B$ represents constants that
+where determined by simulations and $\epsilon_{ij}$ represents the
+distance from pedestrian $i$ towards pedestrian $j$. Figure $1.2$
+shows this vector grafically. 
+
+\begin{figure}[H]
+\begin{centering}
+\includegraphics[scale=0.4]{sfm/sf}
+\par\end{centering}
+
+\protect\caption{Social Force}
+\end{figure}
+
+
+\vspace{1cm}
+
+
+The third terms represents the granular force. This force represents
+the physical force that a pedestrians feels when in collision with
+another objects (pedestrian or wall). This granular force term is
+defined as follows:
+
+\[
+F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
+\]
+
+
+Where: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
+
+\begin{figure}[H]
+\begin{centering}
+\includegraphics[scale=0.4]{sfm/ganular}
+\par\end{centering}
+
+\protect\caption{Example of two pedestrians in collision}
+
+
+\end{figure}
+
+
+\vspace{1cm}
+
+
+Afterwards $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$is calculated for
+each of the pedestrians on each simulation step and applyed to the
+pedestrian until it reaches his goal.
 
 Fixed parameter values: $A=2000\,[N]$, $B=0.08\,[m]$, $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$,
 $k_{t}=2.4\,10^{5}\,[\frac{kg}{m/s}]$ y $\tau=0.5\,[s]$.
@@ -315,12 +353,17 @@ Each step is defined as follows:
 \item FVP force calculation. 
 
 
-In each iteration, the FVP from pedestrian $i$ feels a force generated
-by the other pedestrians and FVPs. First of all, we filter de pedestrians
-$j$ who are not in the range of sight of pedestrian $i$ as follows:
+For each pedestrian $i$, the force that his future $i'$ will suffer
+is calculated in this step. The magnitude of this force will depend
+on two factors: by each of the other pedestrians and the walls that
+might exists surronding $i$. The final value of the force applied
+over the future $i'$ will be the addition of the latest two factors.
 
 
-The following must be valid:
+The fist factor is caluclated for each of the pedestrian $j$ ($j\neq i$).
+First, we filter all pedestrians who are not in the range of sight
+of pedestrian $i$. This condition is verified using the following
+formula:
 
 
 \[
@@ -329,40 +372,83 @@ The following must be valid:
 
 
 
-Once filtered, the force is calculated for every other FVP. The repulsion
-force between i' and j' is defined as follows:
+This filter is represents the fact that a pedestrian (in most cases)
+is not aware of what each of the pedestrians that are behind him are
+doing. Hence, they are ignored. Once filtered, the pedestrian will
+try to face towards the direction that think is best for avoiding
+all the obstacles. This factor is represented using the social force
+formula from Helbing's model.
 
 
 \[
-F_{ext}(i)=\sum_{j}F_{i',j'}=\sum_{j}\alpha e^{-dist(i',j')/\beta}
+F_{ext}(i)=\sum_{j}F_{i',j'}+F_{i'j}=\sum_{j}(\alpha_{ff}e^{-dist(i',j')/\beta_{ff}}+\alpha_{fp}e^{-dist(i',j')/\beta_{fp}})
 \]
 
 
 
-where $\alpha$ and $\beta$ are predefined constants. Afterwards,
-we calculate the repulsion force between i' and j using the same formula
-but different $\alpha$ and $\beta$. Afterwards, we calculate the
-force between pedestrian i and his FVP i', this is a force that pushes
-i' to be in its desired relative distance from the pedestrian. This
-force is represented with a spring of length ``reaction distance''
-and constant $K$. When we sum all these, we get the final $F_{ext}$.
+where $\alpha_{x}$ and $\beta_{x}$ are predefined constants. 
 
 
-Fig 2: FVP force calculation.
+Here there are two terms in the $sum$. The first term represents
+the fact that $i$ does not want to be in the same location as $j$
+in the near future. Note that $j'$ represents the predicted location
+of $j$ inferred by another pedestrian (in this case, $i$) and because
+of this, it moves it's near future away of that predicted location.
+The seocond term, represents the same fact but taking in mind the
+current location of the pedestrian $j$. The same law applies to each
+of the walls on the simulation, the difference is that the closest
+point on the wall and and the future has to be calculated before applying
+the formula. Also, the constants $\alpha_{fw}$ and $\beta_{fw}$
+have different values.
 
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{Fuerzas que actúan sobre el Future $i'$}
+\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{External forces affecting future $i'$}
 \end{figure}
 
-\begin{enumerate}
+
+
+Then, the desire force that pedestrian $i$ will aply to his future
+is calculated. This force is modelled using two springs. The first
+spring hast its origin attached on $i$ and its end attached on $i'$
+and has a spring constant $K_{1}$. This spring will regulate the
+velocity that will be calculated on a previous step at witch the pedestrian
+$i$ will advance. The second spring, has its origin on $i'$ and
+the end attached to the closest point on the pedestrian target area
+and has a spring constant $K_{2}$. In order to avoid an oscilatory
+movement (in example, with a single pedestrian), a damping $\gamma$
+was added to this second spring. This spring represents how much te
+pedestrian wants to reach his target. A larger spring constant will
+force a more straight path, but possible with more collitions on its
+way.
+
+
+\begin{figure}[H]
+\centering{}\includegraphics[scale=0.5]{pedestrian-internal-forces}\protect\caption{Pedestrian internal forces}
+\end{figure}
+
+
+
+Because a pedestrian always tryes to reach his goal in in the sortest
+possible path (hipotesis 1). If it has to take a big detour of his
+ideal path, it will try to reduce his velocity drastically in order
+to avoid making a long travel. In orer to recreate this fact, the
+spring constant $K_{2}$ has to be variable and also dependant of
+the deviation angle. This constant is defined as $K_{2}\alpha\frac{1}{\theta},$
+whereas $\theta$is the angle between $\overrightarrow{ii'}$ and
+$\overrightarrow{i-objective_{i}}$. The constant in this relation
+is $\delta$.
+
+
+After this, the final $F_{i'}$ is computed by adding all the terms.
+$F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$
+
 \item FVP position update.
 
 
 In this stage, the position of the FVP is updated with Euler's formula
 and the forces calculated in the previous step.
 
-\end{enumerate}
 
 To avoid high simetry situations, a low noise $P=10\%$ is added to
 $F$. There are two ways to apply this noise:
@@ -385,14 +471,12 @@ At last, we find $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ and apply euler's
 movement equations.
 
 \end{itemize}
-\begin{enumerate}
 \item Pedestrian forces calculation. 
 
 
 The pedestrian always wants to move in the direction his FVP is pointing
 and its magnitude is defined as Fd or desire force:
 
-\end{enumerate}
 
 \[
 F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
@@ -401,14 +485,13 @@ F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
 
 
 Where $\tau=0.5$
-\begin{enumerate}
+
 \item Pedestrian position update. 
 
 
 The new position of the pedestrian will be calculated using Euler's
 formula and the desire force calculated in the previous step.
 
-\end{enumerate}
 \end{enumerate}
 
 \section{Calibration}
@@ -475,6 +558,8 @@ possible one. After seeing clear preferences towards certain values,
 the values were refined within that scope. After numerous iterations
 of this process, the values that best suit these metrics are$\alpha=800$
 y $\beta=[0.65,\,085]$ uniformly distributed.
+
+//TODO todos los demas parametros
 
 
 \section{Results}
