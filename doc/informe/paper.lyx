@@ -985,7 +985,7 @@ Here there are two terms in the
 
 ) and because of this, it moves it's near future away of that predicted
  location.
- The seocond term, represents the same fact but taking in mind the current
+ The second term, represents the same fact but taking in mind the current
  location of the pedestrian 
 \begin_inset Formula $j$
 \end_inset
@@ -1006,11 +1006,27 @@ Here there are two terms in the
 \end_layout
 
 \begin_layout Standard
+Figure 2.2 shows the external forces that a pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ suffers because of another pedestrian (
+\begin_inset Formula $j$
+\end_inset
+
+) and also the direction in wich 
+\begin_inset Formula $i$
+\end_inset
+
+ desires to move.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement H
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1047,9 +1063,9 @@ Then, the desire force that pedestrian
 \begin_inset Formula $i$
 \end_inset
 
- will aply to his future is calculated.
- This force is modelled using two springs.
- The first spring hast its origin attached on 
+ will apply to his future is calculated.
+ This force is modeled using two springs.
+ The first spring has its origin attached on 
 \begin_inset Formula $i$
 \end_inset
 
@@ -1057,12 +1073,12 @@ Then, the desire force that pedestrian
 \begin_inset Formula $i'$
 \end_inset
 
- and has a spring constant 
+ with a spring constant 
 \begin_inset Formula $K_{1}$
 \end_inset
 
 .
- This spring will regulate the velocity that will be calculated on a previous
+ This spring will regulate the velocity that will be calculated on a posterior
  step at witch the pedestrian 
 \begin_inset Formula $i$
 \end_inset
@@ -1072,7 +1088,10 @@ Then, the desire force that pedestrian
 \begin_inset Formula $i'$
 \end_inset
 
- and the end attached to the closest point on the pedestrian target area
+ and the end attached to 
+\begin_inset Formula $objective_{i}$
+\end_inset
+
  and has a spring constant 
 \begin_inset Formula $K_{2}$
 \end_inset

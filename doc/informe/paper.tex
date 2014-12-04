@@ -394,12 +394,17 @@ the fact that $i$ does not want to be in the same location as $j$
 in the near future. Note that $j'$ represents the predicted location
 of $j$ inferred by another pedestrian (in this case, $i$) and because
 of this, it moves it's near future away of that predicted location.
-The seocond term, represents the same fact but taking in mind the
-current location of the pedestrian $j$. The same law applies to each
-of the walls on the simulation, the difference is that the closest
-point on the wall and and the future has to be calculated before applying
+The second term, represents the same fact but taking in mind the current
+location of the pedestrian $j$. The same law applies to each of the
+walls on the simulation, the difference is that the closest point
+on the wall and and the future has to be calculated before applying
 the formula. Also, the constants $\alpha_{fw}$ and $\beta_{fw}$
 have different values.
+
+
+Figure 2.2 shows the external forces that a pedestrian $i$ suffers
+because of another pedestrian ($j$) and also the direction in wich
+$i$ desires to move.
 
 
 \begin{figure}[H]
@@ -408,19 +413,18 @@ have different values.
 
 
 
-Then, the desire force that pedestrian $i$ will aply to his future
-is calculated. This force is modelled using two springs. The first
-spring hast its origin attached on $i$ and its end attached on $i'$
-and has a spring constant $K_{1}$. This spring will regulate the
-velocity that will be calculated on a previous step at witch the pedestrian
+Then, the desire force that pedestrian $i$ will apply to his future
+is calculated. This force is modeled using two springs. The first
+spring has its origin attached on $i$ and its end attached on $i'$
+with a spring constant $K_{1}$. This spring will regulate the velocity
+that will be calculated on a posterior step at witch the pedestrian
 $i$ will advance. The second spring, has its origin on $i'$ and
-the end attached to the closest point on the pedestrian target area
-and has a spring constant $K_{2}$. In order to avoid an oscilatory
-movement (in example, with a single pedestrian), a damping $\gamma$
-was added to this second spring. This spring represents how much te
-pedestrian wants to reach his target. A larger spring constant will
-force a more straight path, but possible with more collitions on its
-way.
+the end attached to $objective_{i}$ and has a spring constant $K_{2}$.
+In order to avoid an oscilatory movement (in example, with a single
+pedestrian), a damping $\gamma$ was added to this second spring.
+This spring represents how much te pedestrian wants to reach his target.
+A larger spring constant will force a more straight path, but possible
+with more collitions on its way.
 
 
 \begin{figure}[H]
