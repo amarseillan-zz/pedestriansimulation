@@ -53,13 +53,13 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 
 	private Vector2f obstacleCollitionForces(Pedestrian subject, PedestrianArea input) {
 		final Vector2f totalRepulsionForce = new Vector2f();
-		RepulsionForce repulsionForce = _forces.getWallRepulsionForceModel();
+		RepulsionForce repulsionForce = _forces.getRepulsionForceModel();
 		for (Wall wall : input.obstacles()) {
 			Line line = wall.line();
 			RigidBody future = subject.getFuture().getBody();
 			line.getClosestPoint(future.getCenter(), _wallClosestPointCache);
 			totalRepulsionForce
-				.add(_forces.getCollisitionModel().getForce(future, wall))
+//				.add(_forces.getCollisitionModel().getForce(future, wall))
 				.add(repulsionForce.between(future.getCenter(), _wallClosestPointCache, subject.wallRepulsionForceValues()))
 			;
 		}

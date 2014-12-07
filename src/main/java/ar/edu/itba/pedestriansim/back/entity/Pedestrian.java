@@ -90,10 +90,9 @@ public class Pedestrian {
 	public void recenterFuture() {
 		Vector2f targetCenter = getTargetSelection().getTarget().getClosesPoint(getBody().getCenter());
 		float distance = _reactionDistance;
-		Vector2f cache = new Vector2f();
-		Vectors.pointBetween(getBody().getCenter(), targetCenter, distance, cache);
-		getFuture().getBody().setCenter(cache);
-		
+		Vector2f result = new Vector2f();
+		Vectors.pointBetween(getBody().getCenter(), targetCenter, distance, result);
+		getFuture().getBody().setCenter(result);
 	}
 
 	public float getReactionDistance() {

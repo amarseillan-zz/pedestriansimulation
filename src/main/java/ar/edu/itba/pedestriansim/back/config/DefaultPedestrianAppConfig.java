@@ -18,9 +18,9 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 		Range<Float> mass = Range.closed(60f, 80f);
 		Range<Float> velocity = Range.closed(1.2f, 1.4f);
 		Range<Float> r = Range.closed(0.25f, 0.29f);
-		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(1000f, Range.closed(0.3f, 0.6f));
-		Pair<Float, Float> wallAlphaBeta = Pair.of(5000f, .15f);
-		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(1000f, 0.2f);
+		Pair<Float, Range<Float>> pedestrianAlphaBeta = Pair.of(1000f, Range.closed(0.4f, 0.5f));
+		Pair<Float, Float> wallAlphaBeta = Pair.of(10000f, 0.1f);
+		Pair<Float, Float> futurePedestrianAlphaBeta = Pair.of(1000f, 0.1f);
 		return new PedestrianAppConfig()
 			.makeNewRun(true)
 			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))
