@@ -650,7 +650,7 @@ Movement speed will be influenced by needs.
 \end_layout
 
 \begin_layout Subsection
-Definition
+Geometrical definition
 \end_layout
 
 \begin_layout Standard
@@ -754,7 +754,14 @@ Maximum distance between a pedestrian and his FVP, it represents the distance
 \end_layout
 
 \begin_layout Standard
-Fig 1: Pedestrian and his FVP.
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Pedestrian-top-view"
+
+\end_inset
+
+ shows a pedestrian geomtrical definition:
 \end_layout
 
 \begin_layout Standard
@@ -777,6 +784,12 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Pedestrian-top-view"
+
+\end_inset
+
 Pedestrian top view
 \end_layout
 
@@ -791,16 +804,64 @@ Pedestrian top view
 \end_layout
 
 \begin_layout Standard
-In the document, we will call pedestrians with a letter and FVP of pedestrian
- x will be called x'.
-\begin_inset Newline newline
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Pedestrian-vectors"
+
+\end_inset
+
+ shows all the vectorial definition that will be used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename geometry.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Pedestrian-vectors"
+
+\end_inset
+
+Vectorial definitions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
 \end_inset
 
 
 \end_layout
 
 \begin_layout Subsection
-Algorithm
+Dynamics of the FPV Model
 \end_layout
 
 \begin_layout Standard
@@ -813,36 +874,15 @@ Each pedestrian has to reach the long term objective at some point, to ensure
 \end_layout
 
 \begin_layout Standard
-The pedestrian movement is calculated in four steps:
-\end_layout
-
-\begin_layout Enumerate
-Calculate forces for each FVP.
-\end_layout
-
-\begin_layout Enumerate
-Update positions for each FVP.
-\end_layout
-
-\begin_layout Enumerate
-Calculate forces for each pedestrian.
-\end_layout
-
-\begin_layout Enumerate
-Update positions for each pedestrian.
-\begin_inset Newline newline
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Each step is defined as follows:
 \end_layout
 
-\begin_layout Enumerate
-FVP force calculation.
- 
+\begin_layout Subsubsection
+Forces
+\end_layout
+
+\begin_layout Itemize
+Dyamic of the FVP
 \end_layout
 
 \begin_deeper
@@ -856,17 +896,7 @@ For each pedestrian
 \end_inset
 
  will suffer is calculated in this step.
- The magnitude of this force will depend on two factors: by each of the
- other pedestrians and the walls that might exists surronding 
-\begin_inset Formula $i$
-\end_inset
-
-.
- The final value of the force applied over the future 
-\begin_inset Formula $i'$
-\end_inset
-
- will be the addition of the latest two factors.
+ The magnitude of this force is calculated using two factors:
 \end_layout
 
 \begin_layout Standard
@@ -878,20 +908,18 @@ The fist factor is caluclated for each of the pedestrian
 \begin_inset Formula $j\neq i$
 \end_inset
 
-).
- First, we filter all pedestrians who are not in the range of sight of pedestria
-n 
+) who is in the range of sight of pedestrian 
 \begin_inset Formula $i$
 \end_inset
 
 .
- This condition is verified using the following formula:
+ This restriction is verified using the following condition:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\overrightarrow{ii'}\bullet\overrightarrow{ij'}<0
+\mathbf{r_{ii'}}\bullet\mathbf{r_{ij'}}<0
 \]
 
 \end_inset
@@ -903,33 +931,7 @@ n
 This filter is represents the fact that a pedestrian (in most cases) is
  not aware of what each of the pedestrians that are behind him are doing.
  Hence, they are ignored.
- Once filtered, the pedestrian will try to face towards the direction that
- think is best for avoiding all the obstacles.
- This factor is represented using the social force formula from 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-Helbing's
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- model.
+ The formula for 
 \end_layout
 
 \begin_layout Standard
@@ -1006,7 +1008,14 @@ Here there are two terms in the
 \end_layout
 
 \begin_layout Standard
-Figure 2.2 shows the external forces that a pedestrian 
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:External-forces-affecting"
+
+\end_inset
+
+ shows the external forces that a pedestrian 
 \begin_inset Formula $i$
 \end_inset
 
@@ -1041,6 +1050,12 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:External-forces-affecting"
+
+\end_inset
+
 External forces affecting future 
 \begin_inset Formula $i'$
 \end_inset
@@ -1185,18 +1200,11 @@ After this, the final
 \begin_inset Formula $F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$
 \end_inset
 
+.
+\begin_inset Newline newline
+\end_inset
 
-\end_layout
 
-\end_deeper
-\begin_layout Enumerate
-FVP position update.
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-In this stage, the position of the FVP is updated with Euler's formula and
- the forces calculated in the previous step.
 \end_layout
 
 \begin_layout Standard
@@ -1265,20 +1273,23 @@ At last, we find
 \begin_inset Formula $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$
 \end_inset
 
- and apply euler's movement equations.
+ and apply movement equations.
 \end_layout
 
 \end_deeper
 \end_deeper
-\begin_layout Enumerate
-Pedestrian forces calculation.
- 
+\begin_layout Itemize
+Dynamic of the pedestrian
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
 The pedestrian always wants to move in the direction his FVP is pointing
- and its magnitude is defined as Fd or desire force:
+ and its magnitude is defined as 
+\begin_inset Formula $F_{d}$
+\end_inset
+
+ or desire force:
 \end_layout
 
 \begin_layout Standard
@@ -1301,18 +1312,30 @@ Where
 \end_layout
 
 \end_deeper
-\begin_layout Enumerate
-Pedestrian position update.
- 
+\begin_layout Subsubsection
+Algorithm
 \end_layout
 
-\begin_deeper
 \begin_layout Standard
-The new position of the pedestrian will be calculated using Euler's formula
- and the desire force calculated in the previous step.
+The pedestrian movement is calculated in four steps:
 \end_layout
 
-\end_deeper
+\begin_layout Enumerate
+Calculate forces for each FVP.
+\end_layout
+
+\begin_layout Enumerate
+Update positions for each FVP.
+\end_layout
+
+\begin_layout Enumerate
+Calculate forces for each pedestrian.
+\end_layout
+
+\begin_layout Enumerate
+Update positions for each pedestrian.
+\end_layout
+
 \begin_layout Section
 Calibration
 \end_layout
@@ -1450,6 +1473,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 
 \size scriptsize
 \begin_inset Tabular
@@ -1548,7 +1572,7 @@ Values
 \begin_layout Plain Layout
 
 \size scriptsize
-\begin_inset Formula $\alpha=800,\,\beta=[0.65,\,0.85]$
+\begin_inset Formula $\alpha=1000,\,\beta=[0.4,\,0.5]$
 \end_inset
 
 

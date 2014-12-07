@@ -277,7 +277,7 @@ to them.
 \item Movement speed will be influenced by needs.
 \end{enumerate}
 
-\subsection{Definition}
+\subsection{Geometrical definition}
 
 A pedestrian is defined as follows:
 \begin{itemize}
@@ -320,19 +320,27 @@ distance at which a real pedestrian would react from an obstacle.
 \vspace{1cm}
 
 
-Fig 1: Pedestrian and his FVP.
+Figure \ref{fig:Pedestrian-top-view} shows a pedestrian geomtrical
+definition:
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{Pedestrian top view}
+\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{\label{fig:Pedestrian-top-view}Pedestrian top view}
 \end{figure}
 
 
-In the document, we will call pedestrians with a letter and FVP of
-pedestrian x will be called x'.\\
+Figure \ref{fig:Pedestrian-vectors} shows all the vectorial definition
+that will be used:
+
+\begin{figure}[H]
+\centering{}\includegraphics[scale=0.5]{geometry}\protect\caption{\label{fig:Pedestrian-vectors}Vectorial definitions}
+\end{figure}
+
+
+\vspace{1cm}
 
 
 
-\subsection{Algorithm}
+\subsection{Dynamics of the FPV Model}
 
 Each pedestrian has to reach the long term objective at some point,
 to ensure this, the FVP always feels the need to be aligned with the
@@ -340,44 +348,33 @@ shortest path to the long term objective. On the other hand, there
 are sometimes obstacles in the way, which will make this impossible,
 in this cases, the route will have to change depending on the situation.
 
-The pedestrian movement is calculated in four steps:
-\begin{enumerate}
-\item Calculate forces for each FVP.
-\item Update positions for each FVP.
-\item Calculate forces for each pedestrian.
-\item Update positions for each pedestrian.\\
-
-\end{enumerate}
 Each step is defined as follows:
-\begin{enumerate}
-\item FVP force calculation. 
+
+
+\subsubsection{Forces}
+\begin{itemize}
+\item Dyamic of the FVP
 
 
 For each pedestrian $i$, the force that his future $i'$ will suffer
-is calculated in this step. The magnitude of this force will depend
-on two factors: by each of the other pedestrians and the walls that
-might exists surronding $i$. The final value of the force applied
-over the future $i'$ will be the addition of the latest two factors.
+is calculated in this step. The magnitude of this force is calculated
+using two factors:
 
 
-The fist factor is caluclated for each of the pedestrian $j$ ($j\neq i$).
-First, we filter all pedestrians who are not in the range of sight
-of pedestrian $i$. This condition is verified using the following
-formula:
+The fist factor is caluclated for each of the pedestrian $j$ ($j\neq i$)
+who is in the range of sight of pedestrian $i$. This restriction
+is verified using the following condition:
 
 
 \[
-\overrightarrow{ii'}\bullet\overrightarrow{ij'}<0
+\mathbf{r_{ii'}}\bullet\mathbf{r_{ij'}}<0
 \]
 
 
 
 This filter is represents the fact that a pedestrian (in most cases)
 is not aware of what each of the pedestrians that are behind him are
-doing. Hence, they are ignored. Once filtered, the pedestrian will
-try to face towards the direction that think is best for avoiding
-all the obstacles. This factor is represented using the social force
-formula from Helbing's model.
+doing. Hence, they are ignored. The formula for 
 
 
 \[
@@ -402,13 +399,14 @@ the formula. Also, the constants $\alpha_{fw}$ and $\beta_{fw}$
 have different values.
 
 
-Figure 2.2 shows the external forces that a pedestrian $i$ suffers
-because of another pedestrian ($j$) and also the direction in wich
-$i$ desires to move.
+Figure \ref{fig:External-forces-affecting} shows the external forces
+that a pedestrian $i$ suffers because of another pedestrian ($j$)
+and also the direction in wich $i$ desires to move.
 
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{External forces affecting future $i'$}
+\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{\label{fig:External-forces-affecting}External forces affecting future
+$i'$}
 \end{figure}
 
 
@@ -445,13 +443,8 @@ is $\delta$.
 
 
 After this, the final $F_{i'}$ is computed by adding all the terms.
-$F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$
+$F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$.\\
 
-\item FVP position update.
-
-
-In this stage, the position of the FVP is updated with Euler's formula
-and the forces calculated in the previous step.
 
 
 To avoid high simetry situations, a low noise $P=10\%$ is added to
@@ -471,15 +464,15 @@ is calculated.
 \end{itemize}
 \end{itemize}
 
-At last, we find $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ and apply euler's
-movement equations.
+At last, we find $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$ and apply movement
+equations.
 
 \end{itemize}
-\item Pedestrian forces calculation. 
+\item Dynamic of the pedestrian
 
 
 The pedestrian always wants to move in the direction his FVP is pointing
-and its magnitude is defined as Fd or desire force:
+and its magnitude is defined as $F_{d}$ or desire force:
 
 
 \[
@@ -490,12 +483,16 @@ F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
 
 Where $\tau=0.5$
 
-\item Pedestrian position update. 
+\end{itemize}
 
+\subsubsection{Algorithm}
 
-The new position of the pedestrian will be calculated using Euler's
-formula and the desire force calculated in the previous step.
-
+The pedestrian movement is calculated in four steps:
+\begin{enumerate}
+\item Calculate forces for each FVP.
+\item Update positions for each FVP.
+\item Calculate forces for each pedestrian.
+\item Update positions for each pedestrian.
 \end{enumerate}
 
 \section{Calibration}
@@ -572,13 +569,13 @@ y $\beta=[0.65,\,085]$ uniformly distributed.
 
 
 \begin{table}[H]
-{\scriptsize{}}%
+\centering{}{\scriptsize{}}%
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline 
 {\scriptsize{}Values} & {\scriptsize{}1} & {\scriptsize{}2} & {\scriptsize{}3} & {\scriptsize{}4} & {\scriptsize{}5} & {\scriptsize{}6}\tabularnewline
 \hline 
 \hline 
-{\scriptsize{}$\alpha=800,\,\beta=[0.65,\,0.85]$} & {\scriptsize{}(1.800, 0.748) } & {\scriptsize{}(34.600, 8.333) } & {\scriptsize{}(1.024, 0.016) } & {\scriptsize{}(1.910, 0.022) } & {\scriptsize{}(2.392, 0.005) } & {\scriptsize{}(111.062, 19.122)}\tabularnewline
+{\scriptsize{}$\alpha=1000,\,\beta=[0.4,\,0.5]$} & {\scriptsize{}(1.800, 0.748) } & {\scriptsize{}(34.600, 8.333) } & {\scriptsize{}(1.024, 0.016) } & {\scriptsize{}(1.910, 0.022) } & {\scriptsize{}(2.392, 0.005) } & {\scriptsize{}(111.062, 19.122)}\tabularnewline
 \hline 
 {\scriptsize{}$\alpha=2000,\,\beta=0.08$} & {\scriptsize{}(5.333, 2.625)} & {\scriptsize{}(12.333, 8.340) } & {\scriptsize{}(1.052, 0.003) } & {\scriptsize{}(1.876, 0.003) } & {\scriptsize{}(2.391, 0.002) } & {\scriptsize{}(106.185, 13.778)}\tabularnewline
 \hline 
