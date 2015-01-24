@@ -1,7 +1,3 @@
-% Preview source code
-
-%% LyX 2.1.1 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
 \usepackage[latin9]{inputenc}
 \usepackage[a4paper]{geometry}
@@ -53,130 +49,126 @@ Navigation of biological, sinthetic or virtual agents is a relevant
 problem in several fields such as pedestrian dynamics, moving robots
 and animation of characters for videogames and motion pictures.
 
-Modelling and simulating the displacement of agents througth arbitrarily
-complex enviroments may be stated in an hierachical structure of mecahnisms
-depending mianly on the distance from the agent. This level has been
-named, from closer to further, as operational (walking, lowst level
-physical-computaitnal model for displacement), tactical (wayfinding,
-route chocie) and strategic (general activity planning) {[}Hoogonen
-and Bovy 2004{]}. These levels are not independient, factors affecting
-one level may impact in the following and vice versa, for example,
-the route choice may vary due to congestion of agents producing from
-previous route chice and walking behavior. Also, obstacles can impact
+Modelling and simulating the displacement of agents through arbitrarily
+complex environments may be stated in an hierarchical structure of mechanisms
+depending mainly on the distance from the agent. This level has been
+named, from closer to further, as operational (walking, lowest level
+physical-computational model for displacement), tactical (way-finding,
+route choice) and strategic (general activity planning) {[}Hoogonen
+and Bovy 2004{]}. These levels are not independent, factors affecting
+one level may impact in the following and vice-versa, for example,
+the route choice may vary due to congestion of agents produced from
+previous route choice and walking behavior. Also, obstacles can impact
 on the operational level or tactical level depending on the particular
-geometry of the enviroment. The particular mechanism we want to address
+geometry of the environment. The particular mechanism we want to address
 is the avoidance of obstacles being fixed or moving (another agent)
 which involves operational and tactical aspects of the navigation.
 
 A general approach is to take an existing operational model and equip
 it with a higher level model which allows better and smoother collision
-avoidance behavior. Exisiting low level models can be taken from pedestrian
+avoidance behavior. Existing low level models can be taken from pedestrian
 dynamics field and in general this models can be classified into rule
 based and force based, discrete and continuous space description,
 etc. {[}Schadschneider 2009{]}.
 
-A famous example of continuos and force based model is the Social
+A famous example of continuous and force based model is the Social
 Force Model {[}Helbing 1995, 2000{]}. In this model the dynamic for
 virtual pedestrians is derived from the Newton equation\textquoteright s
-considering the total force exceterd over each agent is the result
+considering the total force exerted over each agent is the result
 of three forces: Contact, Social and Driving Force. While the driving
 force points towards the final objective of each pedestrian, the social
 force is repulsive and acts as a kind of collision avoidance force.
-However this social force term introduce several artefacts in some
+However this social force term introduces several artifices in some
 configurations {[}see for example Lakoba et al. 2005, Parisi et al
 2009{]}.
 
-Cellular automata models make use of a spacial grid, which can be
-occuied or empty, along with a set of rules determining the evolution
+Cellular automaton models make use of a spatial grid, which can be
+occupied or empty, along with a set of rules determining the evolution
 and conflict resolution of virtual pedestrians moving over the cells
-of the grid. An emblematic celluar automata model is the one proposed
+of the grid. An emblematic cellular automaton model is the one proposed
 by Kirchner and Schadschneider {[}2002{]}.
 
-It have been also proposed hibrid models such as the Contractile Particle
-Model {[}Baglietto and Parisi, 2011{]} in which a continuos description
-of the space is combined with a set of simple rules governig the dynamcis
+Hybrid models have also been proposed such as the Contractile Particle
+Model {[}Baglietto and Parisi, 2011{]} in which a continuous description
+of the space is combined with a set of simple rules governing the dynamics
 of the system.
 
-The basic operational model as the ones described above can be improved
+The basic operational model -as the ones described above- can be improved
 if higher level mechanisms were added to manage more complex issues
-as eficient avoidance. Some recent examples can be found in the literature.
+as efficient avoidance. Some recent examples can be found in the literature.
 
 Karamouzas et al. (2009) proposed a method for collision avoidance
 modifying the social force model, basically, replacing the social
 force term by a new \textquotedblleft evasive\textquotedblright{}
-force which tends to avoid future collisions. The magnitud and direction
-of this force is calculaed considering the predictions of these possible
+force which tends to avoid future collisions. The magnitude and direction
+of this force is calculated considering the predictions of these possible
 collisions.
 
 Kretz et al. 2011 have arrised the point that the key ingredient in
 social force model is the driving force instead of interaction force,
-so in this work the authors propose a method for dinamically adjust
+so in this work the authors propose a method for dynamically adjusting
 the desired velocity following the gradient of a field given by a
-time map, in other words, the desired velocity is choosen as the quickest
+time map, in other words, the desired velocity is chosen as the quickest
 path to the objective taking into account the geometry and other agents
-(collision, congestions, jams, etc.). Also mounted on the SFM, Moussaïd
-et al. {[}2011{]} have presented a model using a \textquotedblleft cognitive
+(collision, congestion, jams, etc.). Also mounted on the SFM, Moussaïd
+et al. {[}2011{]} presented a model using \textquotedblleft cognitive
 heuristics\textquotedblright{} to determine the norm and direction
-of the desired velocity for each agent dinamically during the evolution
+of the desired velocity for each agent dynamically during the evolution
 of the system. 
 
 In the same line, we also proposed that the navigation capacity of
 virtual agents should be concentrated in the on-line decision of the
-desired velocity. Similar to this approach, we postulate a new method
-derived from the methods used in robotics/artificial inteligence\dots{}
-The method deals with two aspects of the navigation mechanism. The
-first one is geometrical problem of finding intermediate goals when
-the final goal is not visible from the current position of the virtual
-agent. The second aspect is the local avoidance of other agents, which
-is performed via a reactive mechanism inspired in (robot navigation
-/ artificial inteligence) aproaches ¿?¿?¿\dots ..?¿?¿ {[} Ref.???
-??? {]}. 
+desired velocity. Both direction and magnitude calculation of the desired velocity
+are the key differences with the SFM.
 
 The method proposed could be mounted on different basic displacement
-models like de SFM or the CPM, in the present work we have chosen
+models like the SFM or the CPM, in the present work we have chosen
 the first one.
 
 
 \subsection{Social Force Model}
 
+//Hay que citar la de 1995 pero la que estamos describiendo es la del 2000
 {[}Helbing 1995, 2000{]} presents a Model in which each pedestrian
 is subject to ``social forces''. This forces are a measure for the
 internal motivations of the individual to perform certain actions.
 In its simplest form, the Social Force Model consist on three main
-terms. Each of there term represent a force that a pedestrian will
+terms. Each of them represents a force that a pedestrian will
 suffer in order to reach his objective.
 
 The first term describes the acceleration that a pedestrian keeps
 towards his desired velocity of motion. This term is known as the
-``Desire Force'' and it's calculated as follows:
+``Driving Force'' and it's calculated as follows:
 
-\[
+\begin{equation}
+\label{eq:driving-force}
 F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}
-\]
+\end{equation}
 
 
-In this latest formula, $v_{di}$ represents the desire velocity for
+In this latest formula, $v_{di}$ represents the desire speed for
 the pedestrian $i$, $v_{i}$ is the current velocity and $e_{i}$
 represents the desired direction of motion of the pedestrian $i$
 and is calculated as follows:
 
-\[
+\begin{equation}
+\label{eq:desired-direction}
 e_{i}(t)=\frac{r_{i}^{k}-r_{i}(t)}{||r_{i}^{k}-r_{i}(t)||}
-\]
+\end{equation}
 
-
-where $r_{\alpha}(t)$ denotes the actual position of the pedestrian
-$i$ at the time $t$. The goal is represented as an area, and the
-vector $e_{i}$ will be pointing towards the closest pont. Figure
-$1.1$ shows en example of a pedestrian currenty moving in direction
-of $v$ but correcting its trayectory towards $e$.
+where $r_{i}(t)$ denotes the actual position of the pedestrian
+$i$ at the time $t$ and $r_{i}^{k}$ is the closest point from the goal
+(represented as an area) to the pedestrian. The unit vector $e_{i}$ will 
+be pointing towards the closest point. Figure \ref{fig:driving-force} shows an 
+example of a pedestrian currently moving in direction of $v$ but correcting its 
+trajectory towards $x$.
 
 \begin{figure}[H]
 \begin{centering}
-\includegraphics[scale=0.4]{sfm/drivingforce}
+\includegraphics[scale=0.4]{pics/sfm/drivingforce}
 \par\end{centering}
 
-\protect\caption{Driving force}
+\protect\caption{\label{fig:driving-force}Driving force}
 \end{figure}
 
 
@@ -185,21 +177,21 @@ of $v$ but correcting its trayectory towards $e$.
 
 The second term represents the fact that a pedestrian keeps a certain
 distance to other pedestrians and borders. This term is known as the
-``Social Force'' and it's caluclated as follows:
+``Social Force'' and it's calculated as follows:
 
 \[
 F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
 \]
 
 
-In this formula the terms $A$ and $B$ represents constants that
-where determined by simulations and $\epsilon_{ij}$ represents the
+In this formula the terms $A$ and $B$ represent constants that
+were determined by simulations and $\epsilon_{ij}$ represents the
 distance from pedestrian $i$ towards pedestrian $j$. Figure $1.2$
-shows this vector grafically. 
+shows this vector graphically. 
 
 \begin{figure}[H]
 \begin{centering}
-\includegraphics[scale=0.4]{sfm/sf}
+\includegraphics[scale=0.4]{pics/sfm/sf}
 \par\end{centering}
 
 \protect\caption{Social Force}
@@ -209,9 +201,9 @@ shows this vector grafically.
 \vspace{1cm}
 
 
-The third terms represents the granular force. This force represents
-the physical force that a pedestrians feels when in collision with
-another objects (pedestrian or wall). This granular force term is
+The third term represents the granular force. This force represents
+the physical force that a pedestrian feels when colliding with
+another object (pedestrian or wall). This granular force term is
 defined as follows:
 
 \[
@@ -223,7 +215,7 @@ Where: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
 
 \begin{figure}[H]
 \begin{centering}
-\includegraphics[scale=0.4]{sfm/ganular}
+\includegraphics[scale=0.4]{pics/sfm/ganular}
 \par\end{centering}
 
 \protect\caption{Example of two pedestrians in collision}
@@ -236,7 +228,7 @@ Where: $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
 
 
 Afterwards $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$is calculated for
-each of the pedestrians on each simulation step and applyed to the
+each of the pedestrians on each simulation step and applied to the
 pedestrian until it reaches his goal.
 
 Fixed parameter values: $A=2000\,[N]$, $B=0.08\,[m]$, $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$,
@@ -248,16 +240,10 @@ it worked as a starting point for numerous projects.
 
 \subsection{Future Virtual Particle Model}
 
-Given that the SFM adds a fictional force on pedestrians, navigation
-stops imitating reality when there's a big quantity of pedestrians.
-Pedestrians also show a collision avoidance method that resembles
-magnetism, with movements that are clearly governed by the squared
-distance to the other pedestrian. Also, SFM didn't have the same values
-as well known metrics for real-case scenarios such as the flow of
-pedestrians going out a door and the fundamental diagram.
+Given that the SFM adds a fictional force on pedestrians, navigation doesn't resemble reality for high pedestrian densities.
+Also, SFM didn't have the same values as well known metrics for real-case scenarios such as the flow of pedestrians going out a door and the fundamental diagram.
 
-Because of this, we present a new model.
-
+Because of this, we present a new model in which the social force from equation \ref{eq:driving-force} affecting directly on each pedestrian is eliminated and replaced with a desire force facing a short term objective. This force is created using equation \ref{eq:desired-direction} replacing $r_{i}^{k}$ with the vector facing the closest point on the short term objective area.
 
 \section{The Model}
 
@@ -269,7 +255,7 @@ as Helbin's:
 \begin{enumerate}
 \item The pedestrian wants to reach his goal in the shortest possible path.
 \item The pedestrian's movement is influenced by other pedestrians. Depending
-on the distance between the two of them and the predicted trayectory,
+on the distance between the two of them and the predicted trajectory,
 the pedestrian will feel the need to change his route to be able to
 avoid the other pedestrians. It is because of this effect that pedestrians
 will need to recalculate their route as new pedestrians get closer
@@ -298,19 +284,19 @@ in a list, in this case, each of them must be reached in order.
 \item Short term objective
 
 
-Called FVP, it represents a point at a relative distance from the
-pedestrian's center. It's a dynamic objective.
+Called future virtual particle (FVP), it represents a point at a
+relative distance from the pedestrian's center. It's a dynamic objective.
 
 
-It is defined as a$1$ $[kg]$ mass. Not collisionable.
+It is defined as a $1\,[kg]$ mass. Not collisionable.
 
 \item Desired speed
 
 
 Represents the speed the pedestrian would walk if he was alone. Varies
-randomly between$[1.2,1.4]$ $[m/s]$.
+with a uniform distribution between $[1.2,1.4]\,[m/s]$.
 
-\item Reaction distance 
+\item Reaction distance ($RD$)
 
 
 Maximum distance between a pedestrian and his FVP, it represents the
@@ -320,19 +306,20 @@ distance at which a real pedestrian would react from an obstacle.
 \vspace{1cm}
 
 
-Figure \ref{fig:Pedestrian-top-view} shows a pedestrian geomtrical
+Figure \ref{fig:Pedestrian-top-view} shows a pedestrian geometrical
 definition:
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top}\protect\caption{\label{fig:Pedestrian-top-view}Pedestrian top view}
+\centering{}\includegraphics[scale=0.5]{pics/pedestrian-top}\protect\caption{\label{fig:Pedestrian-top-view}Pedestrian top view}
 \end{figure}
-
+\vspace{1cm}
+Pedestrians will be named after a letter (i.e: $i$ or $j$) and the same letter with a apostrophe will represent it's FVP (i.e: $i'$ or $j'$)\\
 
 Figure \ref{fig:Pedestrian-vectors} shows all the vectorial definition
 that will be used:
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{geometry}\protect\caption{\label{fig:Pedestrian-vectors}Vectorial definitions}
+\centering{}\includegraphics[scale=0.5]{pics/geometry}\protect\caption{\label{fig:Pedestrian-vectors}Vectorial definitions}
 \end{figure}
 
 
@@ -340,53 +327,112 @@ that will be used:
 
 
 
-\subsection{Dynamics of the FPV Model}
+\subsection{Dynamics of the FVP Model}
 
-Each pedestrian has to reach the long term objective at some point,
-to ensure this, the FVP always feels the need to be aligned with the
-shortest path to the long term objective. On the other hand, there
-are sometimes obstacles in the way, which will make this impossible,
-in this cases, the route will have to change depending on the situation.
-
-Each step is defined as follows:
-
+In this section all the forces acting on the FVPM will be defined 
 
 \subsubsection{Forces}
 \begin{itemize}
-\item Dyamic of the FVP
+\item Dynamic of the FVP
+
+Each pedestrian has to reach the long term objective at some point,
+to ensure this, the FVP needs to be aligned with the
+shortest path to the long term objective $\mathbf{o}$. On the other hand, there
+are sometimes obstacles in the way, which will make this impossible,
+in this cases, the route will have to change depending on the situation.
+
+To model this situations, two types of forces act over the FVP:
+
+\begin{itemize}
+\item Internal force
+\\
+\\
+This force will guide the pedestrian on the shortest path $\mathbf{ox_i}$ and minimize the time needed to reach the long term goal. This force is modeled using two springs:
+\\
+\iffalse
+This forces will try to keep the FVP aligned with $\mathbf{o}$ and at the same time, 
+keep the FVP at $RD$ from the pedestrian. 
+
+This (first) spring will regulate the velocity
+that will be calculated on a posterior step at which the pedestrian
+$i$ will advance. 
+...
+which pushes the FVP towards its desired length.
+At the same time, a force pushing the FVP towards his original
+alingment, defined
+
+\fi
+
+The first spring starts on $x_{i'}$ and ends on the point at distance $RD$ on vector $\mathbf{x_{i}o}$ with a spring constant $K_{1}$.
+This spring represents how much the pedestrian wants to reach his target.
+A larger spring constant will force a more straight path, but possible
+with more collisions on its way.
+In order to avoid an oscillatory movement (i.e: with a single pedestrian), a 
+damping $\gamma$ was added to this spring.
+
+The second spring starts on $x_i$, ends on $x_i'$ and has a steady 
+distance of $RD$ with a spring constant $K_s(\theta)$ 
+where $\theta$ is the angle between $\mathbf{u}$ and $\mathbf{r}$.
+With this spring the FVP will tend to always be at $RD$ distance 
+from the pedestrian.
+Because a pedestrian always tries to reach his goal in the shortest
+possible path (hypothesis 1), if it has to take a big detour of his
+ideal path, it will try to reduce his velocity drastically in order
+to avoid making a long travel. To recreate this, the
+spring constant has to be dependant of the deviation angle. 
+\[
+K_s(\theta) = \frac{K_{2}}{\theta}
+\]
+
+Given pedestrian $i$, the equation for his internal force is:
+
+\begin{equation}
+\iffalse
+F_s(r,\theta)=K_s(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})
+\fi
+F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
+\end{equation}
+
+\begin{figure}[H]
+\centering{}\includegraphics[scale=0.5]{pics/pedestrian-internal-forces}\protect\caption{Pedestrian internal forces}
+\end{figure}
 
 
-For each pedestrian $i$, the force that his future $i'$ will suffer
-is calculated in this step. The magnitude of this force is calculated
-using two factors:
-
-
-The fist factor is caluclated for each of the pedestrian $j$ ($j\neq i$)
+\item Avoidance forces
+\\
+\\
+This force will produce avoidance movements when obstactes are detected on the path.
+The magnitude of this force is calculated using two factors:
+\\
+The first factor is calculated for each of the pedestrian $j$ ($j\neq i$)
 who is in the range of sight of pedestrian $i$. This restriction
 is verified using the following condition:
-
 
 \[
 \mathbf{r_{ii'}}\bullet\mathbf{r_{ij'}}<0
 \]
 
-
-
-This filter is represents the fact that a pedestrian (in most cases)
-is not aware of what each of the pedestrians that are behind him are
-doing. Hence, they are ignored. The formula for 
-
+This filter represents the fact that a pedestrian (in most cases)
+does not make decisions based on obstacles behind him. Hence,
+they are ignored. The formula for the external forces that the
+FVP $i$ feels is defined as follows
 
 \[
-F_{ext}(i)=\sum_{j}F_{i',j'}+F_{i'j}=\sum_{j}(\alpha_{ff}e^{-dist(i',j')/\beta_{ff}}+\alpha_{fp}e^{-dist(i',j')/\beta_{fp}})
+F_{ext}(i)=\sum_{j}F_{i',j'}+F_{i'j}=\sum_{j}(\alpha_{ff}e^{-dist(i',j')/\beta_{ff}})+\sum_{j}(\alpha_{fp}e^{-dist(i',j')/\beta_{fp}})
 \]
-
-
 
 where $\alpha_{x}$ and $\beta_{x}$ are predefined constants. 
 
+The first term of the sum acts as a repulsion force between $i$ and $j$
+FVPs, resulting in the avoidance of a future collision.
+The second term uses this same principle but calculates the repulsion
+force between $j's$ FVP and $i$.
+Repulsion against walls is calculated in the same way, by using the
+closest point between the FVP and the wall and special values for
+$\alpha_{fw}$ and $\beta_{fw}$ for the calculation.
 
-Here there are two terms in the $sum$. The first term represents
+\iffalse
+The first term of the sum represents
 the fact that $i$ does not want to be in the same location as $j$
 in the near future. Note that $j'$ represents the predicted location
 of $j$ inferred by another pedestrian (in this case, $i$) and because
@@ -397,57 +443,27 @@ walls on the simulation, the difference is that the closest point
 on the wall and and the future has to be calculated before applying
 the formula. Also, the constants $\alpha_{fw}$ and $\beta_{fw}$
 have different values.
+\fi
 
 
 Figure \ref{fig:External-forces-affecting} shows the external forces
 that a pedestrian $i$ suffers because of another pedestrian ($j$)
-and also the direction in wich $i$ desires to move.
+and also the direction in which $i$ desires to move.
 
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-top-forces}\protect\caption{\label{fig:External-forces-affecting}External forces affecting future
+\centering{}\includegraphics[scale=0.5]{pics/pedestrian-top-forces}\protect\caption{\label{fig:External-forces-affecting}External forces affecting future
 $i'$}
 \end{figure}
 
-
-
-Then, the desire force that pedestrian $i$ will apply to his future
-is calculated. This force is modeled using two springs. The first
-spring has its origin attached on $i$ and its end attached on $i'$
-with a spring constant $K_{1}$. This spring will regulate the velocity
-that will be calculated on a posterior step at witch the pedestrian
-$i$ will advance. The second spring, has its origin on $i'$ and
-the end attached to $objective_{i}$ and has a spring constant $K_{2}$.
-In order to avoid an oscilatory movement (in example, with a single
-pedestrian), a damping $\gamma$ was added to this second spring.
-This spring represents how much te pedestrian wants to reach his target.
-A larger spring constant will force a more straight path, but possible
-with more collitions on its way.
-
-
-\begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pedestrian-internal-forces}\protect\caption{Pedestrian internal forces}
-\end{figure}
-
-
-
-Because a pedestrian always tryes to reach his goal in in the sortest
-possible path (hipotesis 1). If it has to take a big detour of his
-ideal path, it will try to reduce his velocity drastically in order
-to avoid making a long travel. In orer to recreate this fact, the
-spring constant $K_{2}$ has to be variable and also dependant of
-the deviation angle. This constant is defined as $K_{2}\alpha\frac{1}{\theta},$
-whereas $\theta$is the angle between $\overrightarrow{ii'}$ and
-$\overrightarrow{i-objective_{i}}$. The constant in this relation
-is $\delta$.
-
+\end{itemize}
 
 After this, the final $F_{i'}$ is computed by adding all the terms.
 $F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$.\\
 
 
 
-To avoid high simetry situations, a low noise $P=10\%$ is added to
+To avoid high symetry situations, a low noise $P=10\%$ is added to
 $F$. There are two ways to apply this noise:
 \begin{itemize}
 \item Radial noise:
@@ -476,12 +492,16 @@ and its magnitude is defined as $F_{d}$ or desire force:
 
 
 \[
-F_{desire_{i}}=m_{i}\frac{\frac{dist(i',i)}{dist_{react}}e_{i}-v_{i}}{\tau}
+F_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
 \]
 
 
 
 Where $\tau=0.5$
+
+\textit{*It is important to note that the only deviation from the SFM in this
+equation is the $k\vec{e}_i$ term. As described above, this model focuses on improving
+the SFM through dynamically adjusting the desired velocity.}
 
 \end{itemize}
 
@@ -500,9 +520,9 @@ The pedestrian movement is calculated in four steps:
 
 \subsection{Metrics}
 
-The results where compared to the SFM using the values propposed by
+The results where compared to the SFM using the values proposed by
 Dirk Helbing {[}2{]}. The test scenarios where crossing and hallway
-for they present the main two types of simmetry (90 degrees and 180
+for they present the main two types of symmetry (90 degrees and 180
 degrees).
 
 The metrics used where:
@@ -603,3 +623,4 @@ trabajo}
 \item {[}2{]} ...Helbing ...\end{itemize}
 
 \end{document}
+
