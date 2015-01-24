@@ -218,7 +218,7 @@ Kretz et al.
  the desired velocity is chosen as the quickest path to the objective taking
  into account the geometry and other agents (collision, congestion, jams,
  etc.).
- Also mounted on the SFM, MoussaÃ¯d et al.
+ Also mounted on the SFM, Moussaad et al.
  [2011] presented a model using 
 \begin_inset Quotes eld
 \end_inset
@@ -268,14 +268,14 @@ key "key-1"
 \begin_inset Formula $i$
 \end_inset
 
- occupies a circular area of redius 
+ occupies a circular area of radius 
 \begin_inset Formula $r_{i}$
 \end_inset
 
  and is governed by thee forces.
 \begin_inset Formula 
 \[
-\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{C}}+\vec{F_{s}}
+\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{S_{i}}}+\vec{F_{G_{i}}}
 \]
 
 \end_inset
@@ -934,11 +934,6 @@ Value
 
 \end_layout
 
-\begin_layout Standard
-While this model doesn't present a very real behaviour for pedestrians,
- it worked as a starting point for numerous projects.
-\end_layout
-
 \begin_layout Subsection
 Future Virtual Particle Model
 \end_layout
@@ -986,7 +981,14 @@ Hipotesis
 
 \begin_layout Standard
 The main effects that govern the motion of a pedestrian are the same as
- Helbin's: 
+ Helbin's 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-0,key-1"
+
+\end_inset
+
+: 
 \end_layout
 
 \begin_layout Enumerate
@@ -997,16 +999,16 @@ The pedestrian wants to reach his goal in the shortest possible path.
 \begin_layout Enumerate
 The pedestrian's movement is influenced by other pedestrians.
  Depending on the distance between the two of them and the predicted trajectory,
- the pedestrian will feel the need to change his route to be able to avoid
- the other pedestrians.
+ the pedestrian feels the need to change his route to be able to avoid the
+ other pedestrians.
  It is because of this effect that pedestrians will need to recalculate
  their route as new pedestrians get closer to them.
  
 \end_layout
 
 \begin_layout Enumerate
-Movement speed will be influenced by needs.
- 
+Movement speed will be influenced by the presence of other pedestrians and
+ obstacles.
 \end_layout
 
 \begin_layout Subsection
@@ -1023,9 +1025,8 @@ Circular shape
 
 \begin_deeper
 \begin_layout Standard
-Represents the space that this pedestrian occupies.
- Circle's radio is generated randomly to represent different types of pedestrian
-s.
+Represents the personal space of a pedetrian.
+ The value of the radio is generated randomly for each pedestrian.
  The range of values is distributed uniformly in 
 \begin_inset Formula $[0.25,0.29]$
 \end_inset
@@ -1046,7 +1047,7 @@ Long term objective
 \begin_layout Standard
 Represented by a static area.
  When it is touched by a pedestrian, it is considered as accomplished.
- Multiple objectives can by defined in a list, in this case, each of them
+ Multiple objectives may by defined in a list, in this case, each of them
  must be reached in order.
 \end_layout
 
@@ -1078,7 +1079,20 @@ Desired speed
 
 \begin_deeper
 \begin_layout Standard
-Represents the speed the pedestrian would walk if he was alone.
+This is the speed the pedestrian would walk if he/she was alone.
+ This represents the constant 
+\begin_inset Formula $v_{di}$
+\end_inset
+
+ in ecuation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:driving-force"
+
+\end_inset
+
+.
+ It takes a different value for each pedestrian.
  Varies with a uniform distribution between 
 \begin_inset Formula $[1.2,1.4]\,[m/s]$
 \end_inset
@@ -1110,17 +1124,6 @@ Maximum distance between a pedestrian and his FVP, it represents the distance
 \end_layout
 
 \begin_layout Standard
-Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Pedestrian-top-view"
-
-\end_inset
-
- shows a pedestrian geometrical definition:
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 placement H
 wide false
@@ -1142,11 +1145,11 @@ status collapsed
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:Pedestrian-top-view"
+name "fig:pedestrian-geometry"
 
 \end_inset
 
-Pedestrian top view
+Pedestrian geometry
 \end_layout
 
 \end_inset
@@ -1160,10 +1163,8 @@ Pedestrian top view
 \end_layout
 
 \begin_layout Standard
-\begin_inset VSpace 1cm
-\end_inset
-
- Pedestrians will be named after a letter (i.e: 
+For the sake of clarity.
+ A single pedestrian will be named after a letter (i.e: 
 \begin_inset Formula $i$
 \end_inset
 
@@ -1190,7 +1191,7 @@ Pedestrian top view
 Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:Pedestrian-vectors"
+reference "fig:pedestrian-vectors"
 
 \end_inset
 
@@ -1219,7 +1220,7 @@ status collapsed
 \begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:Pedestrian-vectors"
+name "fig:pedestrian-vectors"
 
 \end_inset
 
@@ -1252,7 +1253,7 @@ In this section all the forces acting on the FVPM will be defined
 \end_layout
 
 \begin_layout Subsubsection
-Forces
+Calculatin of forces
 \end_layout
 
 \begin_layout Itemize
@@ -1290,96 +1291,13 @@ Internal force
 \begin_inset Formula $\mathbf{ox_{i}}$
 \end_inset
 
- and minimize the time needed to reach the long term goal.
+.
  This force is modeled using two springs: 
-\begin_inset Newline newline
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-iffalse
-\end_layout
-
-\end_inset
-
- This forces will try to keep the FVP aligned with 
-\begin_inset Formula $\mathbf{o}$
-\end_inset
-
- and at the same time, keep the FVP at 
-\begin_inset Formula $RD$
-\end_inset
-
- from the pedestrian.
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-This (first) spring will regulate the velocity that will be calculated on
- a posterior step at which the pedestrian 
-\begin_inset Formula $i$
-\end_inset
-
- will advance.
- ...
- which pushes the FVP towards its desired length.
- At the same time, a force pushing the FVP towards his original alingment,
- defined
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-fi
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 The first spring starts on 
-\begin_inset Formula $x_{i'}$
-\end_inset
-
- and ends on the point at distance 
-\begin_inset Formula $RD$
-\end_inset
-
- on vector 
-\begin_inset Formula $\mathbf{x_{i}o}$
-\end_inset
-
- with a spring constant 
-\begin_inset Formula $K_{1}$
-\end_inset
-
-.
- This spring represents how much the pedestrian wants to reach his target.
- A larger spring constant will force a more straight path, but possible
- with more collisions on its way.
- In order to avoid an oscillatory movement (i.e: with a single pedestrian),
- a damping 
-\begin_inset Formula $\gamma$
-\end_inset
-
- was added to this spring.
-\end_layout
-
-\begin_layout Standard
-The second spring starts on 
 \begin_inset Formula $x_{i}$
 \end_inset
 
@@ -1431,6 +1349,39 @@ K_{s}(\theta)=\frac{K_{2}}{\theta}
 \end_layout
 
 \begin_layout Standard
+The second spring starts on 
+\begin_inset Formula $x_{i'}$
+\end_inset
+
+ and ends on the point at distance 
+\begin_inset Formula $RD$
+\end_inset
+
+ on vector 
+\begin_inset Formula $\mathbf{x_{i}o}$
+\end_inset
+
+ with a spring constant 
+\begin_inset Formula $K_{1}$
+\end_inset
+
+.
+ This spring represents how much the pedestrian wants to reach his target.
+ A larger spring constant will force a more straight path, but possible
+ with more collisions on its way.
+ In order to avoid an oscillatory movement (i.e: with a single pedestrian),
+ a damping 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ was added to this spring.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Given pedestrian 
 \begin_inset Formula $i$
 \end_inset
@@ -1441,9 +1392,28 @@ Given pedestrian
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\iffalse F_{s}(r,\theta)=K_{s}(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})\fi F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
+F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
 \end{equation}
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\iffalse F_{s}(r,\theta)=K_{s}(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})\fi$
 \end_inset
 
 
@@ -1829,13 +1799,13 @@ The pedestrian always wants to move in the direction his FVP is pointing
 \begin_inset Formula $F_{d}$
 \end_inset
 
- or desire force:
+ or driving force:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-F_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
+\vec{F}_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
 \]
 
 \end_inset

@@ -7,7 +7,6 @@
 \usepackage[a4paper]{geometry}
 \geometry{verbose,tmargin=1in,bmargin=1in,headheight=1in,headsep=1in}
 \usepackage{float}
-\usepackage{textcomp}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -128,7 +127,7 @@ so in this work the authors propose a method for dynamically adjusting
 the desired velocity following the gradient of a field given by a
 time map, in other words, the desired velocity is chosen as the quickest
 path to the objective taking into account the geometry and other agents
-(collision, congestion, jams, etc.). Also mounted on the SFM, MoussaÃ¯d
+(collision, congestion, jams, etc.). Also mounted on the SFM, Moussaad
 et al. {[}2011{]} presented a model using ``cognitive heuristics''
 to determine the norm and direction of the desired velocity for each
 agent dynamically during the evolution of the system.
@@ -148,9 +147,9 @@ the first one.
 The Social Force is a model presented by Helbing \cite{key-0,key-1}
 in several publications. This paper will focus on the latest version
 of the model \cite{key-1}. In his model, each pedestrian $i$ occupies
-a circular area of redius $r_{i}$ and is governed by thee forces.
+a circular area of radius $r_{i}$ and is governed by thee forces.
 \[
-\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{C}}+\vec{F_{s}}
+\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{S_{i}}}+\vec{F_{G_{i}}}
 \]
 
 
@@ -294,9 +293,6 @@ $\tau$ & $0.5\,[s]$\tabularnewline
 \end{tabular}
 \par\end{center}
 
-While this model doesn't present a very real behaviour for pedestrians,
-it worked as a starting point for numerous projects.
-
 
 \subsection{Future Virtual Particle Model}
 
@@ -320,16 +316,17 @@ the short term objective area.
 \subsection{Hipotesis}
 
 The main effects that govern the motion of a pedestrian are the same
-as Helbin's: 
+as Helbin's \cite{key-0,key-1}: 
 \begin{enumerate}
 \item The pedestrian wants to reach his goal in the shortest possible path. 
 \item The pedestrian's movement is influenced by other pedestrians. Depending
 on the distance between the two of them and the predicted trajectory,
-the pedestrian will feel the need to change his route to be able to
-avoid the other pedestrians. It is because of this effect that pedestrians
+the pedestrian feels the need to change his route to be able to avoid
+the other pedestrians. It is because of this effect that pedestrians
 will need to recalculate their route as new pedestrians get closer
 to them. 
-\item Movement speed will be influenced by needs. 
+\item Movement speed will be influenced by the presence of other pedestrians
+and obstacles.
 \end{enumerate}
 
 \subsection{Geometrical definition}
@@ -339,15 +336,15 @@ A pedestrian is defined as follows:
 \item Circular shape
 
 
-Represents the space that this pedestrian occupies. Circle's radio
-is generated randomly to represent different types of pedestrians.
-The range of values is distributed uniformly in $[0.25,0.29]$$[cm]$.
+Represents the personal space of a pedetrian. The value of the radio
+is generated randomly for each pedestrian. The range of values is
+distributed uniformly in $[0.25,0.29]$$[cm]$.
 
 \item Long term objective
 
 
 Represented by a static area. When it is touched by a pedestrian,
-it is considered as accomplished. Multiple objectives can by defined
+it is considered as accomplished. Multiple objectives may by defined
 in a list, in this case, each of them must be reached in order.
 
 \item Short term objective
@@ -362,8 +359,10 @@ It is defined as a $1\,[kg]$ mass. Not collisionable.
 \item Desired speed
 
 
-Represents the speed the pedestrian would walk if he was alone. Varies
-with a uniform distribution between $[1.2,1.4]\,[m/s]$.
+This is the speed the pedestrian would walk if he/she was alone. This
+represents the constant $v_{di}$ in ecuation \ref{eq:driving-force}.
+It takes a different value for each pedestrian. Varies with a uniform
+distribution between $[1.2,1.4]\,[m/s]$.
 
 \item Reaction distance ($RD$)
 
@@ -375,25 +374,21 @@ distance at which a real pedestrian would react from an obstacle.
 \vspace{1cm}
 
 
-Figure \ref{fig:Pedestrian-top-view} shows a pedestrian geometrical
-definition:
-
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pics/pedestrian-top}\caption{\label{fig:Pedestrian-top-view}Pedestrian top view}
+\centering{}\includegraphics[scale=0.5]{pics/pedestrian-top}\caption{\label{fig:pedestrian-geometry}Pedestrian geometry}
 \end{figure}
 
 
-\vspace{1cm}
- Pedestrians will be named after a letter (i.e: $i$ or $j$) and
-the same letter with a apostrophe will represent it's FVP (i.e: $i'$
-or $j'$)\\
+For the sake of clarity. A single pedestrian will be named after a
+letter (i.e: $i$ or $j$) and the same letter with a apostrophe will
+represent it's FVP (i.e: $i'$ or $j'$)\\
 
 
-Figure \ref{fig:Pedestrian-vectors} shows all the vectorial definition
+Figure \ref{fig:pedestrian-vectors} shows all the vectorial definition
 that will be used:
 
 \begin{figure}[H]
-\centering{}\includegraphics[scale=0.5]{pics/geometry}\caption{\label{fig:Pedestrian-vectors}Vectorial definitions}
+\centering{}\includegraphics[scale=0.5]{pics/geometry}\caption{\label{fig:pedestrian-vectors}Vectorial definitions}
 \end{figure}
 
 
@@ -406,7 +401,7 @@ that will be used:
 In this section all the forces acting on the FVPM will be defined
 
 
-\subsubsection{Forces}
+\subsubsection{Calculatin of forces}
 \begin{itemize}
 \item Dynamic of the FVP
 
@@ -422,43 +417,32 @@ To model this situations, two types of forces act over the FVP:
 \begin{itemize}
 \item Internal force \\
  \\
- This force will guide the pedestrian on the shortest path $\mathbf{ox_{i}}$
-and minimize the time needed to reach the long term goal. This force
-is modeled using two springs: \\
- \iffalse This forces will try to keep the FVP aligned with $\mathbf{o}$
-and at the same time, keep the FVP at $RD$ from the pedestrian.
+ This force will guide the pedestrian on the shortest path $\mathbf{ox_{i}}$.
+This force is modeled using two springs: 
 
 
-This (first) spring will regulate the velocity that will be calculated
-on a posterior step at which the pedestrian $i$ will advance. ...
-which pushes the FVP towards its desired length. At the same time,
-a force pushing the FVP towards his original alingment, defined
+The first spring starts on $x_{i}$, ends on $x_{i}'$ and has a steady
+distance of $RD$ with a spring constant $K_{s}(\theta)$ where $\theta$
+is the angle between $\mathbf{u}$ and $\mathbf{r}$. With this spring
+the FVP will tend to always be at $RD$ distance from the pedestrian.
+Because a pedestrian always tries to reach his goal in the shortest
+possible path (hypothesis 1), if it has to take a big detour of his
+ideal path, it will try to reduce his velocity drastically in order
+to avoid making a long travel. To recreate this, the spring constant
+has to be dependant of the deviation angle. 
+\[
+K_{s}(\theta)=\frac{K_{2}}{\theta}
+\]
 
 
-\fi
 
-
-The first spring starts on $x_{i'}$ and ends on the point at distance
+The second spring starts on $x_{i'}$ and ends on the point at distance
 $RD$ on vector $\mathbf{x_{i}o}$ with a spring constant $K_{1}$.
 This spring represents how much the pedestrian wants to reach his
 target. A larger spring constant will force a more straight path,
 but possible with more collisions on its way. In order to avoid an
 oscillatory movement (i.e: with a single pedestrian), a damping $\gamma$
-was added to this spring.
-
-
-The second spring starts on $x_{i}$, ends on $x_{i}'$ and has a
-steady distance of $RD$ with a spring constant $K_{s}(\theta)$ where
-$\theta$ is the angle between $\mathbf{u}$ and $\mathbf{r}$. With
-this spring the FVP will tend to always be at $RD$ distance from
-the pedestrian. Because a pedestrian always tries to reach his goal
-in the shortest possible path (hypothesis 1), if it has to take a
-big detour of his ideal path, it will try to reduce his velocity drastically
-in order to avoid making a long travel. To recreate this, the spring
-constant has to be dependant of the deviation angle. 
-\[
-K_{s}(\theta)=\frac{K_{2}}{\theta}
-\]
+was added to this spring.\\
 
 
 
@@ -466,9 +450,12 @@ Given pedestrian $i$, the equation for his internal force is:
 
 
 \begin{equation}
-\iffalse F_{s}(r,\theta)=K_{s}(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})\fi F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
+F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
 \end{equation}
 
+
+
+$\iffalse F_{s}(r,\theta)=K_{s}(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})\fi$
 
 
 \begin{figure}[H]
@@ -571,11 +558,11 @@ equations.
 
 
 The pedestrian always wants to move in the direction his FVP is pointing
-and its magnitude is defined as $F_{d}$ or desire force:
+and its magnitude is defined as $F_{d}$ or driving force:
 
 
 \[
-F_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
+\vec{F}_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
 \]
 
 
