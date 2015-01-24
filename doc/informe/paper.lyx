@@ -248,28 +248,48 @@ Social Force Model
 \end_layout
 
 \begin_layout Standard
-//Hay que citar la de 1995 pero la que estamos describiendo es la del 2000
- [Helbing 1995, 2000] presents a Model in which each pedestrian is subject
- to 
-\begin_inset Quotes eld
+The Social Force is a model presented by Helbing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-0,key-1"
+
 \end_inset
 
-social forces
-\begin_inset Quotes erd
+ in several publications.
+ This paper will focus on the latest version of the model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
 \end_inset
 
 .
- This forces are a measure for the internal motivations of the individual
- to perform certain actions.
- In its simplest form, the Social Force Model consist on three main terms.
- Each of them represents a force that a pedestrian will suffer in order
- to reach his objective.
+ In his model, each pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ occupies a circular area of redius 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+ and is governed by thee forces.
+\begin_inset Formula 
+\[
+\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{C}}+\vec{F_{s}}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-The first term describes the acceleration that a pedestrian keeps towards
- his desired velocity of motion.
- This term is known as the 
+This forces are a measure for the internal motivations of the individual
+ to perform certain actions.
+\end_layout
+
+\begin_layout Standard
+The first term is known as the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -277,13 +297,14 @@ Driving Force
 \begin_inset Quotes erd
 \end_inset
 
- and it's calculated as follows:
+.
+ It's calculated as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}\label{eq:driving-force}
+\vec{F_{D_{i}}}=m_{i}\frac{v_{di}\vec{e_{i}}-\vec{v_{i}}}{\tau}\label{eq:driving-force}
 \end{equation}
 
 \end_inset
@@ -292,46 +313,65 @@ F_{D_{i}}=m_{i}\frac{v_{di}e_{i}-v_{i}}{\tau}\label{eq:driving-force}
 \end_layout
 
 \begin_layout Standard
-In this latest formula, 
+\begin_inset Formula 
+\begin{equation}
+\vec{e_{i}}=\frac{\vec{x}_{i}^{k}-\vec{x}_{i}(t)}{||\vec{x}_{i}^{k}-\vec{x}_{i}(t)||}\label{eq:desired-direction}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{F}_{D_{i}}$
+\end_inset
+
+ represents the force that a pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ keeps towards his desired velocity of motion.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $v_{di}$
 \end_inset
 
- represents the desire speed for the pedestrian 
+ is the desired speed for the pedestrian 
 \begin_inset Formula $i$
 \end_inset
 
-, 
-\begin_inset Formula $v_{i}$
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{e}{}_{i}$
 \end_inset
 
- is the current velocity and 
-\begin_inset Formula $e_{i}$
-\end_inset
-
- represents the desired direction of motion of the pedestrian 
+ is the desired direction of motion of the pedestrian 
 \begin_inset Formula $i$
 \end_inset
 
- and is calculated as follows:
+.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-e_{i}(t)=\frac{r_{i}^{k}-r_{i}(t)}{||r_{i}^{k}-r_{i}(t)||}\label{eq:desired-direction}
-\end{equation}
-
+\begin_inset Formula $\vec{v}{}_{i}$
 \end_inset
 
+ is the current velocity of the pedestrian 
+\begin_inset Formula $i$
+\end_inset
 
+.
 \end_layout
 
 \begin_layout Standard
-where 
-\begin_inset Formula $r_{i}(t)$
+\begin_inset Formula $\vec{x}_{i}(t)$
 \end_inset
 
- denotes the actual position of the pedestrian 
+ is the actual position of the pedestrian 
 \begin_inset Formula $i$
 \end_inset
 
@@ -339,17 +379,28 @@ where
 \begin_inset Formula $t$
 \end_inset
 
- and 
-\begin_inset Formula $r_{i}^{k}$
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x_{i}^{k}$
 \end_inset
 
- is the closest point from the goal (represented as an area) to the pedestrian.
- The unit vector 
-\begin_inset Formula $e_{i}$
+ is the closest point from the goal (represented as an area) to pedestrian
+ 
+\begin_inset Formula $i$
 \end_inset
 
- will be pointing towards the closest point.
- Figure 
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:driving-force"
@@ -357,13 +408,17 @@ reference "fig:driving-force"
 \end_inset
 
  shows an example of a pedestrian currently moving in direction of 
-\begin_inset Formula $v$
+\begin_inset Formula $\vec{v}$
 \end_inset
 
- but correcting its trajectory towards 
-\begin_inset Formula $x$
+ but adjusting its trajectory towards 
+\series bold
+
+\begin_inset Formula $X$
 \end_inset
 
+
+\series default
 .
 \end_layout
 
@@ -417,24 +472,23 @@ Driving force
 \end_layout
 
 \begin_layout Standard
-The second term represents the fact that a pedestrian keeps a certain distance
- to other pedestrians and borders.
- This term is known as the 
+The second term is known as the 
 \begin_inset Quotes eld
 \end_inset
 
-Social Force
+Social force
 \begin_inset Quotes erd
 \end_inset
 
- and it's calculated as follows:
+.
+ It's calculated as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
-\]
+\begin{equation}
+\vec{F}_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\,\vec{e}_{ij}^{n}\label{eq:social-force}
+\end{equation}
 
 \end_inset
 
@@ -442,7 +496,21 @@ F_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\, e_{ij}^{n}
 \end_layout
 
 \begin_layout Standard
-In this formula the terms 
+\begin_inset Formula $\vec{F}_{S_{i}}$
+\end_inset
+
+ represents the fact that a pedestrian keeps a certain distance to other
+ pedestrians and borders.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{p}$
+\end_inset
+
+ is the number of existing pedestrians.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $A$
 \end_inset
 
@@ -450,24 +518,59 @@ In this formula the terms
 \begin_inset Formula $B$
 \end_inset
 
- represent constants that were determined by simulations and 
+ are constants determined by simulations.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $\epsilon_{ij}$
 \end_inset
 
- represents the distance from pedestrian 
-\begin_inset Formula $i$
+ is the distance from 
+\begin_inset Formula $x_{i}$
 \end_inset
 
- towards pedestrian 
-\begin_inset Formula $j$
+ towards 
+\begin_inset Formula $x_{j}$
 \end_inset
 
 .
- Figure 
-\begin_inset Formula $1.2$
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{e}_{ij}^{n}$
 \end_inset
 
- shows this vector graphically.
+ is the unit vector from 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ towards 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Social-Force"
+
+\end_inset
+
+ shows 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:social-force"
+
+\end_inset
+
+ graphically.
 \end_layout
 
 \begin_layout Standard
@@ -494,6 +597,13 @@ status collapsed
 
 \begin_layout Plain Layout
 Social Force
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Social-Force"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -514,17 +624,23 @@ Social Force
 \end_layout
 
 \begin_layout Standard
-The third term represents the granular force.
- This force represents the physical force that a pedestrian feels when colliding
- with another object (pedestrian or wall).
- This granular force term is defined as follows:
+The third term is known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Granular force
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It's calculated as follows:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}e_{ij}^{t}]\, g(\epsilon_{ij})
-\]
+\begin{equation}
+\vec{F}_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}\vec{e}_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}\vec{e}_{ij}^{t}]\, g(\epsilon_{ij})\label{eq:granular-force}
+\end{equation}
 
 \end_inset
 
@@ -532,11 +648,51 @@ F_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}e_{ij}^{n}+v_{ij}^{t}\eps
 \end_layout
 
 \begin_layout Standard
-Where: 
-\begin_inset Formula $\epsilon_{ij}=r_{ij}-(R_{i}+R_{j})$
+\begin_inset Formula $\vec{F}_{G_{i}}$
+\end_inset
+
+ represents the physical force that a pedestrian suffers when colliding
+ with another object (pedestrian or wall).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $k_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{t}$
+\end_inset
+
+ are the normal and tangential friction coeficient respectively.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $g$
+\end_inset
+
+ is ???
+\begin_inset Newline newline
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:colliding-pedestrians"
+
+\end_inset
+
+ shows 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:granular-force"
+
+\end_inset
+
+ graphically.
 \end_layout
 
 \begin_layout Standard
@@ -562,7 +718,14 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Example of two pedestrians in collision
+Colliding pedestrians
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:colliding-pedestrians"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -584,35 +747,191 @@ Example of two pedestrians in collision
 
 \begin_layout Standard
 Afterwards 
-\begin_inset Formula $F_{i}=F_{G_{i}}+F_{S_{i}}+F_{D_{i}}$
+\begin_inset Formula $\vec{F}_{i}$
 \end_inset
 
-is calculated for each of the pedestrians on each simulation step and applied
- to the pedestrian until it reaches his goal.
+ is calculated on each simulation step for each of the pedestrians and applied
+ until all of them had reached their goal.
 \end_layout
 
 \begin_layout Standard
-Fixed parameter values: 
-\begin_inset Formula $A=2000\,[N]$
+Fixed parameter values:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Value
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
 \end_inset
 
-, 
-\begin_inset Formula $B=0.08\,[m]$
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $2000\,[N]$
 \end_inset
 
-, 
-\begin_inset Formula $k_{n}=1.2\,10^{5}\,[\frac{N}{m}]$
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B$
 \end_inset
 
-, 
-\begin_inset Formula $k_{t}=2.4\,10^{5}\,[\frac{kg}{m/s}]$
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.08\,[m]$
 \end_inset
 
- y 
-\begin_inset Formula $\tau=0.5\,[s]$
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{n}$
 \end_inset
 
-.
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.2\,10^{5}\,[\frac{N}{m}]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{t}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.4\,10^{5}\,[\frac{kg}{m/s}]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\tau$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.5\,[s]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -806,7 +1125,7 @@ reference "fig:Pedestrian-top-view"
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -883,7 +1202,7 @@ reference "fig:Pedestrian-vectors"
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -1583,10 +1902,16 @@ Metrics
 \end_layout
 
 \begin_layout Standard
-The results where compared to the SFM using the values proposed by Dirk
- Helbing [2].
+The results where compared to the SFM 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
  The test scenarios where crossing and hallway for they present the main
- two types of symmetry (90 degrees and 180 degrees).
+ types of symmetry (90 degrees and 180 degrees respectively).
 \end_layout
 
 \begin_layout Standard
@@ -1599,9 +1924,7 @@ Number of collisions
 
 \begin_deeper
 \begin_layout Standard
-When a pedestrian's body is touching another one, a counter is incremented,
- it won't be incremented again unless it separates and touch again.
- This counter represents the amount of collisions.
+The total amount of collisions between pedestrians.
 \end_layout
 
 \end_deeper
@@ -1611,9 +1934,7 @@ Total duration of collisions:
 
 \begin_deeper
 \begin_layout Standard
-When a pedestrian's body is touching another one, a counter is incremented
- by the time step of the simulation.
- This counter will represent the total time pedestrians were colliding.
+The sum of the duration of each collision.
 \end_layout
 
 \end_deeper
@@ -1623,7 +1944,7 @@ Average walking speed:
 
 \begin_deeper
 \begin_layout Standard
-//TODO
+The average of the average speed of each pedestrian.
 \end_layout
 
 \end_deeper
@@ -1633,9 +1954,7 @@ Average travel time:
 
 \begin_deeper
 \begin_layout Standard
-When a pedestrian appears in the map, this time is recorded, once he reaches
- his goal, the travel time is calculated with this value.
- The average of all this times represents the average travel time.
+The average time that a pedestrian needed unit it reached the goal.
 \end_layout
 
 \end_deeper
@@ -1645,10 +1964,7 @@ Average travel distance:
 
 \begin_deeper
 \begin_layout Standard
-Each step, the distance a pedestrian has traveled from the source is saved.
- When this pedestrian reaches his goal, that distance is considered as finished
- and it is saved elsewhere.
- Afterwards, an average of all finished distances is calculated.
+The average distance that a pedestrian traveled unit it reached the goal.
 \end_layout
 
 \end_deeper
@@ -1658,11 +1974,7 @@ Average turn angle:
 
 \begin_deeper
 \begin_layout Standard
-Each step, the angle of the previous velocity of a pedestrian and the current
- one is saved and added to a total.
- When this pedestrians reaches his goal, this total is considered as finished
- and it is saved elsewhere.
- Afterwards, an average of all finished turn angles is calculated.
+The average angle turned by a pedestrian unit it reached the goal.
 \end_layout
 
 \end_deeper
@@ -2051,18 +2363,62 @@ Conclusions
 
 \end_layout
 
-\begin_layout Section
-References
-\end_layout
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-0"
 
-\begin_layout Itemize
-[1] ...
- Karamouzas ...
+\end_inset
+
+Helbing, Dirk; Molnár, Péter (1995).
  
+\begin_inset Quotes eld
+\end_inset
+
+Social force model for pedestrian dynamics
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Itemize
-[2] ...Helbing ...
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+Helbing, Dirk; Farkas, Illés; Vicsek, Tamás (2000).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Simulating dynamical features of escape panic
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+I.
+ Karamouzas (2009).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+A Predictive Collision Avoidance Model for Pedestrian Simulation
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \end_body
