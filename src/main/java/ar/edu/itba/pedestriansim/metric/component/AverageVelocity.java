@@ -24,15 +24,15 @@ public class AverageVelocity implements SimpleMetric {
 	}
 
 	@Override
+	public void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo) {
+		avgSpeed.add(pedestrian.velocity().length());
+	}
+
+	@Override
 	public void appendResults(FileWriter writer) throws IOException {
 		writer.append(String.format("%.3f", avgSpeed.getAverage()));
 	}
 
-	@Override
-	public void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo) {
-		avgSpeed.add(pedestrian.velocity().length());
-	}
-	
 	@Override
 	public String name() {
 		return "Vel. prom";

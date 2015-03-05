@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class CollitionCountPerInstant implements CollitionMetric {
 
-	long count;
+	private long count;
 
 	public CollitionCountPerInstant() {
 		count = 0;
@@ -37,6 +37,6 @@ public class CollitionCountPerInstant implements CollitionMetric {
 
 	@Override
 	public String name() {
-		return "Durac. Colis.";
+		return "Coll x inst.";
 	}
 }
