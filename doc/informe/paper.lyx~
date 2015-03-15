@@ -1,0 +1,2396 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+
+\usepackage{amsthm}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+
+
+\usepackage{babel}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding latin9
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 2
+\use_esint 1
+\use_mhchem 0
+\use_mathdots 0
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\topmargin 1in
+\bottommargin 1in
+\headheight 1in
+\headsep 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Future Virtual Particle Method for Pedestrian Navigation
+\end_layout
+
+\begin_layout Author
+Castiglione Gonzalo, Agustin Marseillan, Daniel Parisi
+\end_layout
+
+\begin_layout Abstract
+We present a novel method to simulate virtual pedestrians based on the social
+ force model.
+ In our model, each pedestrian has a point in front of him called Future
+ Virtual Particle (FVP) which represents where the pedestrian is headed
+ to and at what speed.
+ 
+\end_layout
+
+\begin_layout Standard
+keywords:
+\end_layout
+
+\begin_layout Standard
+pedestrian, collision avoidance, future virtual particle, force model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Subsection
+Motivation and previous work
+\end_layout
+
+\begin_layout Standard
+Navigation of biological, sinthetic or virtual agents is a relevant problem
+ in several fields such as pedestrian dynamics, moving robots and animation
+ of characters for videogames and motion pictures.
+\end_layout
+
+\begin_layout Standard
+Modelling and simulating the displacement of agents through arbitrarily
+ complex environments may be stated in an hierarchical structure of mechanisms
+ depending mainly on the distance from the agent.
+ This level has been named, from closer to further, as operational (walking,
+ lowest level physical-computational model for displacement), tactical (way-find
+ing, route choice) and strategic (general activity planning) [Hoogonen and
+ Bovy 2004].
+ These levels are not independent, factors affecting one level may impact
+ in the following and vice-versa, for example, the route choice may vary
+ due to congestion of agents produced from previous route choice and walking
+ behavior.
+ Also, obstacles can impact on the operational level or tactical level depending
+ on the particular geometry of the environment.
+ The particular mechanism we want to address is the avoidance of obstacles
+ being fixed or moving (another agent) which involves operational and tactical
+ aspects of the navigation.
+\end_layout
+
+\begin_layout Standard
+A general approach is to take an existing operational model and equip it
+ with a higher level model which allows better and smoother collision avoidance
+ behavior.
+ Existing low level models can be taken from pedestrian dynamics field and
+ in general this models can be classified into rule based and force based,
+ discrete and continuous space description, etc.
+ [Schadschneider 2009].
+\end_layout
+
+\begin_layout Standard
+A famous example of continuous and force based model is the Social Force
+ Model [Helbing 1995, 2000].
+ In this model the dynamic for virtual pedestrians is derived from the Newton
+ equation
+\begin_inset Quotes ers
+\end_inset
+
+s considering the total force exerted over each agent is the result of three
+ forces: Contact, Social and Driving Force.
+ While the driving force points towards the final objective of each pedestrian,
+ the social force is repulsive and acts as a kind of collision avoidance
+ force.
+ However this social force term introduces several artifices in some configurati
+ons [see for example Lakoba et al.
+ 2005, Parisi et al 2009].
+\end_layout
+
+\begin_layout Standard
+Cellular automaton models make use of a spatial grid, which can be occupied
+ or empty, along with a set of rules determining the evolution and conflict
+ resolution of virtual pedestrians moving over the cells of the grid.
+ An emblematic cellular automaton model is the one proposed by Kirchner
+ and Schadschneider [2002].
+\end_layout
+
+\begin_layout Standard
+Hybrid models have also been proposed such as the Contractile Particle Model
+ [Baglietto and Parisi, 2011] in which a continuous description of the space
+ is combined with a set of simple rules governing the dynamics of the system.
+\end_layout
+
+\begin_layout Standard
+The basic operational model -as the ones described above- can be improved
+ if higher level mechanisms were added to manage more complex issues as
+ efficient avoidance.
+ Some recent examples can be found in the literature.
+\end_layout
+
+\begin_layout Standard
+Karamouzas et al.
+ (2009) proposed a method for collision avoidance modifying the social force
+ model, basically, replacing the social force term by a new 
+\begin_inset Quotes grd
+\end_inset
+
+evasive” force which tends to avoid future collisions.
+ The magnitude and direction of this force is calculated considering the
+ predictions of these possible collisions.
+\end_layout
+
+\begin_layout Standard
+Kretz et al.
+ 2011 have arrised the point that the key ingredient in social force model
+ is the driving force instead of interaction force, so in this work the
+ authors propose a method for dynamically adjusting the desired velocity
+ following the gradient of a field given by a time map, in other words,
+ the desired velocity is chosen as the quickest path to the objective taking
+ into account the geometry and other agents (collision, congestion, jams,
+ etc.).
+ Also mounted on the SFM, Moussaad et al.
+ [2011] presented a model using 
+\begin_inset Quotes eld
+\end_inset
+
+cognitive heuristics
+\begin_inset Quotes erd
+\end_inset
+
+ to determine the norm and direction of the desired velocity for each agent
+ dynamically during the evolution of the system.
+\end_layout
+
+\begin_layout Standard
+In the same line, we also proposed that the navigation capacity of virtual
+ agents should be concentrated in the on-line decision of the desired velocity.
+ Both direction and magnitude calculation of the desired velocity are the
+ key differences with the SFM.
+\end_layout
+
+\begin_layout Standard
+The method proposed could be mounted on different basic displacement models
+ like the SFM or the CPM, in the present work we have chosen the first one.
+\end_layout
+
+\begin_layout Subsection
+Social Force Model
+\end_layout
+
+\begin_layout Standard
+The Social Force is a model presented by Helbing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-0,key-1"
+
+\end_inset
+
+ in several publications.
+ This paper will focus on the latest version of the model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
+ In his model, each pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ occupies a circular area of radius 
+\begin_inset Formula $r_{i}$
+\end_inset
+
+ and is governed by thee forces.
+\begin_inset Formula 
+\[
+\vec{F_{i}}=\vec{F_{D_{i}}}+\vec{F_{S_{i}}}+\vec{F_{G_{i}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This forces are a measure for the internal motivations of the individual
+ to perform certain actions.
+\end_layout
+
+\begin_layout Standard
+The first term is known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Driving Force
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It's calculated as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{F_{D_{i}}}=m_{i}\frac{v_{di}\vec{e_{i}}-\vec{v_{i}}}{\tau}\label{eq:driving-force}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{e_{i}}=\frac{\vec{x}_{i}^{k}-\vec{x}_{i}(t)}{||\vec{x}_{i}^{k}-\vec{x}_{i}(t)||}\label{eq:desired-direction}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{F}_{D_{i}}$
+\end_inset
+
+ represents the force that a pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ keeps towards his desired velocity of motion.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $v_{di}$
+\end_inset
+
+ is the desired speed for the pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{e}{}_{i}$
+\end_inset
+
+ is the desired direction of motion of the pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{v}{}_{i}$
+\end_inset
+
+ is the current velocity of the pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{x}_{i}(t)$
+\end_inset
+
+ is the actual position of the pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ at the time 
+\begin_inset Formula $t$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x_{i}^{k}$
+\end_inset
+
+ is the closest point from the goal (represented as an area) to pedestrian
+ 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:driving-force"
+
+\end_inset
+
+ shows an example of a pedestrian currently moving in direction of 
+\begin_inset Formula $\vec{v}$
+\end_inset
+
+ but adjusting its trajectory towards 
+\series bold
+
+\begin_inset Formula $X$
+\end_inset
+
+
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/sfm/drivingforce.png
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:driving-force"
+
+\end_inset
+
+Driving force
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second term is known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Social force
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It's calculated as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{F}_{S_{i}}=\sum_{j=1,j\ne i}^{N_{P}}Aexp(-\frac{\epsilon_{ij}}{B})\,\vec{e}_{ij}^{n}\label{eq:social-force}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{F}_{S_{i}}$
+\end_inset
+
+ represents the fact that a pedestrian keeps a certain distance to other
+ pedestrians and borders.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{p}$
+\end_inset
+
+ is the number of existing pedestrians.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ are constants determined by simulations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+ is the distance from 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ towards 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{e}_{ij}^{n}$
+\end_inset
+
+ is the unit vector from 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ towards 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Social-Force"
+
+\end_inset
+
+ shows 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:social-force"
+
+\end_inset
+
+ graphically.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/sfm/sf.png
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Social Force
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Social-Force"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The third term is known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Granular force
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It's calculated as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{F}_{G_{i}}=\sum_{j=1,j\ne i}^{N_{P}}[-\epsilon_{ij}k_{n}\vec{e}_{ij}^{n}+v_{ij}^{t}\epsilon_{ij}k_{t}\vec{e}_{ij}^{t}]\, g(\epsilon_{ij})\label{eq:granular-force}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vec{F}_{G_{i}}$
+\end_inset
+
+ represents the physical force that a pedestrian suffers when colliding
+ with another object (pedestrian or wall).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $k_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $k_{t}$
+\end_inset
+
+ are the normal and tangential friction coeficient respectively.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $g$
+\end_inset
+
+ is ???
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:colliding-pedestrians"
+
+\end_inset
+
+ shows 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:granular-force"
+
+\end_inset
+
+ graphically.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/sfm/ganular.png
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Colliding pedestrians
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:colliding-pedestrians"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Afterwards 
+\begin_inset Formula $\vec{F}_{i}$
+\end_inset
+
+ is calculated on each simulation step for each of the pedestrians and applied
+ until all of them had reached their goal.
+\end_layout
+
+\begin_layout Standard
+Fixed parameter values:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Value
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $2000\,[N]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.08\,[m]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{n}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.2\,10^{5}\,[\frac{N}{m}]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{t}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.4\,10^{5}\,[\frac{kg}{m/s}]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\tau$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.5\,[s]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Future Virtual Particle Model
+\end_layout
+
+\begin_layout Standard
+Given that the SFM adds a fictional force on pedestrians, navigation doesn't
+ resemble reality for high pedestrian densities.
+ Also, SFM didn't have the same values as well known metrics for real-case
+ scenarios such as the flow of pedestrians going out a door and the fundamental
+ diagram.
+\end_layout
+
+\begin_layout Standard
+Because of this, we present a new model in which the social force from equation
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:driving-force"
+
+\end_inset
+
+ affecting directly on each pedestrian is eliminated and replaced with a
+ desire force facing a short term objective.
+ This force is created using equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:desired-direction"
+
+\end_inset
+
+ replacing 
+\begin_inset Formula $r_{i}^{k}$
+\end_inset
+
+ with the vector facing the closest point on the short term objective area.
+\end_layout
+
+\begin_layout Section
+The Model
+\end_layout
+
+\begin_layout Subsection
+Hipotesis
+\end_layout
+
+\begin_layout Standard
+The main effects that govern the motion of a pedestrian are the same as
+ Helbin's 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-0,key-1"
+
+\end_inset
+
+: 
+\end_layout
+
+\begin_layout Enumerate
+The pedestrian wants to reach his goal in the shortest possible path.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The pedestrian's movement is influenced by other pedestrians.
+ Depending on the distance between the two of them and the predicted trajectory,
+ the pedestrian feels the need to change his route to be able to avoid the
+ other pedestrians.
+ It is because of this effect that pedestrians will need to recalculate
+ their route as new pedestrians get closer to them.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Movement speed will be influenced by the presence of other pedestrians and
+ obstacles.
+ 
+\end_layout
+
+\begin_layout Subsection
+Geometrical definition
+\end_layout
+
+\begin_layout Standard
+A pedestrian is defined as follows: 
+\end_layout
+
+\begin_layout Itemize
+Circular shape
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Represents the personal space of a pedetrian.
+ The value of the radio is generated randomly for each pedestrian.
+ The range of values is distributed uniformly in 
+\begin_inset Formula $[0.25,0.29]$
+\end_inset
+
+
+\begin_inset Formula $[cm]$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Long term objective
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Represented by a static area.
+ When it is touched by a pedestrian, it is considered as accomplished.
+ Multiple objectives may by defined in a list, in this case, each of them
+ must be reached in order.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Short term objective
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Called future virtual particle (FVP), it represents a point at a relative
+ distance from the pedestrian's center.
+ It's a dynamic objective.
+\end_layout
+
+\begin_layout Standard
+It is defined as a 
+\begin_inset Formula $1\,[kg]$
+\end_inset
+
+ mass.
+ Not collisionable.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Desired speed
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+This is the speed the pedestrian would walk if he/she was alone.
+ This represents the constant 
+\begin_inset Formula $v_{di}$
+\end_inset
+
+ in ecuation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:driving-force"
+
+\end_inset
+
+.
+ It takes a different value for each pedestrian.
+ Varies with a uniform distribution between 
+\begin_inset Formula $[1.2,1.4]\,[m/s]$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Reaction distance (
+\begin_inset Formula $RD$
+\end_inset
+
+)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Maximum distance between a pedestrian and his FVP, it represents the distance
+ at which a real pedestrian would react from an obstacle.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/pedestrian-top.png
+	lyxscale 40
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pedestrian-geometry"
+
+\end_inset
+
+Pedestrian geometry
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the sake of clarity.
+ A single pedestrian will be named after a letter (i.e: 
+\begin_inset Formula $i$
+\end_inset
+
+ or 
+\begin_inset Formula $j$
+\end_inset
+
+) and the same letter with a apostrophe will represent it's FVP (i.e: 
+\begin_inset Formula $i'$
+\end_inset
+
+ or 
+\begin_inset Formula $j'$
+\end_inset
+
+)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:pedestrian-vectors"
+
+\end_inset
+
+ shows all the vectorial definition that will be used:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/geometry.png
+	lyxscale 40
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:pedestrian-vectors"
+
+\end_inset
+
+Vectorial definitions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Dynamics of the FVP Model
+\end_layout
+
+\begin_layout Standard
+In this section all the forces acting on the FVPM will be defined
+\end_layout
+
+\begin_layout Subsubsection
+Calculatin of forces
+\end_layout
+
+\begin_layout Itemize
+Dynamic of the FVP
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Each pedestrian has to reach the long term objective at some point, to ensure
+ this, the FVP needs to be aligned with the shortest path to the long term
+ objective 
+\begin_inset Formula $\mathbf{o}$
+\end_inset
+
+.
+ On the other hand, there are sometimes obstacles in the way, which will
+ make this impossible, in this cases, the route will have to change depending
+ on the situation.
+\end_layout
+
+\begin_layout Standard
+To model this situations, two types of forces act over the FVP:
+\end_layout
+
+\begin_layout Itemize
+Internal force 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ This force will guide the pedestrian on the shortest path 
+\begin_inset Formula $\mathbf{ox_{i}}$
+\end_inset
+
+.
+ This force is modeled using two springs: 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The first spring starts on 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+, ends on 
+\begin_inset Formula $x_{i}'$
+\end_inset
+
+ and has a steady distance of 
+\begin_inset Formula $RD$
+\end_inset
+
+ with a spring constant 
+\begin_inset Formula $K_{s}(\theta)$
+\end_inset
+
+ where 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is the angle between 
+\begin_inset Formula $\mathbf{u}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{r}$
+\end_inset
+
+.
+ With this spring the FVP will tend to always be at 
+\begin_inset Formula $RD$
+\end_inset
+
+ distance from the pedestrian.
+ Because a pedestrian always tries to reach his goal in the shortest possible
+ path (hypothesis 1), if it has to take a big detour of his ideal path,
+ it will try to reduce his velocity drastically in order to avoid making
+ a long travel.
+ To recreate this, the spring constant has to be dependant of the deviation
+ angle.
+ 
+\begin_inset Formula 
+\[
+K_{s}(\theta)=\frac{K_{2}}{\theta}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second spring starts on 
+\begin_inset Formula $x_{i'}$
+\end_inset
+
+ and ends on the point at distance 
+\begin_inset Formula $RD$
+\end_inset
+
+ on vector 
+\begin_inset Formula $\mathbf{x_{i}o}$
+\end_inset
+
+ with a spring constant 
+\begin_inset Formula $K_{1}$
+\end_inset
+
+.
+ This spring represents how much the pedestrian wants to reach his target.
+ A larger spring constant will force a more straight path, but possible
+ with more collisions on its way.
+ In order to avoid an oscillatory movement (i.e: with a single pedestrian),
+ a damping 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ was added to this spring.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+, the equation for his internal force is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+F_{internal}(i)=K_{1}*(|r|-RD)+K_{2}(\theta_{i})+K_{2}(\theta_{i})*(???)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\iffalse F_{s}(r,\theta)=K_{s}(\theta)\frac{\vec{ii'}}{\mid\vec{ii'}\mid}(r_{max}-r_{ii'})\fi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/pedestrian-internal-forces.png
+	lyxscale 40
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Pedestrian internal forces
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Avoidance forces 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ This force will produce avoidance movements when obstactes are detected
+ on the path.
+ The magnitude of this force is calculated using two factors: 
+\begin_inset Newline newline
+\end_inset
+
+ The first factor is calculated for each of the pedestrian 
+\begin_inset Formula $j$
+\end_inset
+
+ (
+\begin_inset Formula $j\neq i$
+\end_inset
+
+) who is in the range of sight of pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ This restriction is verified using the following condition:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{r_{ii'}}\bullet\mathbf{r_{ij'}}<0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This filter represents the fact that a pedestrian (in most cases) does not
+ make decisions based on obstacles behind him.
+ Hence, they are ignored.
+ The formula for the external forces that the FVP 
+\begin_inset Formula $i$
+\end_inset
+
+ feels is defined as follows
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{ext}(i)=\sum_{j}F_{i',j'}+F_{i'j}=\sum_{j}(\alpha_{ff}e^{-dist(i',j')/\beta_{ff}})+\sum_{j}(\alpha_{fp}e^{-dist(i',j')/\beta_{fp}})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\alpha_{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{x}$
+\end_inset
+
+ are predefined constants.
+\end_layout
+
+\begin_layout Standard
+The first term of the sum acts as a repulsion force between 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ FVPs, resulting in the avoidance of a future collision.
+ The second term uses this same principle but calculates the repulsion force
+ between 
+\begin_inset Formula $j's$
+\end_inset
+
+ FVP and 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ Repulsion against walls is calculated in the same way, by using the closest
+ point between the FVP and the wall and special values for 
+\begin_inset Formula $\alpha_{fw}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{fw}$
+\end_inset
+
+ for the calculation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+iffalse
+\end_layout
+
+\end_inset
+
+ The first term of the sum represents the fact that 
+\begin_inset Formula $i$
+\end_inset
+
+ does not want to be in the same location as 
+\begin_inset Formula $j$
+\end_inset
+
+ in the near future.
+ Note that 
+\begin_inset Formula $j'$
+\end_inset
+
+ represents the predicted location of 
+\begin_inset Formula $j$
+\end_inset
+
+ inferred by another pedestrian (in this case, 
+\begin_inset Formula $i$
+\end_inset
+
+) and because of this, it moves it's near future away of that predicted
+ location.
+ The second term, represents the same fact but taking in mind the current
+ location of the pedestrian 
+\begin_inset Formula $j$
+\end_inset
+
+.
+ The same law applies to each of the walls on the simulation, the difference
+ is that the closest point on the wall and and the future has to be calculated
+ before applying the formula.
+ Also, the constants 
+\begin_inset Formula $\alpha_{fw}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{fw}$
+\end_inset
+
+ have different values.
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+fi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:External-forces-affecting"
+
+\end_inset
+
+ shows the external forces that a pedestrian 
+\begin_inset Formula $i$
+\end_inset
+
+ suffers because of another pedestrian (
+\begin_inset Formula $j$
+\end_inset
+
+) and also the direction in which 
+\begin_inset Formula $i$
+\end_inset
+
+ desires to move.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pics/pedestrian-top-forces.png
+	lyxscale 40
+	scale 50
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:External-forces-affecting"
+
+\end_inset
+
+External forces affecting future 
+\begin_inset Formula $i'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+After this, the final 
+\begin_inset Formula $F_{i'}$
+\end_inset
+
+ is computed by adding all the terms.
+ 
+\begin_inset Formula $F_{i'}=F_{ext}(i)+F_{i\, s1}+F_{i\, s2}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To avoid high symetry situations, a low noise 
+\begin_inset Formula $P=10\%$
+\end_inset
+
+ is added to 
+\begin_inset Formula $F$
+\end_inset
+
+.
+ There are two ways to apply this noise: 
+\end_layout
+
+\begin_layout Itemize
+Radial noise:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A value 
+\begin_inset Formula $p$
+\end_inset
+
+ is taken randomly from a uniform distribution 
+\begin_inset Formula $[-P,\, P]$
+\end_inset
+
+ and calculate: 
+\begin_inset Formula $FL_{i'}=F_{i'}*p$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+Angular noise:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A value 
+\begin_inset Formula $sgn=\{-1,\,1\}$
+\end_inset
+
+ is taken randomly from a uniform distribution and a value 
+\begin_inset Formula $p$
+\end_inset
+
+ from 
+\begin_inset Formula $[-P,\, P]$
+\end_inset
+
+.
+ Then 
+\begin_inset Formula $FA_{i'}=rotation(F_{i'},\,\pi*sgn)*p$
+\end_inset
+
+ is calculated.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+At last, we find 
+\begin_inset Formula $F'_{i'}=F_{i'}+FL_{i'}+FA_{i'}$
+\end_inset
+
+ and apply movement equations.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Dynamic of the pedestrian
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The pedestrian always wants to move in the direction his FVP is pointing
+ and its magnitude is defined as 
+\begin_inset Formula $F_{d}$
+\end_inset
+
+ or driving force:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\vec{F}_{desire_{i}}=m_{i}\frac{\frac{|\vec{ii'}|}{|\vec{r}_{max}|}\vec{e_{i}}-\vec{v}_{i}}{\tau}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\tau=0.5$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+*It is important to note that the only deviation from the SFM in this equation
+ is the 
+\begin_inset Formula $k\vec{e}_{i}$
+\end_inset
+
+ term.
+ As described above, this model focuses on improving the SFM through dynamically
+ adjusting the desired velocity.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Algorithm
+\end_layout
+
+\begin_layout Standard
+The pedestrian movement is calculated in four steps: 
+\end_layout
+
+\begin_layout Enumerate
+Calculate forces for each FVP.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Update positions for each FVP.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Calculate forces for each pedestrian.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Update positions for each pedestrian.
+ 
+\end_layout
+
+\begin_layout Section
+Calibration
+\end_layout
+
+\begin_layout Subsection
+Metrics
+\end_layout
+
+\begin_layout Standard
+The results where compared to the SFM 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
+ The test scenarios where crossing and hallway for they present the main
+ types of symmetry (90 degrees and 180 degrees respectively).
+\end_layout
+
+\begin_layout Standard
+The metrics used where: 
+\end_layout
+
+\begin_layout Enumerate
+Number of collisions
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The total amount of collisions between pedestrians.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Total duration of collisions:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The sum of the duration of each collision.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average walking speed:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The average of the average speed of each pedestrian.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average travel time:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The average time that a pedestrian needed unit it reached the goal.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average travel distance:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The average distance that a pedestrian traveled unit it reached the goal.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Average turn angle:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The average angle turned by a pedestrian unit it reached the goal.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Values
+\end_layout
+
+\begin_layout Standard
+To calibrate the model, runs varying parameters were made.
+ A wide spectrum of values was covered, testing every combination of every
+ possible one.
+ After seeing clear preferences towards certain values, the values were
+ refined within that scope.
+ After numerous iterations of this process, the values that best suit these
+ metrics are
+\begin_inset Formula $\alpha=800$
+\end_inset
+
+ y 
+\begin_inset Formula $\beta=[0.65,\,085]$
+\end_inset
+
+ uniformly distributed.
+\end_layout
+
+\begin_layout Standard
+//TODO todos los demas parametros
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+Values
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+1
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+2
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+3
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+4
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+5
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+\begin_inset Formula $\alpha=1000,\,\beta=[0.4,\,0.5]$
+\end_inset
+
+
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(1.800, 0.748) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(34.600, 8.333) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(1.024, 0.016) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(1.910, 0.022) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(2.392, 0.005) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(111.062, 19.122)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+\begin_inset Formula $\alpha=2000,\,\beta=0.08$
+\end_inset
+
+
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(5.333, 2.625)
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(12.333, 8.340) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(1.052, 0.003) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(1.876, 0.003) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(2.391, 0.002) 
+\size default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size scriptsize
+(106.185, 13.778)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Metrics comparing SFM vs FVPM.
+ Average of 
+\begin_inset Formula $10$
+\end_inset
+
+ runs.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+// Poner Graficos indicando distancias y esquemas del future y la particula.
+ 
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+// agregar al final futuras opciones que se abren con este trabajo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-0"
+
+\end_inset
+
+Helbing, Dirk; Molnár, Péter (1995).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Social force model for pedestrian dynamics
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+Helbing, Dirk; Farkas, Illés; Vicsek, Tamás (2000).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Simulating dynamical features of escape panic
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+I.
+ Karamouzas (2009).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+A Predictive Collision Avoidance Model for Pedestrian Simulation
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
