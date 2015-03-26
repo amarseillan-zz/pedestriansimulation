@@ -27,15 +27,14 @@ public class AverageWalkDistance implements SimpleMetric {
 	public void update(float delta, PedestrianDynamicLineInfo pedestrian, StaticFileLine pedestrianStaticInfo) {
 		int id = pedestrianStaticInfo.id();
 		Vector2f lastPosition = lastPositions.get(id);
-		Float walkedDistance = walkedDistances.get(id);
-		Vector2f position = pedestrian.center();
 		if (lastPosition == null) {
-			lastPositions.put(id, lastPosition = new Vector2f(position));
-			walkedDistances.put(id, walkedDistance = 0f);
+			walkedDistances.put(id, 0f);
+		} else {
+			Float walkedDistance = walkedDistances.get(id);
+			float deltaX = lastPosition.distance(pedestrian.center());
+			walkedDistances.put(id, walkedDistance + deltaX);
 		}
-		walkedDistance += lastPosition.distance(position);
-		lastPosition.set(position);
-		walkedDistances.put(id, walkedDistance);
+		lastPositions.put(id, pedestrian.center().copy());
 	}
 
 	@Override

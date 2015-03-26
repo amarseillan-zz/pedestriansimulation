@@ -1,7 +1,10 @@
 package ar.edu.itba.pedestriansim.back.config;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
+
+import com.google.common.collect.Range;
 
 import ar.edu.itba.common.rand.UniformRandomGenerator;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
@@ -11,6 +14,7 @@ import ar.edu.itba.pedestriansim.back.entity.Wall;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianMision;
 import ar.edu.itba.pedestriansim.back.entity.mision.PedestrianTargetArea;
 
+// 17 mts recorridos en promedio
 public class HallwayConfig implements ApplicationConfigBuilder {
 
 	private final float delay = 1f;
@@ -28,6 +32,8 @@ public class HallwayConfig implements ApplicationConfigBuilder {
 	@Override
 	public PedestrianAppConfig get() {
 		PedestrianAppConfig config = _defaultBuilder.get();
+		config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(1000f, Range.closed(0.4f, 0.5f)));
+		config.pedestrianFactory().setFuturePedestrianAlphaBeta(1000f, 0.2f);
 		addWalls(config.pedestrianArea());
 		addSource1(config.pedestrianArea());
 		addSource2(config.pedestrianArea());

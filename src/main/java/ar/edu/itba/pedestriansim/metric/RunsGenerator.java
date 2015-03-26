@@ -14,6 +14,7 @@ import ar.edu.itba.command.CommandParser;
 import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.pedestriansim.back.PedestrianSimApp;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.HallwayConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 
 import com.google.common.collect.Lists;
@@ -30,7 +31,6 @@ public class RunsGenerator {
 		;
 	}
 
-	private static final int RUNS_COUNT = 5;
 
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
@@ -47,10 +47,11 @@ public class RunsGenerator {
 		new RunsGenerator(newRun, metricsDir).generate();
 	}
 
+	private static final int RUNS_COUNT = 5;
 	private final float[] thresholds = { 0f };
-	private final float[] alphas = { 800 };
+	private final float[] alphas = { 1000f };
 	private List<Range<Float>> betas = new LinkedList<Range<Float>>() {{
-		add(Range.closed(0.65f, 0.85f));
+		add(Range.closed(0.4f, 0.6f));
 	}};
 
 	private final File _metricsDirectory;
@@ -63,6 +64,11 @@ public class RunsGenerator {
 		runsDirectory = new File(_metricsDirectory + File.separator + "runs");
 		_metricsDirectory.mkdir();
 		runsDirectory.mkdir();
+	}
+
+	private PedestrianAppConfig newConfig() {
+//		return new CrossingConfig().get();
+		return new HallwayConfig().get();
 	}
 
 	public void generate() {
@@ -97,7 +103,7 @@ public class RunsGenerator {
 		for (int runNumber = 0; runNumber < RUNS_COUNT; runNumber++) {
 			String fileId = id + "-c=" + runNumber;
 			System.out.println("Started: " + fileId);
-			PedestrianAppConfig config = new CrossingConfig().get();
+			PedestrianAppConfig config = newConfig();
 			config.setStaticfile(new File(runsDirectory + File.separator + fileId + "-static.txt"));
 			config.setDynamicfile(new File(runsDirectory + File.separator + fileId + "-dynamic.txt"));
 			config.pedestrianFactory().setPedestrianAlphaBeta(Pair.of(alpha, beta));

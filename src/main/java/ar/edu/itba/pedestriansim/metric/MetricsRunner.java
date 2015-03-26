@@ -36,8 +36,7 @@ public class MetricsRunner implements Runnable {
 				PedestrianAreaFileSerializer serializer = new PedestrianAreaFileSerializer();
 				Supplier<StaticFileLine> staticInfo = serializer.staticFileInfo(closer.register(new Scanner(config.staticfile())));
 				Supplier<DymaimcFileStep> steps = serializer.steps(closer.register(new Scanner(config.dynamicfile())));
-				float timeStep = config.pedestrianArea().timeStep().floatValue();
-				new CalculateMetricsFromFile(staticInfo, steps, writer).appendHeaderIf(isFirstTime).runMetrics(timeStep);
+				new CalculateMetricsFromFile(staticInfo, steps, writer).appendHeaderIf(isFirstTime).runMetrics();
 				isFirstTime = false;
 				closer.close();
 			}

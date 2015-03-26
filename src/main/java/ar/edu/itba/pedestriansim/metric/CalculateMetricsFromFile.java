@@ -31,6 +31,8 @@ public class CalculateMetricsFromFile {
 	private List<Metric> allMetrics;
 	private FileWriter _outputFileWriter;
 
+	private float _lastDt = 0;
+
 	public CalculateMetricsFromFile(Supplier<StaticFileLine> staticStepSupplier, Supplier<DymaimcFileStep> stepsSupplier, FileWriter outputFileWriter) {
 		_stepsSupplier = stepsSupplier;
 		boolean staticSupplierFinished;
@@ -74,13 +76,15 @@ public class CalculateMetricsFromFile {
 		allMetrics.add(metric);
 	}
 
-	public void runMetrics(float delta) {
-		while (update(delta))
-			;
+	public void runMetrics() {
+		_lastDt = 0;
+		while (update()) {
+			// No op.
+		}
 		onSimulationEnd();
 	}
 
-	public boolean update(float dt) {
+	public boolean update() {
 		for (Metric metric : allMetrics) {
 			metric.onIterationStart();
 		}
@@ -88,6 +92,8 @@ public class CalculateMetricsFromFile {
 		if (step == null) {
 			return false; // XXX: simulation finished!
 		}
+		float dt = step.step() - _lastDt;
+		_lastDt = step.step();
 		List<PedestrianDynamicLineInfo> lines = step.pedestriansInfo();
 		for (int i = 0; i < lines.size(); i++) {
 			PedestrianDynamicLineInfo linei = lines.get(i);
@@ -96,7 +102,7 @@ public class CalculateMetricsFromFile {
 				StaticFileLine staticLinei = _staticPedestrianInfoById.get(linei.id());
 				StaticFileLine staticLinej = _staticPedestrianInfoById.get(linej.id());
 				float centerDist = linei.center().distance(linej.center());
-				float deltaDist = 0.1f;
+				float deltaDist = 0.08f;
 				if (centerDist <= staticLinei.radius() + staticLinej.radius() + deltaDist) {
 					for (CollitionMetric metric : collitionMetrics) {
 						metric.onCollition(dt, linei.id(), linej.id());
