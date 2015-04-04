@@ -37,7 +37,7 @@ public class FutureForceUpdaterComponent extends PedestrianAreaStep {
 			for (Pedestrian other : input.pedestrians()) {
 				if (subject != other && !isOnBack(subject, other)) {
 					Vector2f future2Center = other.getFuture().getBody().getCenter();
-					float scale = subject.getTeam() == other.getTeam() ? 0.5f : 1;	// USAR VELOCIDAD RELATIVA ACA!!!!!!
+					float scale = Vectors.angle(subject.getBody().getVelocity(), other.getBody().getVelocity()) < 45 ? 0.5f : 1f;
 					repulsion.add(
 						repulsionForce.between(future1Center, future2Center, subject.pedestrianRepulsionForceValues()).scale(scale)
 					);

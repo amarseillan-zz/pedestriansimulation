@@ -44,6 +44,8 @@ public class GUIPedestrianSim extends BasicGame {
 		parser = new CommandParser()
 			.param(new CommandParam("-config").message("Archivo (.properties) de donde se va a leer la configuracion de la aplicacion."))
 			.param(new CommandParam("-map").required().constrained("cross", "hallway", "room").message("Mapa en el cual correr la simulacion"))
+			.param(new CommandParam("-static").message("Archivo con informacion estatica de los peatones"))
+			.param(new CommandParam("-dynamic").message("Archivo con informacion dinamica de los peatones"))
 		;
 	}
 
@@ -65,7 +67,16 @@ public class GUIPedestrianSim extends BasicGame {
 		configBuilder = "cross".equals(mapName) ? new CrossingConfig(configBuilder) 
 			: "hallway".equals(mapName) ? new HallwayConfig(configBuilder) 
 			: new SquareRoomConfig(configBuilder);
-		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(configBuilder));
+		PedestrianAppConfig config = configBuilder.get();
+		if (cmd.hasParam("-static")) {
+			config.setStaticfile(new File(cmd.param("-static")));
+			config.makeNewRun(false);
+		}
+		if (cmd.hasParam("-dynamic")) {
+			config.setDynamicfile(new File(cmd.param("-dynamic")));
+			config.makeNewRun(false);
+		}
+		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(config));
 		appContainer.setUpdateOnlyWhenVisible(false);
 		appContainer.setDisplayMode(1200, 700, false);
 		appContainer.start();
@@ -79,9 +90,9 @@ public class GUIPedestrianSim extends BasicGame {
 	private boolean _simulationIsFinished = false;
 	private boolean _initialized;
 
-	public GUIPedestrianSim(ApplicationConfigBuilder configBuilder) {
+	public GUIPedestrianSim(PedestrianAppConfig config) {
 		super("Pedestrian simulation");
-		_config = configBuilder.get();
+		_config = config;
 		if (_config.isMakeNewRun()) {
 			logger.info("Creating a new run");
 			new PedestrianSimApp(_config).run();

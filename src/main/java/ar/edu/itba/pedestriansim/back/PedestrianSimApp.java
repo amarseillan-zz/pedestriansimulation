@@ -1,15 +1,25 @@
 package ar.edu.itba.pedestriansim.back;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import ar.edu.itba.command.CommandParam;
 import ar.edu.itba.command.CommandParser;
+import ar.edu.itba.command.ParsedCommand;
 import ar.edu.itba.common.rand.RandomGenerator;
 import ar.edu.itba.common.rand.UniformRandomGenerator;
+import ar.edu.itba.pedestriansim.back.config.ApplicationConfigBuilder;
 import ar.edu.itba.pedestriansim.back.config.CrossingConfig;
+import ar.edu.itba.pedestriansim.back.config.DefaultPedestrianAppConfig;
+import ar.edu.itba.pedestriansim.back.config.HallwayConfig;
+import ar.edu.itba.pedestriansim.back.config.PedestrianConfigurationFromFile;
+import ar.edu.itba.pedestriansim.back.config.SquareRoomConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianAppConfig;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianArea;
 import ar.edu.itba.pedestriansim.back.entity.PedestrianForces;
@@ -35,11 +45,41 @@ public class PedestrianSimApp implements Runnable {
 
 	public static final CommandParser parser;
 	static {
-		parser = new CommandParser();
+		parser = new CommandParser()
+			.param(new CommandParam("-config").message("Archivo (.properties) de donde se va a leer la configuracion de la aplicacion."))
+			.param(new CommandParam("-map").required().constrained("cross", "hallway", "room").message("Mapa en el cual correr la simulacion"))
+			.param(new CommandParam("-static").message("Archivo con informacion estatica de los peatones"))
+			.param(new CommandParam("-dynamic").message("Archivo con informacion dinamica de los peatones"))
+		;
 	}
-
-	public static void main(String[] args) {
-		new PedestrianSimApp(new CrossingConfig().get()).run();
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		ParsedCommand cmd = parser.parse(args);
+		if (cmd.hasErrors()) {
+			System.out.println(cmd.getErrorString());
+			return;
+		}
+		ApplicationConfigBuilder configBuilder;
+		if (cmd.hasParam("-config")) {
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(cmd.param("-config")));
+			configBuilder = new PedestrianConfigurationFromFile(properties);
+		} else {
+			configBuilder = new DefaultPedestrianAppConfig();
+		}
+		String mapName = cmd.param("-map").toLowerCase();
+		configBuilder = "cross".equals(mapName) ? new CrossingConfig(configBuilder) 
+			: "hallway".equals(mapName) ? new HallwayConfig(configBuilder) 
+			: new SquareRoomConfig(configBuilder);
+		PedestrianAppConfig config = configBuilder.get();
+		if (cmd.hasParam("-static")) {
+			config.setStaticfile(new File(cmd.param("-static")));
+			config.makeNewRun(false);
+		}
+		if (cmd.hasParam("-dynamic")) {
+			config.setDynamicfile(new File(cmd.param("-dynamic")));
+			config.makeNewRun(false);
+		}
+		new PedestrianSimApp(config).run();
 	}
 
 	private static final Logger logger = Logger.getLogger(PedestrianSimApp.class);
