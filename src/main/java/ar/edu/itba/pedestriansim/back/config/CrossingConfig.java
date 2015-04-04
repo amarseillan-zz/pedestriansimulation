@@ -39,7 +39,7 @@ public class CrossingConfig implements ApplicationConfigBuilder {
 		// Arriba
 		PedestrianMision mission = new PedestrianMision();
 		area.addSource(
-			new PedestrianSource(new Vector2f(_L + _W / 2, -1f), 0.5f, mission, 1)
+			new PedestrianSource(new Vector2f(_L + _W / 2, 0f), 0.5f, mission, 1)
 				.setProduceDelayGenerator(new UniformRandomGenerator(1, 2f))
 				.setPedestrianAmountGenerator(new UniformRandomGenerator(1, 1))
 		);
