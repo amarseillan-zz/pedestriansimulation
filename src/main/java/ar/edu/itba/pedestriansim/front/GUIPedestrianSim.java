@@ -46,6 +46,10 @@ public class GUIPedestrianSim extends BasicGame {
 			.param(new CommandParam("-map").required().constrained("cross", "hallway", "room").message("Mapa en el cual correr la simulacion"))
 			.param(new CommandParam("-static").message("Archivo con informacion estatica de los peatones"))
 			.param(new CommandParam("-dynamic").message("Archivo con informacion dinamica de los peatones"))
+			.param(new CommandParam("-door").message("Tamano de la puera (-map room unicamente!)"))
+			.param(new CommandParam("-amount").message("Cantidad total de peatones(-map room unicamente!)"))
+			.param(new CommandParam("-time").message("Tiempo de simulacion en segundos"))
+			.param(new CommandParam("-outdir").message("Directorio donde guardar los archivos de salida"))
 		;
 	}
 
@@ -61,12 +65,19 @@ public class GUIPedestrianSim extends BasicGame {
 			properties.load(new FileInputStream(cmd.param("-config")));
 			configBuilder = new PedestrianConfigurationFromFile(properties);
 		} else {
-			configBuilder = new DefaultPedestrianAppConfig();
+			String outdir = cmd.hasParam("-outdir") ? cmd.param("-outdir") : "";
+			configBuilder = new DefaultPedestrianAppConfig(outdir);
 		}
 		String mapName = cmd.param("-map").toLowerCase();
 		configBuilder = "cross".equals(mapName) ? new CrossingConfig(configBuilder) 
 			: "hallway".equals(mapName) ? new HallwayConfig(configBuilder) 
 			: new SquareRoomConfig(configBuilder);
+		if (mapName.equals("room") && cmd.hasParam("-door")) {
+			((SquareRoomConfig) configBuilder).setDoorWidth(Float.valueOf(cmd.param("-door")));
+		}
+		if (mapName.equals("room") && cmd.hasParam("-amount")) {
+			((SquareRoomConfig) configBuilder).setDoorWidth(Integer.valueOf(cmd.param("-amount")));
+		}
 		PedestrianAppConfig config = configBuilder.get();
 		if (cmd.hasParam("-static")) {
 			config.setStaticfile(new File(cmd.param("-static")));
@@ -75,6 +86,9 @@ public class GUIPedestrianSim extends BasicGame {
 		if (cmd.hasParam("-dynamic")) {
 			config.setDynamicfile(new File(cmd.param("-dynamic")));
 			config.makeNewRun(false);
+		}
+		if (cmd.hasParam("-time")) {
+			config.setSimulationTime(Float.valueOf(cmd.param("-time")));
 		}
 		AppGameContainer appContainer = new AppGameContainer(new GUIPedestrianSim(config));
 		appContainer.setUpdateOnlyWhenVisible(false);

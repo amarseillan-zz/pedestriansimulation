@@ -13,6 +13,19 @@ import com.google.common.collect.Range;
 
 public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 
+	private String _outDir;
+
+	public DefaultPedestrianAppConfig() {
+		this("");
+	}
+
+	public DefaultPedestrianAppConfig(String outdir) {
+		_outDir = outdir;
+		if (!_outDir.isEmpty() && !_outDir.endsWith("/")) {
+			_outDir += "/";
+		}
+	}
+
 	@Override
 	public PedestrianAppConfig get() {
 		Range<Float> mass = Range.closed(60f, 80f);
@@ -26,8 +39,9 @@ public class DefaultPedestrianAppConfig implements ApplicationConfigBuilder {
 			.setTimeStep(new BigDecimal(1 / 1000f).setScale(5, RoundingMode.UP))
 			.setExternalForceRadiusThreshold(0)
 			.setExternalForceThreshold(0)
-			.setStaticfile(new File("static.txt"))
-			.setDynamicfile(new File("dynamic.txt"))
+			.setStaticfile(new File(_outDir + "static.txt"))
+			.setDynamicfile(new File(_outDir +"dynamic.txt"))
+			.setOutDir(_outDir)
 			.setSimulationTime(100)
 			.setPedestrianFactory(new PedestrianFactory(mass, velocity, r, pedestrianAlphaBeta, wallAlphaBeta, futurePedestrianAlphaBeta));
 	}

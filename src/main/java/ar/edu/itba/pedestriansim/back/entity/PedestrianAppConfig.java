@@ -21,6 +21,7 @@ public class PedestrianAppConfig {
 	private float _simulationTime;
 
 	private boolean _makeNewRun;
+	private String _outDir;
 
 	public PedestrianArea pedestrianArea() {
 		return _pedestrianArea;
@@ -101,6 +102,15 @@ public class PedestrianAppConfig {
 
 	public boolean isMakeNewRun() {
 		return _makeNewRun;
+	}
+
+	public PedestrianAppConfig setOutDir(String outDir) {
+		_outDir = outDir;
+		return this;
+	}
+
+	public String outDir() {
+		return _outDir;
 	}
 
 }
