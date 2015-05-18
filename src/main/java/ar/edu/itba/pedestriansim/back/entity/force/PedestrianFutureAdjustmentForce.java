@@ -31,9 +31,11 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 	private Vector2f springAlignmentForce(Pedestrian input, Vector2f target) {
 		PedestrianFuture future = input.getFuture();
 		Vector2f position = input.getBody().getCenter();
+		float targetDist = target.distance(input.getBody().getCenter());
+		float c = targetDist > 1.5f ? 1 : (1 + (2f * (1.5f - targetDist) / 1.5f));
 		return Vectors.pointBetween(position, target, input.getReactionDistance(), positionCache)
 			.sub(future.getBody().getCenter())
-			.scale(_kAlign)
+			.scale(_kAlign * c)
 			.add(new Vector2f(future.getBody().getVelocity()).scale(-_sigma));
 	}
 
@@ -45,6 +47,8 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 		if (deviationAngle > 31) {
 			angleDeviationDecay /= (deviationAngle - 30);
 		}
+//		float targetDist = target.distance(input.getBody().getCenter());
+//		float c = targetDist > 2f ? 1 : (1 + (2f * (2f - targetDist) / 2f));
 		return 
 			Vectors.pointBetween(position, pedestrianFutureCenter, input.getReactionDistance(), positionCache)
 			.sub(pedestrianFutureCenter)
