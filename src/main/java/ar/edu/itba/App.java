@@ -20,6 +20,7 @@ public class App {
 	}
 
 	public static void main(String[] args) throws SlickException, IOException {
+//		args = new String[] {"-sim", "gui", "-map", "room", "-door", "1.5"};
 		if (args.length == 0) {
 			System.out.println("USAGE: ");
 			System.out.println(parser.getHelp());
