@@ -76,7 +76,7 @@ public class GUIPedestrianSim extends BasicGame {
 			((SquareRoomConfig) configBuilder).setDoorWidth(Float.valueOf(cmd.param("-door")));
 		}
 		if (mapName.equals("room") && cmd.hasParam("-amount")) {
-			((SquareRoomConfig) configBuilder).setDoorWidth(Integer.valueOf(cmd.param("-amount")));
+			((SquareRoomConfig) configBuilder).setAmount(Integer.valueOf(cmd.param("-amount")));
 		}
 		PedestrianAppConfig config = configBuilder.get();
 		if (cmd.hasParam("-static")) {
