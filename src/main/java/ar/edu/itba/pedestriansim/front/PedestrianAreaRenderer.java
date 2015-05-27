@@ -23,12 +23,12 @@ public class PedestrianAreaRenderer extends ShapeRenderer {
 
 	public void render(GameContainer gc, Graphics g, PedestrianArea pedestrianArea) {
 		g.setColor(Color.pink);
-		for (PedestrianSource source : pedestrianArea.sources()) {
-			_sourceShape.setRadius(source.radius());
-			_sourceShape.setCenterX(source.center().x);
-			_sourceShape.setCenterY(source.center().y);
-			fill(g, _sourceShape);
-		}
+//		for (PedestrianSource source : pedestrianArea.sources()) {
+//			_sourceShape.setRadius(source.radius());
+//			_sourceShape.setCenterX(source.center().x);
+//			_sourceShape.setCenterY(source.center().y);
+//			fill(g, _sourceShape);
+//		}
 		_pedestrianRenderer.render(gc, g, pedestrianArea.pedestrians());
 		for (Wall wall : pedestrianArea.obstacles()) {
 			g.setColor(Color.white);
