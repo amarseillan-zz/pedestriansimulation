@@ -32,7 +32,7 @@ public class PedestrianFutureAdjustmentForce implements PedestrianForce {
 		PedestrianFuture future = input.getFuture();
 		Vector2f position = input.getBody().getCenter();
 		float targetDist = target.distance(input.getBody().getCenter());
-		float c = targetDist > 1.5f ? 1 : (1 + (2f * (1.5f - targetDist) / 1.5f));
+		float c = targetDist > 1.6f ? 1 : (1 + (5f * (1.6f - targetDist) / 1.6f));
 		return Vectors.pointBetween(position, target, input.getReactionDistance(), positionCache)
 			.sub(future.getBody().getCenter())
 			.scale(_kAlign * c)

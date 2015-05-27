@@ -3,6 +3,7 @@ package ar.edu.itba.pedestriansim.metric;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -14,13 +15,26 @@ import com.google.common.collect.Sets;
 public class RoomEscapeFlow {
 
 	public static void main(String[] args) throws IOException {
-//		String door = "1.8";
-//		String fileName = "/home/gcastigl/Desktop/tmp/pedestrian-final/room-2/" + N + "/dynamic-" + N + "-" + door + ".txt";
-		int N = Integer.valueOf(args[0]);
-		String fileName = args[1];
+//		int N = Integer.valueOf(args[0]);
+//		String fileName = args[1];
+		List<String> doors = Arrays.asList("1.3", "1.5", "1.8");
+		List<Integer> Ns = Arrays.asList(100, 150, 200);
+		for (String door : doors) {
+			for (int N : Ns) {
+				for (int index = 1; index <= 5; index++) {
+					String fileName = String.format("/home/gcastigl/Desktop/tmp/pedestriansim/room/room-%d/dynamic-%s-%s.txt", index, N, door);
+					System.out.println(fileName);
+					process(new File(fileName), N);
+				}
+			}
+		}
+//		String door = "1.3";
+//		int N = 200;
+	}
+	
+	public static void process(File dynamicFile, int N) throws IOException {
 		String numericRegex = "^[0-9]+\\.[0-9]+";
 		float yLimit = 21;
-		File dynamicFile = new File(fileName);
 		Scanner scanner = new Scanner(dynamicFile);
 		List<String> ts = Lists.newLinkedList();
 		List<Integer> flows = Lists.newLinkedList();
@@ -86,5 +100,6 @@ public class RoomEscapeFlow {
 			writer.write(String.format("%s\t%s\n", tsit.next(), remaningit.next()));
 		}
 		writer.close();
+		System.out.println("OK!");
 	}
 }
