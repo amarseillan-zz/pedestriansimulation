@@ -76,7 +76,7 @@ public class GUIPedestrianSim extends BasicGame {
 			((SquareRoomConfig) configBuilder).setDoorWidth(Float.valueOf(cmd.param("-door")));
 		}
 		if (mapName.equals("room") && cmd.hasParam("-amount")) {
-			((SquareRoomConfig) configBuilder).setDoorWidth(Integer.valueOf(cmd.param("-amount")));
+			((SquareRoomConfig) configBuilder).setAmount(Integer.valueOf(cmd.param("-amount")));
 		}
 		PedestrianAppConfig config = configBuilder.get();
 		if (cmd.hasParam("-static")) {
@@ -183,10 +183,10 @@ public class GUIPedestrianSim extends BasicGame {
 			if (Input.KEY_P == key) {
 				_gc.setPaused(!_gc.isPaused());
 			}
-			if (Input.KEY_NUMPAD1 == key) {
+			if (Input.KEY_NUMPAD1 == key || Input.KEY_1 == key) {
 				_gc.setTargetFrameRate((int) (_gc.getFPS() * 0.6f));
 			}
-			if (Input.KEY_NUMPAD2 == key) {
+			if (Input.KEY_NUMPAD2 == key || Input.KEY_2 == key) {
 				_gc.setTargetFrameRate((int) (_gc.getFPS() * 1.2f));
 			}
 			if (Input.KEY_ESCAPE == key) {
