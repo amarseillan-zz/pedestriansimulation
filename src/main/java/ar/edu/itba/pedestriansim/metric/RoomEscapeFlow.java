@@ -56,7 +56,10 @@ public class RoomEscapeFlow {
 						String[] nextLine = line.split("/");
 						String id = nextLine[0];
 						float yPosition = Float.valueOf(nextLine[1].split(" ")[1]);
-						if (yPosition > yLimit && ids.add(id)) {
+						float xPosition = Float.valueOf(nextLine[1].split(" ")[0]);
+//						System.out.println(yPosition);
+						if ((yPosition < 0 || yPosition > yLimit 
+								|| xPosition < 0 || xPosition > 25) && ids.add(id)) {
 							flow++;
 							N--;
 						}
