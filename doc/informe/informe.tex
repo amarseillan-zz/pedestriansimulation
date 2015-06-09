@@ -64,7 +64,7 @@ avoid collisions instead of being affected by a repulsive force. \\
 The model was tested using three different scenarios and compared 
 against the Social Force Model obtaining more natural navigation,
 reduced number of collisions, increased average
-speed and reduced average deviation angle of navigating pedestrians.
+speed and reduced average deviation angle of navigating pedestrians. \\
 \textbf{keywords:} pedestrian, collision avoidance, future virtual
 particle, force model.
 \end{abstract}
@@ -813,45 +813,53 @@ particle, force model.
 
     
     The average pedestrian flow ($Q_avg$) was taken by averaging the results of $5$ simulations for each configuration.\\
-    The results are shown on fig. \ref{fig:room-flow-100}, fig. \ref{fig:room-flow-150} and fig. 
-    \ref{fig:room-flow-200}.
+    The results for the scenario with a door size of $1.5$ $[m]$ are shown on fig. \ref{fig:room-flow-150}:
 
-    \begin{figure}[H]
-        \begin{centering}
-        \includegraphics[scale=0.2]{pics/flow/12door} 
-        \par\end{centering}
-        \caption{\label{fig:room-flow-100}Room evacuation with $1.2$ $[m]$ door}
-    \end{figure}
+    %\begin{figure}[H]
+    %    \begin{centering}
+    %    \includegraphics[scale=0.2]{pics/flow/12door} 
+    %    \par\end{centering}
+    %    \caption{\label{fig:room-flow-100}Room evacuation with $1.2$ $[m]$ door}
+    %\end{figure}
     
     \begin{figure}[H]
         \begin{centering}
         \includegraphics[scale=0.2]{pics/flow/15door} 
         \par\end{centering}
-        \caption{\label{fig:room-flow-150}Room evacuation with $1.5$ $[m]$ door}
+        \caption{\label{fig:room-flow-150}FVPM - Room evacuation with $1.5$ $[m]$ door}
     \end{figure}
+    
+    For the same scenario, the escape flow when using the SFM model is shown on fig. \ref{fig:sfm-room-flow-15}
     
     \begin{figure}[H]
         \begin{centering}
-        \includegraphics[scale=0.2]{pics/flow/18door} 
+        \includegraphics[scale=0.2]{pics/flow/sfm/sfm15door} 
         \par\end{centering}
-        \caption{\label{fig:room-flow-200}Room evacuation with $1.8$ $[m]$ door}
+        \caption{\label{fig:sfm-room-flow-15}SFM - Room evacuation with $1.5$ $[m]$ door}
     \end{figure}
+
+    %\begin{figure}[H]
+    %    \begin{centering}
+    %    \includegraphics[scale=0.2]{pics/flow/18door} 
+    %    \par\end{centering}
+    %    \caption{\label{fig:room-flow-200}Room evacuation with $1.8$ $[m]$ door}
+    %\end{figure}
     
-    The escape flow for each configuration was calculated using octave's $polyfit$ using a 
-    grade $1$ polygon and the slopes for each door size are as follows:
+    The escape flow for each door configuration for the FVPM was calculated using octave's 
+    $polyfit$ using a grade $1$ polygon and the slopes for each door size are as follows:
 
     \begin{table}[H]
         \begin{centering}
         \begin{tabular}{|c|c|c|c|}
         \hline 
-        N \textbackslash{} Door size & $1.2$ & $1.5$ & $1.8$\tabularnewline
+        Door size \textbackslash{} N & $100$ & $1.5$ & $200$\tabularnewline
         \hline 
         \hline 
-        $100$ & $1.02$ & $1.05$ & $1.05$\tabularnewline
+        $1.2$ & $1.02$ & $1.05$ & $1.05$\tabularnewline
         \hline 
-        $150$ & $1.17$ & $1.18$ & $1.18$\tabularnewline
+        $1.5$ & $1.17$ & $1.18$ & $1.18$\tabularnewline
         \hline 
-        $200$ & $1.20$ & $1.22$ & $1.23$\tabularnewline
+        $1.8$ & $1.20$ & $1.22$ & $1.23$\tabularnewline
         \hline 
         \end{tabular}
         \caption{Escape room configurations \label{tbl:room-runs}}
@@ -895,6 +903,9 @@ particle, force model.
     % It is important to notice that we have successfully removed the 
     % (undesired) social force from the original model and replacing it  
     % with the proposed changes, we were able reproduce real life results.
+    % The presented model was able to reproduce different number of pedestrians
+    % leaving a room with different door sizes and showing that the exit flow
+    % dos not depend on the number of pedestrians (in contrast to the SFM model)
 \newpage{}
 
 \begin{thebibliography}{10}
